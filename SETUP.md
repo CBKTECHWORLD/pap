@@ -120,7 +120,7 @@ In `index.html`, find and replace:
 2. New repository → name it `pupils-and-peoples`
 3. Upload `index.html` and `admin.html`
 4. Go to Settings → Pages → Source: main branch
-5. Your site will be live at: `https://yourusername.github.io/pupils-and-peoples`
+5. Your site will be live at: `https://CBKTECHWORLD.github.io/pap`
 
 **Option B — Netlify (Free, drag & drop)**
 1. Go to netlify.com → Sign up free
