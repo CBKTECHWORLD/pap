@@ -396,11 +396,11 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
   <h2 class="section-title">Donate & Make a Difference</h2>
   <p class="section-subtitle">Every rupee you give feeds a child, plants a tree or buys a notebook. Scan the QR or use UPI ID to donate directly.</p>
 
-  <!-- <div class="upi-box">
+  <div class="upi-box">
     <div class="upi-label">Pay via UPI</div>
     <div class="upi-id">pupilsandpeoples@upi</div>
     <button class="upi-copy" onclick="copyUpi()">📋 Copy UPI ID</button>
-  </div> -->
+  </div>
 
   <div class="upi-qr">
     <div class="upi-qr-placeholder">
@@ -453,7 +453,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Pupils & Peoples Foundation. All rights reserved.</span>
+    <span>© 2025 Pupils & Peoples Foundation. All rights reserved.</span>
     <span><a href="admin.html" class="admin-link">Admin Login</a></span>
   </div>
 </footer>
@@ -470,31 +470,44 @@ function switchTab(t) {
 }
 function selectPlan(el){document.querySelectorAll('.mem-plan').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');}
 
-async function submitForm(e,type){
+async function submitForm(e, type) {
   e.preventDefault();
-  const form=e.target;
-  const data={};
-  new FormData(form).forEach((v,k)=>data[k]=v);
-  data.type=type;
-  data.timestamp=new Date().toISOString();
-  data.status='pending';
-  if(type==='member') data.plan=document.querySelector('.mem-plan.sel .type')?.textContent||'Silver';
+  const form = e.target;
+  const data = {};
+  new FormData(form).forEach((v, k) => data[k] = v);
+  data.type = type;
+  data.timestamp = new Date().toISOString();
+  data.status = 'pending';
+  if (type === 'member') data.plan = document.querySelector('.mem-plan.sel .type')?.textContent || 'Silver';
 
-  const btn=form.querySelector('.form-submit');
-  const orig=btn.textContent;
-  btn.textContent='Submitting...'; btn.disabled=true;
+  const btn = form.querySelector('.form-submit');
+  const orig = btn.textContent;
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
 
-  try{
-    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  }catch(err){}
+  // Build URL with all data as query params (GET request avoids CORS completely)
+  const params = new URLSearchParams();
+  Object.entries(data).forEach(([k, v]) => params.append(k, v));
+  const submitUrl = SHEET_URL + '?' + params.toString();
 
-  const sid=type==='volunteer'?'vol-success':'mem-success';
-  const el=document.getElementById(sid);
-  el.style.display='block';
-  el.textContent='✅ Application submitted successfully! Admin will review and approve. You will receive your ID card on your email after approval.';
+  try {
+    // Use an image ping — works from any origin, no CORS issues
+    await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = img.onerror = resolve;
+      img.src = submitUrl;
+      setTimeout(resolve, 4000); // fallback after 4s
+    });
+  } catch(err) {}
+
+  const sid = type === 'volunteer' ? 'vol-success' : 'mem-success';
+  const el = document.getElementById(sid);
+  el.style.display = 'block';
+  el.textContent = '✅ Application submitted! Admin will review and approve. You will receive your ID card on your email after approval.';
   form.reset();
-  btn.textContent='Submitted ✓'; btn.disabled=false;
-  setTimeout(()=>{btn.textContent=orig;},5000);
+  btn.textContent = 'Submitted ✓';
+  btn.disabled = false;
+  setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 5000);
 }
 
 function copyUpi(){
