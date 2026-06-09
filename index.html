@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pupils & Peoples Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --saffron:#FF6B00;--saffron-light:#FFF0E0;--saffron-dark:#C44D00;
+  --green:#2D7A4F;--green-light:#E8F5EE;--green-dark:#1A4D30;
+  --cream:#FDF8F2;--text:#1A1612;--text-muted:#6B5C4E;
+  --white:#FFFFFF;--border:rgba(139,94,60,0.15);--radius:16px;
+  --shadow:0 4px 24px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(253,248,242,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:68px;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:13px;font-family:'Playfair Display',serif;}
+.nav-brand-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);}
+.nav-brand-text span{color:var(--saffron);}
+.nav-links{display:flex;gap:26px;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--text-muted);font-size:14px;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--saffron);}
+.nav-donate{background:var(--saffron);color:white;padding:9px 20px;border-radius:100px;font-size:13px;font-weight:600;text-decoration:none;transition:background 0.2s;}
+.nav-donate:hover{background:var(--saffron-dark);}
+
+.hero{min-height:100vh;background:var(--cream);display:flex;align-items:center;padding:100px 5% 60px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(45,122,79,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-content{max-width:620px;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--saffron-light);color:var(--saffron-dark);padding:6px 14px;border-radius:100px;font-size:13px;font-weight:600;margin-bottom:24px;}
+.hero h1{font-size:clamp(40px,5vw,66px);line-height:1.05;font-weight:900;margin-bottom:20px;}
+.hero h1 em{color:var(--saffron);font-style:normal;}
+.hero p{font-size:17px;color:var(--text-muted);line-height:1.7;margin-bottom:36px;max-width:520px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-primary{background:var(--saffron);color:white;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:600;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;display:inline-block;}
+.btn-primary:hover{background:var(--saffron-dark);transform:translateY(-1px);}
+.btn-secondary{background:transparent;color:var(--green);padding:14px 28px;border-radius:100px;font-size:15px;font-weight:600;text-decoration:none;border:2px solid var(--green);transition:all 0.2s;display:inline-block;}
+.btn-secondary:hover{background:var(--green-light);}
+.hero-stats{display:flex;gap:40px;margin-top:52px;padding-top:36px;border-top:1px solid var(--border);}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--saffron);}
+.hero-stat-label{font-size:13px;color:var(--text-muted);margin-top:2px;}
+.hero-floats{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:300px;height:380px;z-index:1;}
+.float-card{position:absolute;background:white;border-radius:14px;border:1px solid var(--border);padding:14px 18px;box-shadow:var(--shadow);}
+.float-card:nth-child(1){top:0;right:0;width:190px;animation:fl1 4s ease-in-out infinite;}
+.float-card:nth-child(2){top:110px;right:130px;width:170px;animation:fl2 5s ease-in-out infinite;}
+.float-card:nth-child(3){bottom:50px;right:10px;width:190px;animation:fl1 4.5s ease-in-out infinite reverse;}
+@keyframes fl1{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes fl2{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.float-icon{font-size:22px;margin-bottom:4px;}
+.float-title{font-size:12px;font-weight:600;color:var(--text);}
+.float-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+section{padding:80px 5%;}
+.section-label{display:inline-block;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--saffron);margin-bottom:12px;}
+.section-title{font-size:clamp(26px,3vw,38px);font-weight:700;color:var(--text);margin-bottom:14px;}
+.section-subtitle{font-size:16px;color:var(--text-muted);line-height:1.7;max-width:540px;margin-bottom:48px;}
+.section-header{text-align:center;}
+.section-header .section-subtitle{margin:0 auto 48px;}
+
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;}
+.svc-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:26px;transition:all 0.3s;position:relative;overflow:hidden;}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--saffron),var(--saffron-dark));transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
+.svc-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.svc-card:hover::before{transform:scaleX(1);}
+.svc-img{width:100%;height:150px;border-radius:10px;background:var(--saffron-light);display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:16px;}
+.svc-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:var(--green-light);color:var(--green-dark);padding:3px 10px;border-radius:100px;margin-bottom:8px;}
+.svc-card h3{font-size:17px;font-weight:700;margin-bottom:7px;}
+.svc-card p{font-size:13px;color:var(--text-muted);line-height:1.6;}
+
+.about-strip{background:var(--green);color:white;padding:60px 5%;display:flex;align-items:center;gap:60px;flex-wrap:wrap;}
+.about-strip h2{color:white;margin-bottom:12px;font-size:30px;}
+.about-strip p{color:rgba(255,255,255,0.8);line-height:1.7;font-size:15px;max-width:500px;}
+.about-values{display:flex;gap:14px;margin-top:20px;flex-wrap:wrap;}
+.about-value{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:100px;padding:7px 16px;font-size:13px;font-weight:500;color:white;}
+
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:22px;}
+.team-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:26px 18px;text-align:center;transition:all 0.3s;}
+.team-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.team-avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,var(--saffron-light),var(--saffron));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--saffron-dark);}
+.team-card h3{font-size:15px;font-weight:600;margin-bottom:3px;}
+.team-role{font-size:12px;color:var(--saffron);font-weight:600;margin-bottom:7px;}
+.team-achieve{font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:12px;}
+.team-badge{display:inline-flex;align-items:center;gap:4px;background:var(--green-light);color:var(--green-dark);font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;}
+
+.testi-bg{background:var(--saffron-light);padding:80px 5%;}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;}
+.testi-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;}
+.testi-quote{font-size:30px;line-height:1;color:var(--saffron);margin-bottom:8px;font-family:'Playfair Display',serif;}
+.testi-card p{font-size:13px;color:var(--text);line-height:1.7;margin-bottom:18px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-av{width:36px;height:36px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--green-dark);font-family:'Playfair Display',serif;}
+.testi-name{font-size:13px;font-weight:600;}
+.testi-loc{font-size:11px;color:var(--text-muted);}
+.stars{color:var(--saffron);font-size:12px;margin-bottom:10px;}
+
+/* FORMS */
+.forms-section{background:white;}
+.forms-tabs{display:flex;gap:12px;margin-bottom:34px;flex-wrap:wrap;}
+.form-tab{padding:10px 22px;border-radius:100px;font-size:14px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:transparent;color:var(--text-muted);transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.form-tab.active{background:var(--saffron);border-color:var(--saffron);color:white;}
+.form-panel{display:none;}
+.form-panel.active{display:block;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:13px;font-weight:600;color:var(--text-muted);}
+.form-group input,.form-group select,.form-group textarea{padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);outline:none;transition:border 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--saffron);}
+.form-group textarea{resize:vertical;min-height:88px;}
+.mem-plans{display:flex;gap:12px;margin:8px 0;flex-wrap:wrap;}
+.mem-plan{flex:1;min-width:110px;border:2px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.mem-plan:hover,.mem-plan.sel{border-color:var(--saffron);background:var(--saffron-light);}
+.mem-plan .price{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--saffron);}
+.mem-plan .type{font-size:12px;font-weight:600;margin-top:2px;}
+.mem-plan .desc{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.form-submit{margin-top:22px;background:var(--saffron);color:white;border:none;border-radius:100px;padding:13px 34px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.form-submit:hover{background:var(--saffron-dark);}
+.form-note{font-size:12px;color:var(--text-muted);margin-top:10px;}
+.success-msg{display:none;background:var(--green-light);border:1px solid var(--green);color:var(--green-dark);padding:16px 20px;border-radius:12px;font-size:14px;font-weight:600;margin-top:16px;text-align:center;}
+
+/* DONATE UPI SECTION */
+.donate-section{background:linear-gradient(135deg,var(--green-dark),var(--green));padding:80px 5%;text-align:center;color:white;}
+.donate-section .section-label{color:rgba(255,255,255,0.65);}
+.donate-section .section-title{color:white;}
+.donate-section .section-subtitle{color:rgba(255,255,255,0.8);margin:0 auto 40px;}
+.upi-box{display:inline-block;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.25);border-radius:20px;padding:32px 48px;margin-bottom:28px;}
+.upi-label{font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:6px;}
+.upi-id{font-size:22px;font-weight:700;letter-spacing:1.5px;color:white;font-family:'Playfair Display',serif;}
+.upi-copy{background:rgba(255,255,255,0.15);border:none;color:white;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;margin-top:12px;display:block;margin:12px auto 0;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.upi-copy:hover{background:rgba(255,255,255,0.25);}
+.upi-qr{width:160px;height:160px;margin:20px auto;background:white;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.upi-qr img{width:100%;height:100%;object-fit:contain;}
+.upi-qr-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;}
+.upi-qr-placeholder .qr-grid{display:grid;grid-template-columns:repeat(7,18px);grid-template-rows:repeat(7,18px);gap:2px;}
+.qr-cell{border-radius:2px;}
+.donate-apps{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;}
+.donate-app{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:white;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:600;}
+.donate-note{color:rgba(255,255,255,0.55);font-size:12px;margin-top:20px;line-height:1.6;}
+
+/* ID CARD */
+.id-section{background:var(--green-light);padding:80px 5%;}
+.id-card-wrap{width:340px;background:white;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.13);margin:0 auto 20px;}
+.id-card-head{background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));padding:18px 20px;display:flex;align-items:center;gap:12px;}
+.id-card-circle{width:42px;height:42px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:var(--saffron);font-size:12px;}
+.id-card-orgname{color:white;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;}
+.id-card-orgsub{color:rgba(255,255,255,0.82);font-size:10px;margin-top:2px;}
+.id-card-body{padding:18px 20px;}
+.id-card-photo{width:78px;height:78px;border-radius:50%;margin:0 auto 12px;background:var(--saffron-light);border:3px solid var(--saffron);display:flex;align-items:center;justify-content:center;font-size:28px;}
+.id-card-name{text-align:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;}
+.id-card-role{text-align:center;font-size:11px;color:var(--saffron);font-weight:700;margin:3px 0 12px;text-transform:uppercase;letter-spacing:1px;}
+.id-rows{font-size:12px;}
+.id-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--border);}
+.id-row:last-child{border-bottom:none;}
+.id-row .lbl{color:var(--text-muted);}
+.id-row .val{font-weight:600;color:var(--text);}
+.id-card-foot{background:var(--green);padding:10px 18px;display:flex;justify-content:space-between;align-items:center;}
+.id-card-id{color:white;font-size:12px;font-weight:700;letter-spacing:1px;}
+.id-card-site{color:rgba(255,255,255,0.65);font-size:10px;}
+.download-btn{display:block;width:340px;margin:0 auto;background:var(--saffron);color:white;border:none;border-radius:100px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;transition:background 0.2s;}
+.download-btn:hover{background:var(--saffron-dark);}
+
+footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:32px;}
+.footer-brand h3{color:white;font-size:18px;margin-bottom:10px;}
+.footer-brand p{font-size:13px;line-height:1.7;max-width:270px;}
+.footer-links h4{color:white;font-size:14px;font-weight:600;margin-bottom:12px;}
+.footer-links ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.footer-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:13px;transition:color 0.2s;}
+.footer-links a:hover{color:var(--saffron);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px;}
+.footer-bottom a{color:var(--saffron);text-decoration:none;}
+.admin-link{color:rgba(255,255,255,0.25);font-size:11px;text-decoration:none;transition:color 0.2s;}
+.admin-link:hover{color:rgba(255,255,255,0.6);}
+
+@media(max-width:768px){
+  nav .nav-links{display:none;}
+  .hero-floats{display:none;}
+  .footer-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .hero{padding:90px 5% 50px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">P&P</div>
+    <span class="nav-brand-text">Pupils <span>&</span> Peoples</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Our Work</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#testimonials">Stories</a></li>
+    <li><a href="#join">Join Us</a></li>
+    <li><a href="#donate">Donate</a></li>
+  </ul>
+  <a href="#donate" class="nav-donate">Donate Now 🙏</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🪔 Serving Humanity Since 2018</div>
+    <h1>Nurturing Lives,<br><em>Building Futures</em></h1>
+    <p>We believe every child deserves an education and no one should sleep hungry. Pupils & Peoples Foundation is committed to holistic community upliftment through education, nutrition, environment and devotion.</p>
+    <div class="hero-actions">
+      <a href="#join" class="btn-primary">Become a Volunteer</a>
+      <a href="#services" class="btn-secondary">Our Services</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-num">4,800+</div><div class="hero-stat-label">Lives Impacted</div></div>
+      <div><div class="hero-stat-num">320+</div><div class="hero-stat-label">Volunteers</div></div>
+      <div><div class="hero-stat-num">12</div><div class="hero-stat-label">Active Projects</div></div>
+    </div>
+  </div>
+  <div class="hero-floats">
+    <div class="float-card"><div class="float-icon">📚</div><div class="float-title">Free Education</div><div class="float-sub">Counselling & guidance</div></div>
+    <div class="float-card"><div class="float-icon">🌳</div><div class="float-title">Tree Plantation</div><div class="float-sub">2,000+ trees planted</div></div>
+    <div class="float-card"><div class="float-icon">🍱</div><div class="float-title">Food Distribution</div><div class="float-sub">Daily meals served</div></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <div class="section-label">What We Do</div>
+    <h2 class="section-title">Our Services & Programs</h2>
+    <p class="section-subtitle">From education to devotion, every initiative is rooted in compassion and community service.</p>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card"><div class="svc-img">📋</div><div class="svc-tag">Education</div><h3>Free Education Advisory</h3><p>Expert guidance on school admissions, scholarships, career paths and academic counselling — at zero cost for underprivileged students.</p></div>
+    <div class="svc-card"><div class="svc-img">✏️</div><div class="svc-tag">Education</div><h3>Stationery Distribution</h3><p>We distribute notebooks, pens, pencils, bags and study materials to students from economically weaker sections every academic year.</p></div>
+    <div class="svc-card"><div class="svc-img">🏫</div><div class="svc-tag">Education</div><h3>Tuition & Learning Classes</h3><p>Free after-school tutoring and coaching classes for primary and secondary students, helping bridge the learning gap in communities.</p></div>
+    <div class="svc-card"><div class="svc-img">🌳</div><div class="svc-tag">Environment</div><h3>Tree Plantation Drive</h3><p>Regular campaigns to plant native saplings in schools, roadsides and public areas. Over 2,000 trees planted and maintained so far.</p></div>
+    <div class="svc-card"><div class="svc-img">🍱</div><div class="svc-tag">Food & Nutrition</div><h3>Meals for the Poor</h3><p>Weekly cooked food distribution to homeless individuals, daily wage workers and needy families — because hunger shouldn't exist.</p></div>
+    <div class="svc-card"><div class="svc-img">🐄</div><div class="svc-tag">Animal Care</div><h3>Food for Street Animals</h3><p>Regular feeding of stray dogs, cows and birds across localities, coordinating with veterinary teams for basic medical care.</p></div>
+    <div class="svc-card"><div class="svc-img">🪔</div><div class="svc-tag">Devotion</div><h3>Temple Pooja Duties</h3><p>Volunteers assist in performing daily poojas, aarti and maintenance at local temples, preserving spiritual traditions and seva.</p></div>
+    <div class="svc-card"><div class="svc-img">🙏</div><div class="svc-tag">Devotion</div><h3>Promoting Devotional Culture</h3><p>Organising bhajans, kirtans, religious discourses and satsangs to nurture spiritual values and cultural unity in communities.</p></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about-strip">
+  <div style="flex:1;min-width:280px;">
+    <div class="section-label" style="color:rgba(255,255,255,0.6);">Who We Are</div>
+    <h2>A Family United by Purpose</h2>
+    <p>Founded with a simple belief — that every act of giving, no matter how small, creates a ripple of change. Our volunteers come from all walks of life, united by love for the community.</p>
+    <div class="about-values">
+      <span class="about-value">🤝 Seva</span>
+      <span class="about-value">📖 Shiksha</span>
+      <span class="about-value">🌿 Prakriti</span>
+      <span class="about-value">🙏 Bhakti</span>
+    </div>
+  </div>
+  <div style="flex:0 0 280px;height:240px;border-radius:var(--radius);background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:72px;">🌅</div>
+</div>
+
+<!-- TEAM -->
+<section id="team" style="background:white;">
+  <div class="section-header">
+    <div class="section-label">Project Coordinators</div>
+    <h2 class="section-title">The People Behind the Mission</h2>
+    <p class="section-subtitle">Dedicated leaders who give their time, heart and energy to serve the community.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card"><div class="team-avatar">RP</div><h3>Ramesh Patel</h3><div class="team-role">Founder & President</div><p class="team-achieve">Spearheaded 8 major education drives; counselled 1,200+ students. State-level Social Service Award 2022.</p><span class="team-badge">🏅 12 Years Service</span></div>
+    <div class="team-card"><div class="team-avatar">SK</div><h3>Sunita Kumari</h3><div class="team-role">Education Head</div><p class="team-achieve">Led stationery distribution to 3,500 students; established 5 free tuition centres in rural areas.</p><span class="team-badge">📚 3500 Students</span></div>
+    <div class="team-card"><div class="team-avatar">AM</div><h3>Arjun Mehta</h3><div class="team-role">Environment Coordinator</div><p class="team-achieve">Coordinated 40+ plantation drives; partnered with municipal bodies for 2,000 tree tracking.</p><span class="team-badge">🌳 2000 Trees</span></div>
+    <div class="team-card"><div class="team-avatar">PD</div><h3>Priya Desai</h3><div class="team-role">Food & Welfare Head</div><p class="team-achieve">Manages weekly meal distribution for 500+ individuals; coordinates daily animal feeding programs.</p><span class="team-badge">🍱 500+ Fed Weekly</span></div>
+    <div class="team-card"><div class="team-avatar">VS</div><h3>Vinay Sharma</h3><div class="team-role">Spiritual Activities</div><p class="team-achieve">Organises 50+ annual spiritual events; leads temple seva with 80 trained volunteers across 12 temples.</p><span class="team-badge">🪔 12 Temples</span></div>
+    <div class="team-card"><div class="team-avatar">NJ</div><h3>Nandita Joshi</h3><div class="team-role">Volunteer Manager</div><p class="team-achieve">Onboarded 320+ volunteers; manages ID issuance, membership renewal and community engagement.</p><span class="team-badge">👥 320+ Volunteers</span></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testi-bg">
+  <div class="section-header">
+    <div class="section-label">Community Voices</div>
+    <h2 class="section-title">Stories That Inspire</h2>
+    <p class="section-subtitle">Real words from people whose lives have been touched by our programs.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card"><div class="stars">★★★★★</div><div class="testi-quote">"</div><p>Because of Pupils & Peoples, my daughter got free tuition and is now in Class 10 with top grades. The stationery they gave saved us during very hard times.</p><div class="testi-author"><div class="testi-av">MV</div><div><div class="testi-name">Meena Verma</div><div class="testi-loc">Parent — Rajnagar Colony</div></div></div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><div class="testi-quote">"</div><p>Joining this NGO has changed my life. The food distribution camp I worked at opened my eyes to how much need there is around us. Truly life-changing.</p><div class="testi-author"><div class="testi-av">RK</div><div><div class="testi-name">Rohan Kapoor</div><div class="testi-loc">Volunteer — since 2021</div></div></div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><div class="testi-quote">"</div><p>The temple pooja program has brought our neighbourhood together spiritually. Young volunteers performing aarti is the most beautiful thing I have witnessed.</p><div class="testi-author"><div class="testi-av">PG</div><div><div class="testi-name">Pandit Govind Das</div><div class="testi-loc">Temple Priest — Shiv Mandir</div></div></div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><div class="testi-quote">"</div><p>The tree plantation drive in our school was so well organised. Children now take care of those trees every week. It teaches responsibility from a young age.</p><div class="testi-author"><div class="testi-av">AS</div><div><div class="testi-name">Asha Singh</div><div class="testi-loc">Principal — GVS School</div></div></div></div>
+  </div>
+</section>
+
+<!-- JOIN FORMS -->
+<section id="join" class="forms-section">
+  <div class="section-header">
+    <div class="section-label">Join the Movement</div>
+    <h2 class="section-title">Volunteer & Membership</h2>
+    <p class="section-subtitle">Register today. Admin will review and approve your application, then your ID card is emailed automatically.</p>
+  </div>
+  <div class="forms-tabs">
+    <button class="form-tab active" onclick="switchTab('vol')">🙋 Register as Volunteer</button>
+    <button class="form-tab" onclick="switchTab('mem')">🎟️ Become a Member</button>
+  </div>
+
+  <div class="form-panel active" id="panel-vol">
+    <form id="vol-form" onsubmit="submitForm(event,'volunteer')">
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name *</label><input type="text" name="name" placeholder="Your full name" required></div>
+        <div class="form-group"><label>Mobile Number *</label><input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" name="email" placeholder="your@email.com" required></div>
+        <div class="form-group"><label>Date of Birth *</label><input type="date" name="dob" required></div>
+        <div class="form-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="form-group"><label>City / Area *</label><input type="text" name="city" placeholder="Your city or locality" required></div>
+        <div class="form-group"><label>Occupation</label><input type="text" name="occupation" placeholder="Student / Teacher / etc."></div>
+        <div class="form-group"><label>Area of Interest *</label>
+          <select name="interest" required>
+            <option>Education & Tutoring</option><option>Food Distribution</option><option>Tree Plantation</option>
+            <option>Animal Care</option><option>Temple Seva / Pooja</option><option>Administrative Support</option><option>All Areas</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Why do you want to volunteer?</label><textarea name="motivation" placeholder="Tell us your motivation in 2-3 lines..."></textarea></div>
+      </div>
+      <button type="submit" class="form-submit">Submit Application →</button>
+      <p class="form-note">🔒 After admin approval, your Volunteer ID card will be emailed to you automatically.</p>
+      <div class="success-msg" id="vol-success"></div>
+    </form>
+  </div>
+
+  <div class="form-panel" id="panel-mem">
+    <div style="margin-bottom:22px;">
+      <label style="font-size:13px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:10px;">Choose Membership Plan</label>
+      <div class="mem-plans">
+        <div class="mem-plan sel" onclick="selectPlan(this)"><div class="price">₹500</div><div class="type">Silver</div><div class="desc">Annual membership</div></div>
+        <div class="mem-plan" onclick="selectPlan(this)"><div class="price">₹1,200</div><div class="type">Gold</div><div class="desc">Annual + events</div></div>
+        <div class="mem-plan" onclick="selectPlan(this)"><div class="price">₹3,000</div><div class="type">Patron</div><div class="desc">Annual + all benefits</div></div>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">⚠️ Membership renewal is managed by admin. You will be notified before expiry.</p>
+    </div>
+    <form id="mem-form" onsubmit="submitForm(event,'member')">
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name *</label><input type="text" name="name" placeholder="Your full name" required></div>
+        <div class="form-group"><label>Mobile Number *</label><input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" name="email" placeholder="your@email.com" required></div>
+        <div class="form-group"><label>Date of Birth *</label><input type="date" name="dob" required></div>
+        <div class="form-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="form-group"><label>City / Area *</label><input type="text" name="city" placeholder="Your city" required></div>
+        <div class="form-group"><label>Profession</label><input type="text" name="profession" placeholder="Your profession"></div>
+        <div class="form-group"><label>Address</label><input type="text" name="address" placeholder="Your full address"></div>
+        <div class="form-group full"><label>Message (optional)</label><textarea name="message" placeholder="Any message for us..."></textarea></div>
+      </div>
+      <button type="submit" class="form-submit">Submit Membership Application →</button>
+      <p class="form-note">🔒 After payment confirmation & admin approval, your Membership Card will be emailed automatically.</p>
+      <div class="success-msg" id="mem-success"></div>
+    </form>
+  </div>
+</section>
+
+<!-- ID CARD PREVIEW -->
+<section class="id-section">
+  <div class="section-header">
+    <div class="section-label">Your Identity</div>
+    <h2 class="section-title">Volunteer ID Card</h2>
+    <p class="section-subtitle" style="margin:0 auto 36px;">Once admin approves your registration, a personalised ID card is auto-generated and emailed to you.</p>
+  </div>
+  <div class="id-card-wrap">
+    <div class="id-card-head">
+      <div class="id-card-circle">P&P</div>
+      <div><div class="id-card-orgname">Pupils & Peoples Foundation</div><div class="id-card-orgsub">Community Service NGO</div></div>
+    </div>
+    <div class="id-card-body">
+      <div class="id-card-photo">🙋</div>
+      <div class="id-card-name">Volunteer Name</div>
+      <div class="id-card-role">Volunteer</div>
+      <div class="id-rows">
+        <div class="id-row"><span class="lbl">Member Since</span><span class="val">June 2025</span></div>
+        <div class="id-row"><span class="lbl">Area of Work</span><span class="val">Education</span></div>
+        <div class="id-row"><span class="lbl">Valid Until</span><span class="val">June 2026</span></div>
+        <div class="id-row"><span class="lbl">Mobile</span><span class="val">+91 XXXXX XXXXX</span></div>
+        <div class="id-row"><span class="lbl">City</span><span class="val">Your City</span></div>
+      </div>
+    </div>
+    <div class="id-card-foot">
+      <div><div class="id-card-id">ID: PNP-VOL-2025-0000</div><div class="id-card-site">pupilsandpeoples.org</div></div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:14px;">This is a sample preview. Your card will have your actual name, ID and details.</p>
+</section>
+
+<!-- DONATE UPI -->
+<section id="donate" class="donate-section">
+  <div class="section-label">Support Our Work</div>
+  <h2 class="section-title">Donate & Make a Difference</h2>
+  <p class="section-subtitle">Every rupee you give feeds a child, plants a tree or buys a notebook. Scan the QR or use UPI ID to donate directly.</p>
+
+  <div class="upi-box">
+    <div class="upi-label">Pay via UPI</div>
+    <div class="upi-id">pupilsandpeoples@upi</div>
+    <button class="upi-copy" onclick="copyUpi()">📋 Copy UPI ID</button>
+  </div>
+
+  <div class="upi-qr">
+    <div class="upi-qr-placeholder">
+      <!-- Replace src below with your actual QR code image -->
+      <div style="width:130px;height:130px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;text-align:center;padding:12px;">
+        Add your UPI QR code image here
+      </div>
+    </div>
+  </div>
+
+  <div class="donate-apps">
+    <span class="donate-app">📱 Google Pay</span>
+    <span class="donate-app">💜 PhonePe</span>
+    <span class="donate-app">🔵 Paytm</span>
+    <span class="donate-app">🏦 Any UPI App</span>
+  </div>
+
+  <p class="donate-note">
+    After donating, please WhatsApp your payment screenshot to <strong style="color:white;">+91 XXXXX XXXXX</strong><br>
+    so we can acknowledge your contribution. Tax receipt will be available after NGO registration.
+  </p>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Pupils & Peoples Foundation</h3>
+      <p>An organisation rooted in service, devotion and compassion — working across education, nutrition, environment and spirituality.</p>
+      <p style="margin-top:14px;font-size:12px;">📍 Your Address, City — PIN<br>📞 +91 XXXXX XXXXX<br>✉️ pupilsandpeoples@gmail.com</p>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#services">Our Services</a></li>
+        <li><a href="#team">Our Team</a></li>
+        <li><a href="#join">Volunteer</a></li>
+        <li><a href="#join">Membership</a></li>
+        <li><a href="#donate">Donate</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#">Education Advisory</a></li>
+        <li><a href="#">Stationery Drive</a></li>
+        <li><a href="#">Tree Plantation</a></li>
+        <li><a href="#">Food Distribution</a></li>
+        <li><a href="#">Temple Seva</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Pupils & Peoples Foundation. All rights reserved.</span>
+    <span><a href="admin.html" class="admin-link">Admin Login</a></span>
+  </div>
+</footer>
+
+<div id="copy-toast" style="display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:white;padding:10px 22px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;">✓ UPI ID copied!</div>
+
+<script>
+const SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+function switchTab(t) {
+  document.querySelectorAll('.form-tab').forEach((b,i)=>b.classList.toggle('active',i===(t==='vol'?0:1)));
+  document.querySelectorAll('.form-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+}
+function selectPlan(el){document.querySelectorAll('.mem-plan').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');}
+
+async function submitForm(e,type){
+  e.preventDefault();
+  const form=e.target;
+  const data={};
+  new FormData(form).forEach((v,k)=>data[k]=v);
+  data.type=type;
+  data.timestamp=new Date().toISOString();
+  data.status='pending';
+  if(type==='member') data.plan=document.querySelector('.mem-plan.sel .type')?.textContent||'Silver';
+
+  const btn=form.querySelector('.form-submit');
+  const orig=btn.textContent;
+  btn.textContent='Submitting...'; btn.disabled=true;
+
+  try{
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  }catch(err){}
+
+  const sid=type==='volunteer'?'vol-success':'mem-success';
+  const el=document.getElementById(sid);
+  el.style.display='block';
+  el.textContent='✅ Application submitted successfully! Admin will review and approve. You will receive your ID card on your email after approval.';
+  form.reset();
+  btn.textContent='Submitted ✓'; btn.disabled=false;
+  setTimeout(()=>{btn.textContent=orig;},5000);
+}
+
+function copyUpi(){
+  navigator.clipboard.writeText('pupilsandpeoples@upi').catch(()=>{});
+  const t=document.getElementById('copy-toast');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',2500);
+}
+</script>
+</body>
+</html>

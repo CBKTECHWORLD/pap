@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Pupils & Peoples Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --saffron:#FF6B00;--saffron-light:#FFF0E0;--saffron-dark:#C44D00;
+  --green:#2D7A4F;--green-light:#E8F5EE;--green-dark:#1A4D30;
+  --red:#DC2626;--red-light:#FEE2E2;
+  --bg:#F7F5F2;--white:#FFFFFF;--text:#1A1612;--text-muted:#6B5C4E;
+  --border:rgba(0,0,0,0.1);--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--green-dark),var(--green));display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:white;border-radius:20px;padding:40px;width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.login-logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:white;font-size:16px;margin:0 auto 16px;}
+.login-box h2{font-family:'Playfair Display',serif;margin-bottom:6px;font-size:22px;}
+.login-box p{font-size:13px;color:var(--text-muted);margin-bottom:28px;}
+.login-box input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px;background:var(--bg);}
+.login-box input:focus{border-color:var(--saffron);}
+.login-btn{width:100%;background:var(--saffron);color:white;border:none;border-radius:100px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.login-btn:hover{background:var(--saffron-dark);}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh;flex-direction:column;}
+header{background:white;border-bottom:1px solid var(--border);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.header-logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:white;font-size:11px;}
+.header-title{font-weight:600;font-size:15px;}
+.header-sub{font-size:11px;color:var(--text-muted);}
+.header-right{display:flex;align-items:center;gap:14px;}
+.header-admin{font-size:13px;color:var(--text-muted);}
+.logout-btn{background:none;border:1.5px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+
+.main{display:flex;flex:1;}
+.sidebar{width:220px;background:white;border-right:1px solid var(--border);padding:20px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;flex-shrink:0;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;font-size:14px;font-weight:500;color:var(--text-muted);transition:all 0.2s;border-left:3px solid transparent;}
+.sidebar-item:hover{background:var(--bg);color:var(--text);}
+.sidebar-item.active{background:var(--saffron-light);color:var(--saffron-dark);border-left-color:var(--saffron);font-weight:600;}
+.sidebar-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-badge{margin-left:auto;background:var(--saffron);color:white;border-radius:100px;padding:1px 8px;font-size:11px;font-weight:700;}
+
+.content{flex:1;padding:28px;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:28px;}
+.stat-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;}
+.stat-label{font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.stat-num.orange{color:var(--saffron);}
+.stat-num.green{color:var(--green);}
+.stat-num.red{color:var(--red);}
+
+/* TABLE */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.page-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
+.filter-tabs{display:flex;gap:8px;}
+.f-tab{padding:7px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.f-tab.active{background:var(--saffron);border-color:var(--saffron);color:white;}
+.search-box{padding:9px 14px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;width:220px;background:white;}
+.search-box:focus{border-color:var(--saffron);}
+
+.table-wrap{background:white;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:var(--bg);}
+th{padding:11px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+td{padding:11px 14px;font-size:13px;border-bottom:0.5px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg);}
+.badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;}
+.badge-pending{background:#FEF3C7;color:#92400E;}
+.badge-approved{background:var(--green-light);color:var(--green-dark);}
+.badge-rejected{background:var(--red-light);color:var(--red);}
+.action-btns{display:flex;gap:6px;}
+.act-btn{padding:5px 12px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.act-approve{background:var(--green-light);color:var(--green-dark);}
+.act-approve:hover{background:var(--green);color:white;}
+.act-reject{background:var(--red-light);color:var(--red);}
+.act-reject:hover{background:var(--red);color:white;}
+.act-view{background:var(--saffron-light);color:var(--saffron-dark);}
+.act-view:hover{background:var(--saffron);color:white;}
+.empty-state{padding:48px;text-align:center;color:var(--text-muted);font-size:14px;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{background:white;border-radius:20px;padding:32px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted);}
+.modal h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:18px;}
+.detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-label{color:var(--text-muted);font-weight:600;}
+.detail-value{color:var(--text);font-weight:500;text-align:right;max-width:60%;}
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+.modal-approve{flex:1;background:var(--green);color:white;border:none;border-radius:100px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.modal-reject{flex:1;background:var(--red-light);color:var(--red);border:1.5px solid var(--red);border-radius:100px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ID card in modal */
+.mini-id-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:16px;}
+.mini-id-head{background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));padding:12px 16px;color:white;font-size:13px;font-weight:700;font-family:'Playfair Display',serif;}
+.mini-id-body{padding:14px 16px;font-size:12px;}
+.mini-id-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--border);}
+.mini-id-row:last-child{border-bottom:none;}
+.mini-id-foot{background:var(--green);padding:8px 16px;display:flex;justify-content:space-between;align-items:center;}
+.mini-id-foot span{color:white;font-size:11px;font-weight:700;letter-spacing:1px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:#1A1612;color:white;padding:12px 22px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;display:none;animation:slideUp 0.3s ease;}
+.toast.green-toast{background:var(--green);}
+.toast.red-toast{background:var(--red);}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* SETTINGS */
+.settings-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.settings-card h3{font-size:16px;font-weight:600;margin-bottom:4px;}
+.settings-card p{font-size:13px;color:var(--text-muted);margin-bottom:16px;}
+.settings-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg);}
+.settings-input:focus{border-color:var(--saffron);}
+.save-btn{background:var(--saffron);color:white;border:none;border-radius:100px;padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">P&P</div>
+    <h2>Admin Login</h2>
+    <p>Pupils & Peoples Foundation<br>Admin Dashboard</p>
+    <input type="text" id="login-user" placeholder="Username" autocomplete="off">
+    <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-err" id="login-err">❌ Invalid username or password</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="header-brand">
+      <div class="header-logo">P&P</div>
+      <div><div class="header-title">Admin Dashboard</div><div class="header-sub">Pupils & Peoples Foundation</div></div>
+    </div>
+    <div class="header-right">
+      <span class="header-admin" id="admin-name-display">👤 Admin</span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <nav class="sidebar">
+      <div class="sidebar-item active" onclick="goPage('dashboard')"><span class="sidebar-icon">🏠</span> Dashboard</div>
+      <div class="sidebar-item" onclick="goPage('volunteers')"><span class="sidebar-icon">🙋</span> Volunteers <span class="sidebar-badge" id="vol-pending-badge">0</span></div>
+      <div class="sidebar-item" onclick="goPage('members')"><span class="sidebar-icon">🎟️</span> Members <span class="sidebar-badge" id="mem-pending-badge">0</span></div>
+      <div class="sidebar-item" onclick="goPage('approved')"><span class="sidebar-icon">✅</span> Approved</div>
+      <div class="sidebar-item" onclick="goPage('renewal')"><span class="sidebar-icon">🔄</span> Renewals <span class="sidebar-badge" id="renewal-badge" style="background:var(--red)">0</span></div>
+      <div class="sidebar-item" onclick="goPage('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
+    </nav>
+
+    <main class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header"><h2 class="page-title">Dashboard Overview</h2></div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Volunteers</div><div class="stat-num orange" id="s-total-vol">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Members</div><div class="stat-num green" id="s-total-mem">0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Approval</div><div class="stat-num red" id="s-pending">0</div></div>
+          <div class="stat-card"><div class="stat-label">Approved Today</div><div class="stat-num green" id="s-today">0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Type</th><th>Email</th><th>City</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="dash-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VOLUNTEERS -->
+      <div class="page" id="page-volunteers">
+        <div class="page-header">
+          <h2 class="page-title">Volunteer Applications</h2>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div class="filter-tabs">
+              <button class="f-tab active" onclick="filterTable('volunteers','all',this)">All</button>
+              <button class="f-tab" onclick="filterTable('volunteers','pending',this)">Pending</button>
+              <button class="f-tab" onclick="filterTable('volunteers','approved',this)">Approved</button>
+            </div>
+            <input class="search-box" placeholder="🔍 Search by name..." oninput="searchTable('volunteers',this.value)">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>City</th><th>Interest</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="vol-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="page" id="page-members">
+        <div class="page-header">
+          <h2 class="page-title">Membership Applications</h2>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div class="filter-tabs">
+              <button class="f-tab active" onclick="filterTable('members','all',this)">All</button>
+              <button class="f-tab" onclick="filterTable('members','pending',this)">Pending</button>
+              <button class="f-tab" onclick="filterTable('members','approved',this)">Approved</button>
+            </div>
+            <input class="search-box" placeholder="🔍 Search by name..." oninput="searchTable('members',this.value)">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>Plan</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="mem-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- APPROVED -->
+      <div class="page" id="page-approved">
+        <div class="page-header"><h2 class="page-title">All Approved Members & Volunteers</h2>
+          <input class="search-box" placeholder="🔍 Search..." oninput="searchApproved(this.value)">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assigned ID</th><th>Name</th><th>Type</th><th>Email</th><th>City</th><th>Approved On</th><th>Valid Until</th><th>Action</th></tr></thead>
+            <tbody id="approved-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RENEWALS -->
+      <div class="page" id="page-renewal">
+        <div class="page-header"><h2 class="page-title">Membership Renewals</h2></div>
+        <div style="background:#FEF3C7;border:1px solid #F59E0B;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#92400E;">
+          ⚠️ Members expiring within <strong>30 days</strong> are listed below. Approve renewal to extend by 1 year and resend their ID card.
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assigned ID</th><th>Name</th><th>Type</th><th>Email</th><th>Plan</th><th>Expires On</th><th>Days Left</th><th>Action</th></tr></thead>
+            <tbody id="renewal-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="page-header"><h2 class="page-title">Settings</h2></div>
+        <div class="settings-card">
+          <h3>Google Sheet Integration</h3>
+          <p>Paste your Google Apps Script Web App URL below. Form submissions will be saved here.</p>
+          <input class="settings-input" id="sheet-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
+          <button class="save-btn" onclick="saveSheetUrl()">Save URL</button>
+        </div>
+        <div class="settings-card">
+          <h3>Email Sender</h3>
+          <p>ID cards are sent from <strong>pupilsandpeoples@gmail.com</strong> via Google Apps Script. Make sure the Gmail account is authorised in the script.</p>
+          <input class="settings-input" value="pupilsandpeoples@gmail.com" readonly>
+        </div>
+        <div class="settings-card">
+          <h3>Change Admin Password</h3>
+          <p>Change the admin login password stored locally.</p>
+          <input class="settings-input" type="password" id="new-pass" placeholder="New password">
+          <button class="save-btn" onclick="changePass()">Update Password</button>
+        </div>
+        <div class="settings-card">
+          <h3>Add Sample Data</h3>
+          <p>Load test entries to preview the dashboard.</p>
+          <button class="save-btn" onclick="loadSampleData()">Load Sample Data</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modal-title">Application Details</h3>
+    <div id="modal-details"></div>
+    <div class="mini-id-card" id="modal-id-card" style="display:none;"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- AUTH ----
+const ADMIN_CREDS = { username:'admin', password:'pnp@2025' };
+let currentAdmin = '';
+
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  const savedPass = localStorage.getItem('adminPass') || ADMIN_CREDS.password;
+  if(u===ADMIN_CREDS.username && p===savedPass){
+    currentAdmin=u;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('admin-name-display').textContent='👤 '+u;
+    renderAll();
+  } else {
+    document.getElementById('login-err').style.display='block';
+    setTimeout(()=>document.getElementById('login-err').style.display='none',3000);
+  }
+}
+function doLogout(){
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-pass').value='';
+}
+function changePass(){
+  const np=document.getElementById('new-pass').value;
+  if(np.length<6){showToast('Password must be at least 6 characters','red-toast');return;}
+  localStorage.setItem('adminPass',np);
+  showToast('Password updated successfully!','green-toast');
+  document.getElementById('new-pass').value='';
+}
+
+// ---- DATA STORE ----
+function getData(){ return JSON.parse(localStorage.getItem('pnp_data')||'[]'); }
+function saveData(d){ localStorage.setItem('pnp_data',JSON.stringify(d)); }
+
+function loadSampleData(){
+  const samples=[
+    {id:1,type:'volunteer',name:'Ravi Kumar',email:'ravi@example.com',phone:'9876543210',city:'Delhi',dob:'1998-05-10',gender:'Male',occupation:'Student',interest:'Education & Tutoring',motivation:'I want to give back to society.',status:'pending',timestamp:'2025-06-01T09:00:00',assignedId:''},
+    {id:2,type:'volunteer',name:'Sonal Mehta',email:'sonal@example.com',phone:'9123456780',city:'Mumbai',dob:'1995-11-22',gender:'Female',occupation:'Teacher',interest:'Food Distribution',motivation:'Passionate about feeding the needy.',status:'pending',timestamp:'2025-06-02T10:30:00',assignedId:''},
+    {id:3,type:'member',name:'Deepak Sharma',email:'deepak@example.com',phone:'9001234567',city:'Jaipur',dob:'1990-03-15',gender:'Male',profession:'Engineer',plan:'Gold',status:'pending',timestamp:'2025-06-03T11:00:00',assignedId:''},
+    {id:4,type:'volunteer',name:'Pooja Singh',email:'pooja@example.com',phone:'9988776655',city:'Lucknow',dob:'2000-07-08',gender:'Female',occupation:'Student',interest:'Tree Plantation',motivation:'Love nature, want to help.',status:'approved',timestamp:'2025-06-04T08:00:00',assignedId:'PNP-VOL-2025-1001',approvedOn:'2025-06-04'},
+    {id:5,type:'member',name:'Anil Verma',email:'anil@example.com',phone:'9234567891',city:'Pune',dob:'1985-09-20',gender:'Male',profession:'Business',plan:'Patron',status:'approved',timestamp:'2025-06-05T09:00:00',assignedId:'PNP-MEM-2025-2001',approvedOn:'2025-06-05'},
+  ];
+  saveData(samples);
+  renderAll();
+  showToast('Sample data loaded!','green-toast');
+}
+
+// ---- PAGES ----
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  const items=document.querySelectorAll('.sidebar-item');
+  const map={dashboard:0,volunteers:1,members:2,approved:3,renewal:4,settings:5};
+  if(map[name]!==undefined) items[map[name]].classList.add('active');
+  renderAll();
+}
+
+// ---- RENDER ----
+let volFilter='all', memFilter='all';
+
+function renderAll(){
+  const data=getData();
+  const vols=data.filter(d=>d.type==='volunteer');
+  const mems=data.filter(d=>d.type==='member');
+  const pending=data.filter(d=>d.status==='pending');
+  const today=data.filter(d=>d.status==='approved' && d.approvedOn===new Date().toISOString().slice(0,10));
+  const expiring=getExpiring(data);
+
+  document.getElementById('s-total-vol').textContent=vols.length;
+  document.getElementById('s-total-mem').textContent=mems.length;
+  document.getElementById('s-pending').textContent=pending.length;
+  document.getElementById('s-today').textContent=today.length;
+
+  const volPending=vols.filter(v=>v.status==='pending').length;
+  const memPending=mems.filter(m=>m.status==='pending').length;
+  document.getElementById('vol-pending-badge').textContent=volPending;
+  document.getElementById('mem-pending-badge').textContent=memPending;
+  document.getElementById('renewal-badge').textContent=expiring.length;
+
+  renderDash(data);
+  renderVolTable(vols);
+  renderMemTable(mems);
+  renderApproved(data.filter(d=>d.status==='approved'));
+  renderRenewal(expiring);
+}
+
+// Calculate days until expiry (1 year from approvedOn)
+function getExpiryDate(entry){
+  if(!entry.approvedOn) return null;
+  const d=new Date(entry.approvedOn);
+  d.setFullYear(d.getFullYear()+1);
+  return d;
+}
+function getDaysLeft(entry){
+  const exp=getExpiryDate(entry);
+  if(!exp) return 999;
+  return Math.ceil((exp-new Date())/(1000*60*60*24));
+}
+function getExpiring(data){
+  return data
+    .filter(d=>d.status==='approved')
+    .filter(d=>getDaysLeft(d)<=30)
+    .sort((a,b)=>getDaysLeft(a)-getDaysLeft(b));
+}
+
+function renderDash(data){
+  const body=document.getElementById('dash-table-body');
+  const recent=data.slice(-10).reverse();
+  body.innerHTML=recent.length?recent.map(r=>`
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.type==='volunteer'?'🙋 Volunteer':'🎟️ Member'}</td>
+      <td style="color:#888">${r.email}</td>
+      <td>${r.city}</td>
+      <td>${r.timestamp?r.timestamp.slice(0,10):'-'}</td>
+      <td><span class="badge badge-${r.status}">${r.status}</span></td>
+      <td><button class="act-btn act-view" onclick="viewDetail(${r.id})">View</button>
+      ${r.status==='pending'?`<button class="act-btn act-approve" onclick="approveEntry(${r.id})">Approve</button>`:''}
+      </td>
+    </tr>`).join(''):`<tr><td colspan="7" class="empty-state">No applications yet.</td></tr>`;
+}
+
+function renderVolTable(vols, filterStatus='all', search=''){
+  const body=document.getElementById('vol-table-body');
+  let filtered=vols;
+  if(filterStatus!=='all') filtered=filtered.filter(v=>v.status===filterStatus);
+  if(search) filtered=filtered.filter(v=>v.name.toLowerCase().includes(search.toLowerCase()));
+  body.innerHTML=filtered.length?filtered.map(v=>`
+    <tr>
+      <td style="font-size:11px;color:#888">${v.assignedId||'—'}</td>
+      <td><strong>${v.name}</strong></td>
+      <td style="color:#888;font-size:12px">${v.email}</td>
+      <td>${v.phone}</td>
+      <td>${v.city}</td>
+      <td style="font-size:12px">${v.interest||'—'}</td>
+      <td><span class="badge badge-${v.status}">${v.status}</span></td>
+      <td><div class="action-btns">
+        <button class="act-btn act-view" onclick="viewDetail(${v.id})">View</button>
+        ${v.status==='pending'?`<button class="act-btn act-approve" onclick="approveEntry(${v.id})">✓ Approve</button><button class="act-btn act-reject" onclick="rejectEntry(${v.id})">✗</button>`:''}
+      </div></td>
+    </tr>`).join(''):`<tr><td colspan="8" class="empty-state">No volunteer applications found.</td></tr>`;
+}
+
+function renderMemTable(mems, filterStatus='all', search=''){
+  const body=document.getElementById('mem-table-body');
+  let filtered=mems;
+  if(filterStatus!=='all') filtered=filtered.filter(m=>m.status===filterStatus);
+  if(search) filtered=filtered.filter(m=>m.name.toLowerCase().includes(search.toLowerCase()));
+  body.innerHTML=filtered.length?filtered.map(m=>`
+    <tr>
+      <td style="font-size:11px;color:#888">${m.assignedId||'—'}</td>
+      <td><strong>${m.name}</strong></td>
+      <td style="color:#888;font-size:12px">${m.email}</td>
+      <td>${m.phone}</td>
+      <td><span class="badge" style="background:var(--saffron-light);color:var(--saffron-dark)">${m.plan||'Silver'}</span></td>
+      <td>${m.city}</td>
+      <td><span class="badge badge-${m.status}">${m.status}</span></td>
+      <td><div class="action-btns">
+        <button class="act-btn act-view" onclick="viewDetail(${m.id})">View</button>
+        ${m.status==='pending'?`<button class="act-btn act-approve" onclick="approveEntry(${m.id})">✓ Approve</button><button class="act-btn act-reject" onclick="rejectEntry(${m.id})">✗</button>`:''}
+      </div></td>
+    </tr>`).join(''):`<tr><td colspan="8" class="empty-state">No membership applications found.</td></tr>`;
+}
+
+function renderApproved(approved, search=''){
+  const body=document.getElementById('approved-table-body');
+  let filtered=approved;
+  if(search) filtered=filtered.filter(a=>a.name.toLowerCase().includes(search.toLowerCase())||a.assignedId.toLowerCase().includes(search.toLowerCase()));
+  body.innerHTML=filtered.length?filtered.map(a=>{
+    const exp=getExpiryDate(a);
+    const expStr=exp?exp.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    const days=getDaysLeft(a);
+    const expBadge=days<=0?'<span class="badge badge-rejected">Expired</span>':days<=30?`<span class="badge" style="background:#FEF3C7;color:#92400E">⚠️ ${days}d left</span>`:`<span style="font-size:12px;color:#2D7A4F">${expStr}</span>`;
+    return `<tr>
+      <td><strong style="color:var(--saffron)">${a.assignedId}</strong></td>
+      <td>${a.name}</td>
+      <td>${a.type==='volunteer'?'🙋 Volunteer':'🎟️ Member'}</td>
+      <td style="color:#888;font-size:12px">${a.email}</td>
+      <td>${a.city}</td>
+      <td style="font-size:12px">${a.approvedOn||'—'}</td>
+      <td>${expBadge}</td>
+      <td><div class="action-btns">
+        <button class="act-btn act-view" onclick="viewDetail(${a.id})">View</button>
+        <button class="act-btn act-approve" onclick="resendCard(${a.id})" title="Resend ID card email">📧 Resend</button>
+      </div></td>
+    </tr>`;}).join(''):`<tr><td colspan="8" class="empty-state">No approved entries yet.</td></tr>`;
+}
+
+function searchApproved(val){
+  const data=getData();
+  renderApproved(data.filter(d=>d.status==='approved'),val);
+}
+
+function renderRenewal(expiring){
+  const body=document.getElementById('renewal-table-body');
+  body.innerHTML=expiring.length?expiring.map(e=>{
+    const days=getDaysLeft(e);
+    const exp=getExpiryDate(e);
+    const expStr=exp?exp.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    const daysColor=days<=0?'var(--red)':days<=7?'var(--red)':'#92400E';
+    const daysLabel=days<=0?'<strong style="color:var(--red)">EXPIRED</strong>':`<strong style="color:${daysColor}">${days} days</strong>`;
+    return `<tr>
+      <td><strong style="color:var(--saffron)">${e.assignedId}</strong></td>
+      <td>${e.name}</td>
+      <td>${e.type==='volunteer'?'🙋 Volunteer':'🎟️ Member'}</td>
+      <td style="color:#888;font-size:12px">${e.email}</td>
+      <td>${e.plan||'—'}</td>
+      <td style="font-size:12px">${expStr}</td>
+      <td>${daysLabel}</td>
+      <td><div class="action-btns">
+        <button class="act-btn act-approve" onclick="renewEntry(${e.id})">🔄 Renew +1yr</button>
+        <button class="act-btn act-view" onclick="viewDetail(${e.id})">View</button>
+      </div></td>
+    </tr>`;}).join(''):`<tr><td colspan="8" class="empty-state" style="color:var(--green)">✅ No renewals due in the next 30 days.</td></tr>`;
+}
+
+function renewEntry(id){
+  const data=getData();
+  const idx=data.findIndex(d=>d.id===id);
+  if(idx===-1) return;
+  const entry=data[idx];
+  // Extend from today
+  entry.approvedOn=new Date().toISOString().slice(0,10);
+  data[idx]=entry;
+  saveData(data);
+  // Resend email with new dates
+  resendCard(id);
+  showToast(`🔄 ${entry.name} renewed for 1 year! New ID card emailed.`,'green-toast');
+  renderAll();
+}
+
+function resendCard(id){
+  const data=getData();
+  const entry=data.find(d=>d.id===id);
+  if(!entry||!entry.assignedId) return;
+  const exp=getExpiryDate(entry);
+  const validUntil=exp?exp.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}):'—';
+  const joinDate=new Date(entry.approvedOn).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  sendEmailNotification({...entry, joinDate, validUntil});
+  showToast(`📧 ID card resent to ${entry.email}`,'green-toast');
+}
+
+// ---- FILTER & SEARCH ----
+function filterTable(table, status, btn){
+  btn.closest('.filter-tabs').querySelectorAll('.f-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const data=getData();
+  if(table==='volunteers') renderVolTable(data.filter(d=>d.type==='volunteer'), status);
+  else renderMemTable(data.filter(d=>d.type==='member'), status);
+}
+function searchTable(table, val){
+  const data=getData();
+  if(table==='volunteers') renderVolTable(data.filter(d=>d.type==='volunteer'),'all',val);
+  else renderMemTable(data.filter(d=>d.type==='member'),'all',val);
+}
+
+// ---- APPROVE / REJECT ----
+function approveEntry(id){
+  const data=getData();
+  const idx=data.findIndex(d=>d.id===id);
+  if(idx===-1) return;
+  const entry=data[idx];
+  const prefix=entry.type==='volunteer'?'PNP-VOL':'PNP-MEM';
+  const year=new Date().getFullYear();
+  const num=Math.floor(1000+Math.random()*9000);
+  entry.assignedId=`${prefix}-${year}-${num}`;
+  entry.status='approved';
+  entry.approvedOn=new Date().toISOString().slice(0,10);
+  data[idx]=entry;
+  saveData(data);
+
+  const exp=getExpiryDate(entry);
+  const validUntil=exp?exp.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}):'—';
+  const joinDate=new Date(entry.approvedOn).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  sendEmailNotification({...entry, joinDate, validUntil});
+
+  showToast(`✅ ${entry.name} approved! ID: ${entry.assignedId}. Email sent.`,'green-toast');
+  closeModal();
+  renderAll();
+}
+
+function rejectEntry(id){
+  const data=getData();
+  const idx=data.findIndex(d=>d.id===id);
+  if(idx===-1) return;
+  data[idx].status='rejected';
+  saveData(data);
+  showToast(`❌ ${data[idx].name}'s application rejected.`,'red-toast');
+  closeModal();
+  renderAll();
+}
+
+// ---- EMAIL via Apps Script ----
+function sendEmailNotification(entry){
+  const sheetUrl=localStorage.getItem('sheetUrl')||'';
+  if(!sheetUrl){ console.log('No Apps Script URL set. Email not sent.'); return; }
+  const validUntil=new Date(new Date().setFullYear(new Date().getFullYear()+1)).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const payload={
+    action:'sendIdCard',
+    name:entry.name,
+    email:entry.email,
+    phone:entry.phone,
+    city:entry.city,
+    type:entry.type,
+    assignedId:entry.assignedId,
+    plan:entry.plan||'Volunteer',
+    interest:entry.interest||'General',
+    joinDate:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}),
+    validUntil:validUntil
+  };
+  fetch(sheetUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});
+}
+
+// ---- VIEW DETAIL ----
+function viewDetail(id){
+  const data=getData();
+  const entry=data.find(d=>d.id===id);
+  if(!entry) return;
+  document.getElementById('modal-title').textContent=(entry.type==='volunteer'?'🙋 Volunteer':'🎟️ Member')+' — '+entry.name;
+  const fields=entry.type==='volunteer'
+    ?[['Name',entry.name],['Email',entry.email],['Mobile',entry.phone],['City',entry.city],['Date of Birth',entry.dob],['Gender',entry.gender],['Occupation',entry.occupation||'—'],['Interest',entry.interest||'—'],['Motivation',entry.motivation||'—'],['Status',entry.status],['Submitted',entry.timestamp?entry.timestamp.slice(0,10):'—']]
+    :[['Name',entry.name],['Email',entry.email],['Mobile',entry.phone],['City',entry.city],['Date of Birth',entry.dob],['Gender',entry.gender],['Profession',entry.profession||'—'],['Plan',entry.plan||'Silver'],['Status',entry.status],['Submitted',entry.timestamp?entry.timestamp.slice(0,10):'—']];
+  document.getElementById('modal-details').innerHTML=fields.map(([l,v])=>`<div class="detail-row"><span class="detail-label">${l}</span><span class="detail-value">${v||'—'}</span></div>`).join('');
+
+  const cardDiv=document.getElementById('modal-id-card');
+  const actDiv=document.getElementById('modal-actions');
+
+  if(entry.status==='approved'){
+    const exp=getExpiryDate(entry);
+    const validUntil=exp?exp.toLocaleDateString('en-IN',{month:'short',year:'numeric'}):'—';
+    const validUntilFull=exp?exp.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}):'—';
+    const days=getDaysLeft(entry);
+    const expiryNote=days<=0?'<div style="background:var(--red-light);color:var(--red);padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px;">⚠️ This ID has expired. Please renew.</div>':days<=30?`<div style="background:#FEF3C7;color:#92400E;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px;">⚠️ Expiring in ${days} days. Consider renewing.</div>`:'';
+    cardDiv.style.display='block';
+    cardDiv.innerHTML=`
+      <div class="mini-id-head">Pupils & Peoples Foundation — ID Card</div>
+      <div class="mini-id-body">
+        <div class="mini-id-row"><span style="color:var(--text-muted)">Name</span><span><strong>${entry.name}</strong></span></div>
+        <div class="mini-id-row"><span style="color:var(--text-muted)">Role</span><span>${entry.type==='volunteer'?'Volunteer':'Member ('+entry.plan+')'}</span></div>
+        <div class="mini-id-row"><span style="color:var(--text-muted)">Mobile</span><span>${entry.phone}</span></div>
+        <div class="mini-id-row"><span style="color:var(--text-muted)">City</span><span>${entry.city}</span></div>
+        <div class="mini-id-row"><span style="color:var(--text-muted)">Approved</span><span>${entry.approvedOn||'—'}</span></div>
+        <div class="mini-id-row"><span style="color:var(--text-muted)">Valid Until</span><span style="color:${days<=30?'var(--red)':'var(--green)'}"><strong>${validUntilFull}</strong></span></div>
+      </div>
+      <div class="mini-id-foot"><span>${entry.assignedId}</span><span>pupilsandpeoples.org</span></div>
+      ${expiryNote}`;
+    actDiv.innerHTML=`
+      <button class="modal-approve" onclick="resendCard(${entry.id});closeModal()">📧 Resend ID Card Email</button>
+      ${days<=30?`<button class="modal-approve" style="background:var(--saffron)" onclick="renewEntry(${entry.id});closeModal()">🔄 Renew +1yr</button>`:''}
+      <button class="modal-reject" onclick="closeModal()">Close</button>`;
+  } else {
+    cardDiv.style.display='none';
+    if(entry.status==='pending'){
+      actDiv.innerHTML=`
+        <button class="modal-approve" onclick="approveEntry(${entry.id})">✅ Approve & Send ID Card</button>
+        <button class="modal-reject" onclick="rejectEntry(${entry.id})">✗ Reject</button>`;
+    } else {
+      actDiv.innerHTML=`<button class="modal-approve" onclick="closeModal()">Close</button>`;
+    }
+  }
+  document.getElementById('detail-modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('detail-modal').classList.remove('show'); }
+
+// ---- SETTINGS ----
+function saveSheetUrl(){
+  const url=document.getElementById('sheet-url-input').value.trim();
+  if(!url){showToast('Please enter a valid URL','red-toast');return;}
+  localStorage.setItem('sheetUrl',url);
+  showToast('Sheet URL saved!','green-toast');
+}
+window.addEventListener('load',()=>{
+  const saved=localStorage.getItem('sheetUrl');
+  if(saved) document.getElementById('sheet-url-input').value=saved;
+});
+
+// ---- TOAST ----
+function showToast(msg, cls=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+(cls||'');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',3500);
+}
+
+// ---- FORM DATA from main site (if stored in same origin) ----
+// This handles data submitted via the main site form
+window.addEventListener('message', e=>{
+  if(e.data && e.data.pnpSubmission){
+    const data=getData();
+    const entry={...e.data.pnpSubmission, id:Date.now(), status:'pending', assignedId:''};
+    data.push(entry);
+    saveData(data);
+    renderAll();
+  }
+});
+</script>
+</body>
+</html>
