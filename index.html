@@ -99,6 +99,21 @@ section{padding:80px 5%;}
 .testi-loc{font-size:11px;color:var(--text-muted);}
 .stars{color:var(--saffron);font-size:12px;margin-bottom:10px;}
 
+.svc-img {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.svc-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 /* FORMS */
 .forms-section{background:white;}
 .forms-tabs{display:flex;gap:12px;margin-bottom:34px;flex-wrap:wrap;}
@@ -216,8 +231,8 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     </div>
     <div class="hero-stats">
       <div><div class="hero-stat-num">4,800+</div><div class="hero-stat-label">Lives Impacted</div></div>
-      <div><div class="hero-stat-num">320+</div><div class="hero-stat-label">Volunteers</div></div>
-      <div><div class="hero-stat-num">12</div><div class="hero-stat-label">Active Projects</div></div>
+      <div><div class="hero-stat-num">100+</div><div class="hero-stat-label">Volunteers</div></div>
+      <div><div class="hero-stat-num">5+</div><div class="hero-stat-label">Active Projects</div></div>
     </div>
   </div>
   <div class="hero-floats">
@@ -234,16 +249,81 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <h2 class="section-title">Our Services & Programs</h2>
     <p class="section-subtitle">From education to devotion, every initiative is rooted in compassion and community service.</p>
   </div>
-  <div class="services-grid">
-    <div class="svc-card"><div class="svc-img">📋</div><div class="svc-tag">Education</div><h3>Free Education Advisory</h3><p>Expert guidance on school admissions, scholarships, career paths and academic counselling — at zero cost for underprivileged students.</p></div>
-    <div class="svc-card"><div class="svc-img">✏️</div><div class="svc-tag">Education</div><h3>Stationery Distribution</h3><p>We distribute notebooks, pens, pencils, bags and study materials to students from economically weaker sections every academic year.</p></div>
-    <div class="svc-card"><div class="svc-img">🏫</div><div class="svc-tag">Education</div><h3>Tuition & Learning Classes</h3><p>Free after-school tutoring and coaching classes for primary and secondary students, helping bridge the learning gap in communities.</p></div>
-    <div class="svc-card"><div class="svc-img">🌳</div><div class="svc-tag">Environment</div><h3>Tree Plantation Drive</h3><p>Regular campaigns to plant native saplings in schools, roadsides and public areas. Over 2,000 trees planted and maintained so far.</p></div>
-    <div class="svc-card"><div class="svc-img">🍱</div><div class="svc-tag">Food & Nutrition</div><h3>Meals for the Poor</h3><p>Weekly cooked food distribution to homeless individuals, daily wage workers and needy families — because hunger shouldn't exist.</p></div>
-    <div class="svc-card"><div class="svc-img">🐄</div><div class="svc-tag">Animal Care</div><h3>Food for Street Animals</h3><p>Regular feeding of stray dogs, cows and birds across localities, coordinating with veterinary teams for basic medical care.</p></div>
-    <div class="svc-card"><div class="svc-img">🪔</div><div class="svc-tag">Devotion</div><h3>Temple Pooja Duties</h3><p>Volunteers assist in performing daily poojas, aarti and maintenance at local temples, preserving spiritual traditions and seva.</p></div>
-    <div class="svc-card"><div class="svc-img">🙏</div><div class="svc-tag">Devotion</div><h3>Promoting Devotional Culture</h3><p>Organising bhajans, kirtans, religious discourses and satsangs to nurture spiritual values and cultural unity in communities.</p></div>
-  </div>
+ <div class="services-grid">
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/1.png" alt="Free Education Advisory">
+        </div>
+        <div class="svc-tag">Education</div>
+        <h3>Free Education Advisory</h3>
+        <p>Expert guidance on school admissions, scholarships, career paths and academic counselling — at zero cost for underprivileged students.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/2.png" alt="Stationery Distribution">
+        </div>
+        <div class="svc-tag">Education</div>
+        <h3>Stationery Distribution</h3>
+        <p>We distribute notebooks, pens, pencils, bags and study materials to students from economically weaker sections every academic year.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/3.png" alt="Tuition Classes">
+        </div>
+        <div class="svc-tag">Education</div>
+        <h3>Tuition & Learning Classes</h3>
+        <p>Free after-school tutoring and coaching classes for primary and secondary students, helping bridge the learning gap in communities.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/4.png" alt="Tree Plantation">
+        </div>
+        <div class="svc-tag">Environment</div>
+        <h3>Tree Plantation Drive</h3>
+        <p>Regular campaigns to plant native saplings in schools, roadsides and public areas. Over 2,000 trees planted and maintained so far.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/5.png" alt="Meals for the Poor">
+        </div>
+        <div class="svc-tag">Food & Nutrition</div>
+        <h3>Meals for the Poor</h3>
+        <p>Weekly cooked food distribution to homeless individuals, daily wage workers and needy families — because hunger shouldn't exist.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/6.png" alt="Food for Street Animals">
+        </div>
+        <div class="svc-tag">Animal Care</div>
+        <h3>Food for Street Animals</h3>
+        <p>Regular feeding of stray dogs, cows and birds across localities, coordinating with veterinary teams for basic medical care.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/7.png" alt="Temple Pooja Duties">
+        </div>
+        <div class="svc-tag">Devotion</div>
+        <h3>Temple Pooja Duties</h3>
+        <p>Volunteers assist in performing daily poojas, aarti and maintenance at local temples, preserving spiritual traditions and seva.</p>
+    </div>
+
+    <div class="svc-card">
+        <div class="svc-img">
+            <img src="img/8.png" alt="Promoting Devotional Culture">
+        </div>
+        <div class="svc-tag">Culture</div>
+        <h3>Tamil Language & Culture</h3>
+        <p>Organising event, workshop, seminar and promotion to nurture Tamil values and cultural unity in communities.</p>
+    </div>
+
+</div>
 </section>
 
 <!-- ABOUT -->
@@ -253,10 +333,10 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <h2>A Family United by Purpose</h2>
     <p>Founded with a simple belief — that every act of giving, no matter how small, creates a ripple of change. Our volunteers come from all walks of life, united by love for the community.</p>
     <div class="about-values">
-      <span class="about-value">🤝 Seva</span>
-      <span class="about-value">📖 Shiksha</span>
-      <span class="about-value">🌿 Prakriti</span>
-      <span class="about-value">🙏 Bhakti</span>
+      <span class="about-value">Service</span>
+      <span class="about-value">Education</span>
+      <span class="about-value">Protection</span>
+      <span class="about-value">Devotion</span>
     </div>
   </div>
   <div style="flex:0 0 280px;height:240px;border-radius:var(--radius);background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:72px;">🌅</div>
@@ -270,12 +350,12 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <p class="section-subtitle">Dedicated leaders who give their time, heart and energy to serve the community.</p>
   </div>
   <div class="team-grid">
-    <div class="team-card"><div class="team-avatar">RP</div><h3>Ramesh Patel</h3><div class="team-role">Founder & President</div><p class="team-achieve">Spearheaded 8 major education drives; counselled 1,200+ students. State-level Social Service Award 2022.</p><span class="team-badge">🏅 12 Years Service</span></div>
-    <div class="team-card"><div class="team-avatar">SK</div><h3>Sunita Kumari</h3><div class="team-role">Education Head</div><p class="team-achieve">Led stationery distribution to 3,500 students; established 5 free tuition centres in rural areas.</p><span class="team-badge">📚 3500 Students</span></div>
-    <div class="team-card"><div class="team-avatar">AM</div><h3>Arjun Mehta</h3><div class="team-role">Environment Coordinator</div><p class="team-achieve">Coordinated 40+ plantation drives; partnered with municipal bodies for 2,000 tree tracking.</p><span class="team-badge">🌳 2000 Trees</span></div>
-    <div class="team-card"><div class="team-avatar">PD</div><h3>Priya Desai</h3><div class="team-role">Food & Welfare Head</div><p class="team-achieve">Manages weekly meal distribution for 500+ individuals; coordinates daily animal feeding programs.</p><span class="team-badge">🍱 500+ Fed Weekly</span></div>
-    <div class="team-card"><div class="team-avatar">VS</div><h3>Vinay Sharma</h3><div class="team-role">Spiritual Activities</div><p class="team-achieve">Organises 50+ annual spiritual events; leads temple seva with 80 trained volunteers across 12 temples.</p><span class="team-badge">🪔 12 Temples</span></div>
-    <div class="team-card"><div class="team-avatar">NJ</div><h3>Nandita Joshi</h3><div class="team-role">Volunteer Manager</div><p class="team-achieve">Onboarded 320+ volunteers; manages ID issuance, membership renewal and community engagement.</p><span class="team-badge">👥 320+ Volunteers</span></div>
+    <div class="team-card"><div class="team-avatar">BK</div><h3>Bala krishnan</h3><div class="team-role">Founder & President</div><p class="team-achieve">Spearheaded 8 major education drives; counselled 1,200+ students. </p><span class="team-badge">🏅 11+ Years Service</span></div>
+    <div class="team-card"><div class="team-avatar">DD</div><h3>Deva Darshini</h3><div class="team-role">Education Head</div><p class="team-achieve">Led stationery distribution to 3,500 students; established 5 free tuition centres in rural areas.</p><span class="team-badge">📚 500 Students</span></div>
+    <div class="team-card"><div class="team-avatar">CS</div><h3>Chinna Swamy</h3><div class="team-role">Environment Coordinator</div><p class="team-achieve">Coordinated 40+ plantation drives; partnered with municipal bodies for 2,000 tree tracking.</p><span class="team-badge">🌳 100 Trees</span></div>
+    <div class="team-card"><div class="team-avatar">DS</div><h3>Dhana Sekar</h3><div class="team-role">Food & Welfare Head</div><p class="team-achieve">Manages weekly meal distribution for 500+ individuals; coordinates daily animal feeding programs.</p><span class="team-badge">🍱 100+ Fed Weekly</span></div>
+    <div class="team-card"><div class="team-avatar">VI</div><h3>Vijaya</h3><div class="team-role">Spiritual Activities</div><p class="team-achieve">Organises 10+ annual spiritual events; leads temple seva with 80 trained volunteers across 12 temples.</p><span class="team-badge">🪔 12 Temples</span></div>
+    <div class="team-card"><div class="team-avatar">AB</div><h3>Abhishek</h3><div class="team-role">Volunteer Manager</div><p class="team-achieve">Onboarded 100+ volunteers; manages ID issuance, membership renewal and community engagement.</p><span class="team-badge">👥 320+ Volunteers</span></div>
   </div>
 </section>
 
@@ -384,7 +464,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
       </div>
     </div>
     <div class="id-card-foot">
-      <div><div class="id-card-id">ID: PNP-VOL-2025-0000</div><div class="id-card-site">pupilsandpeoples.org</div></div>
+      <div><div class="id-card-id">ID: PNP-VOL-YEAR-0000</div><div class="id-card-site">pupilsandpeoples.org</div></div>
     </div>
   </div>
   <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:14px;">This is a sample preview. Your card will have your actual name, ID and details.</p>
@@ -396,26 +476,26 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
   <h2 class="section-title">Donate & Make a Difference</h2>
   <p class="section-subtitle">Every rupee you give feeds a child, plants a tree or buys a notebook. Scan the QR or use UPI ID to donate directly.</p>
 
-  <div class="upi-box">
+  <!-- <div class="upi-box">
     <div class="upi-label">Pay via UPI</div>
     <div class="upi-id">pupilsandpeoples@upi</div>
     <button class="upi-copy" onclick="copyUpi()">📋 Copy UPI ID</button>
-  </div>
+  </div> -->
 
-  <div class="upi-qr">
-    <div class="upi-qr-placeholder">
+  <!-- <div class="upi-qr">
+    <div class="upi-qr-placeholder"> -->
       <!-- Replace src below with your actual QR code image -->
-      <div style="width:130px;height:130px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;text-align:center;padding:12px;">
+      <!-- <div style="width:130px;height:130px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;text-align:center;padding:12px;">
         Add your UPI QR code image here
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="donate-apps">
-    <span class="donate-app">📱 Google Pay</span>
-    <span class="donate-app">💜 PhonePe</span>
-    <span class="donate-app">🔵 Paytm</span>
-    <span class="donate-app">🏦 Any UPI App</span>
+    <span class="donate-app">Google Pay</span>
+    <span class="donate-app">PhonePe</span>
+    <span class="donate-app">Paytm</span>
+    <span class="donate-app">Any UPI App</span>
   </div>
 
   <p class="donate-note">
@@ -429,7 +509,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <div class="footer-brand">
       <h3>Pupils & Peoples Foundation</h3>
       <p>An organisation rooted in service, devotion and compassion — working across education, nutrition, environment and spirituality.</p>
-      <p style="margin-top:14px;font-size:12px;">📍 Your Address, City — PIN<br>📞 +91 XXXXX XXXXX<br>✉️ pupilsandpeoples@gmail.com</p>
+      <!-- <p style="margin-top:14px;font-size:12px;">📍 Your Address, City — PIN<br>📞 +91 XXXXX XXXXX<br>✉️ pupilsandpeoples@gmail.com</p> -->
     </div>
     <div class="footer-links">
       <h4>Quick Links</h4>
@@ -453,7 +533,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2025 Pupils & Peoples Foundation. All rights reserved.</span>
+    <span>© 2026 Pupils & Peoples Foundation. All rights reserved.</span>
     <span><a href="admin.html" class="admin-link">Admin Login</a></span>
   </div>
 </footer>
