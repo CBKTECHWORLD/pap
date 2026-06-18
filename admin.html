@@ -600,6 +600,7 @@ tr:hover td{background:#fafaf9;}
         <select class="settings-input" id="inv-product-select" style="flex:2;"></select>
         <input class="settings-input" id="inv-qty" type="number" value="1" min="1" style="width:80px;">
         <button class="save-btn" onclick="addInvoiceItem()" style="margin:0;">+ Add</button>
+        <button class="save-btn" onclick="refreshInvoiceProducts()" style="margin:0;background:#475569;" title="Reload products from sheet">⟳</button>
       </div>
       <table style="width:100%;margin-top:14px;font-size:13px;" id="inv-items-table">
         <thead><tr style="background:var(--bg);"><th style="padding:6px;text-align:left;">Item</th><th style="padding:6px;">Qty</th><th style="padding:6px;text-align:right;">Price</th><th style="padding:6px;text-align:right;">Total</th><th></th></tr></thead>
@@ -1813,11 +1814,16 @@ function openInvoiceForm() {
   const sel = document.getElementById('inv-product-select');
   sel.innerHTML = '<option value="">Loading products...</option>';
   callSheet({ action: 'getProducts' }, function(res) {
+    console.log('getProducts response:', res);
     if (res && res.success) {
       productsCache = res.data || [];
+      if (!productsCache.length) {
+        console.warn('getProducts returned an empty array. If you have products in the sheet, your Apps Script deployment is likely outdated — redeploy as a NEW VERSION.');
+      }
       populateProductSelect();
     } else {
-      sel.innerHTML = '<option value="">Failed to load products</option>';
+      sel.innerHTML = '<option value="">Failed to load products — check console</option>';
+      showToast('❌ Could not load products. Open browser console (F12) for details.', 'red');
     }
   });
 }
@@ -1832,6 +1838,22 @@ function populateProductSelect() {
   sel.innerHTML = productsCache.map(function(p) {
     return '<option value="' + p['SKU'] + '">' + p['Name'] + ' — ₹' + p['Price'] + ' (Stock: ' + p['Stock Qty'] + ')</option>';
   }).join('');
+}
+
+function refreshInvoiceProducts() {
+  const sel = document.getElementById('inv-product-select');
+  sel.innerHTML = '<option value="">Refreshing...</option>';
+  callSheet({ action: 'getProducts' }, function(res) {
+    console.log('refreshInvoiceProducts response:', res);
+    if (res && res.success) {
+      productsCache = res.data || [];
+      populateProductSelect();
+      showToast(productsCache.length ? '✅ Loaded ' + productsCache.length + ' product(s)' : '⚠️ Sheet has 0 products', productsCache.length ? 'green' : 'red');
+    } else {
+      sel.innerHTML = '<option value="">Failed to load — check console</option>';
+      showToast('❌ Refresh failed. Check console for details.', 'red');
+    }
+  });
 }
 
 function addInvoiceItem() {
