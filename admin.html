@@ -1859,8 +1859,8 @@ function refreshInvoiceProducts() {
 function addInvoiceItem() {
   const sku = document.getElementById('inv-product-select').value;
   const qty = parseInt(document.getElementById('inv-qty').value) || 1;
-  const product = productsCache.find(function(p){ return p['SKU'] === sku; });
-  if (!product) { showToast('Add products first in the Products tab', 'red'); return; }
+  const product = productsCache.find(function(p){ return String(p['SKU']) === String(sku); });
+  if (!sku || !product) { showToast('Please select a product from the dropdown', 'red'); return; }
   invoiceItems.push({ sku: sku, name: product['Name'], price: parseFloat(product['Price']), qty: qty, tax: parseFloat(product['Tax%']||0) });
   renderInvoiceItems();
 }
