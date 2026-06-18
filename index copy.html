@@ -68,41 +68,10 @@ section{padding:80px 5%;}
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--saffron),var(--saffron-dark));transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
 .svc-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
 .svc-card:hover::before{transform:scaleX(1);}
-.svc-img{width:100%;height:150px;border-radius:10px;background:var(--saffron-light);overflow:hidden;margin-bottom:16px;}
-.svc-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.svc-img{width:100%;height:150px;border-radius:10px;background:var(--saffron-light);display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:16px;}
 .svc-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:var(--green-light);color:var(--green-dark);padding:3px 10px;border-radius:100px;margin-bottom:8px;}
 .svc-card h3{font-size:17px;font-weight:700;margin-bottom:7px;}
 .svc-card p{font-size:13px;color:var(--text-muted);line-height:1.6;}
-
-/* SDG */
-.sdg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px;max-width:900px;margin:0 auto;}
-.sdg-icon-box{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
-.sdg-placeholder{width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,var(--saffron),var(--green));display:flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:700;font-family:'Playfair Display',serif;}
-.sdg-icon-box span{font-size:12px;font-weight:600;color:var(--text-muted);}
-
-/* GALLERY */
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
-.gallery-item{border-radius:14px;overflow:hidden;aspect-ratio:1/1;position:relative;cursor:pointer;}
-.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
-.gallery-item:hover img{transform:scale(1.08);}
-.gallery-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:white;font-size:13px;font-weight:600;padding:24px 14px 12px;}
-
-/* YOUTUBE */
-.yt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
-.yt-card{background:white;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s;cursor:pointer;}
-.yt-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
-.yt-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;}
-.yt-thumb img{width:100%;height:100%;object-fit:cover;}
-.yt-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:transform 0.2s;}
-.yt-card:hover .yt-play{transform:translate(-50%,-50%) scale(1.1);}
-.yt-info{padding:16px 18px;}
-.yt-info h3{font-size:15px;font-weight:700;margin-bottom:4px;line-height:1.4;}
-.yt-info p{font-size:12px;color:var(--text-muted);}
-
-/* SOCIAL FOOTER */
-.social-row{display:flex;gap:12px;margin-top:14px;}
-.social-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:white;text-decoration:none;font-size:16px;transition:all 0.2s;}
-.social-icon:hover{background:var(--saffron);transform:translateY(-2px);}
 
 .about-strip{background:var(--green);color:white;padding:60px 5%;display:flex;align-items:center;gap:60px;flex-wrap:wrap;}
 .about-strip h2{color:white;margin-bottom:12px;font-size:30px;}
@@ -129,6 +98,21 @@ section{padding:80px 5%;}
 .testi-name{font-size:13px;font-weight:600;}
 .testi-loc{font-size:11px;color:var(--text-muted);}
 .stars{color:var(--saffron);font-size:12px;margin-bottom:10px;}
+
+.svc-img {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.svc-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
 /* FORMS */
 .forms-section{background:white;}
@@ -228,8 +212,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
   <ul class="nav-links">
     <li><a href="#services">Our Work</a></li>
     <li><a href="#team">Team</a></li>
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#videos">Videos</a></li>
+    <li><a href="#testimonials">Stories</a></li>
     <li><a href="#join">Join Us</a></li>
     <li><a href="#donate">Donate</a></li>
   </ul>
@@ -248,8 +231,8 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     </div>
     <div class="hero-stats">
       <div><div class="hero-stat-num">4,800+</div><div class="hero-stat-label">Lives Impacted</div></div>
-      <div><div class="hero-stat-num">320+</div><div class="hero-stat-label">Volunteers</div></div>
-      <div><div class="hero-stat-num">12</div><div class="hero-stat-label">Active Projects</div></div>
+      <div><div class="hero-stat-num">100+</div><div class="hero-stat-label">Volunteers</div></div>
+      <div><div class="hero-stat-num">5+</div><div class="hero-stat-label">Active Projects</div></div>
     </div>
   </div>
   <div class="hero-floats">
@@ -343,24 +326,6 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
 </div>
 </section>
 
-<!-- SDG GOALS -->
-<section style="background:white;padding:60px 5%;">
-  <div class="section-header">
-    <div class="section-label">Global Alignment</div>
-    <h2 class="section-title">UN Sustainable Development Goals</h2>
-    <p class="section-subtitle">Our work directly contributes to the following United Nations SDGs.</p>
-  </div>
-  <div class="sdg-grid">
-    <div class="sdg-icon-box"><div class="sdg-placeholder">1</div><span>No Poverty</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">2</div><span>Zero Hunger</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">3</div><span>Good Health</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">4</div><span>Quality Education</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">13</div><span>Climate Action</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">15</div><span>Life on Land</span></div>
-  </div>
-  <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:16px;">* Official SDG icons to be added — placeholders shown above.</p>
-</section>
-
 <!-- ABOUT -->
 <div class="about-strip">
   <div style="flex:1;min-width:280px;">
@@ -408,50 +373,6 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <div class="testi-card"><div class="stars">★★★★★</div><div class="testi-quote">"</div><p>The tree plantation drive in our school was so well organised. Children now take care of those trees every week. It teaches responsibility from a young age.</p><div class="testi-author"><div class="testi-av">AS</div><div><div class="testi-name">Asha Singh</div><div class="testi-loc">Principal — GVS School</div></div></div></div>
   </div>
 </section>
-
-<!-- GALLERY -->
-<!-- <section id="gallery" style="background:white;">
-  <div class="section-header">
-    <div class="section-label">Moments We Cherish</div>
-    <h2 class="section-title">Our Gallery</h2>
-    <p class="section-subtitle">Glimpses from our events, drives and community programs.</p>
-  </div>
-  <div class="gallery-grid">
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=500&q=80" alt="Education drive" loading="lazy"><div class="gallery-caption">Education Drive</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1547043198-58e3d80b03c8?w=500&q=80" alt="Tree plantation" loading="lazy"><div class="gallery-caption">Tree Plantation</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=500&q=80" alt="Food distribution" loading="lazy"><div class="gallery-caption">Food Distribution</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=500&q=80" alt="Temple seva" loading="lazy"><div class="gallery-caption">Temple Seva</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500&q=80" alt="Health camp" loading="lazy"><div class="gallery-caption">Health Camp</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=500&q=80" alt="Volunteers" loading="lazy"><div class="gallery-caption">Our Volunteers</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1556760544-74068565f05c?w=500&q=80" alt="Stationery drive" loading="lazy"><div class="gallery-caption">Stationery Drive</div></div>
-    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=500&q=80" alt="Community event" loading="lazy"><div class="gallery-caption">Community Event</div></div>
-  </div>
-  <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:18px;">* Sample images shown — replace with your own event photos.</p>
-</section> -->
-
-<!-- YOUTUBE VIDEOS -->
-<!-- <section id="videos" class="testi-bg">
-  <div class="section-header">
-    <div class="section-label">Watch Our Story</div>
-    <h2 class="section-title">Featured Videos</h2>
-    <p class="section-subtitle">Watch our impact in action through these videos from our YouTube channel.</p>
-  </div>
-  <div class="yt-grid">
-    <a class="yt-card" href="https://www.youtube.com/@YOUR_CHANNEL" target="_blank" style="text-decoration:none;color:inherit;">
-      <div class="yt-thumb"><img src="https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=500&q=80" alt="Video thumbnail"><div class="yt-play">▶</div></div>
-      <div class="yt-info"><h3>Our Annual Education Drive 2025</h3><p>Highlights from this year's stationery & tuition program</p></div>
-    </a>
-    <a class="yt-card" href="https://www.youtube.com/@YOUR_CHANNEL" target="_blank" style="text-decoration:none;color:inherit;">
-      <div class="yt-thumb"><img src="https://images.unsplash.com/photo-1542601906897-ecd58d1c6f98?w=500&q=80" alt="Video thumbnail"><div class="yt-play">▶</div></div>
-      <div class="yt-info"><h3>Tree Plantation Drive — Behind the Scenes</h3><p>How our volunteers planted 500 trees in one weekend</p></div>
-    </a>
-    <a class="yt-card" href="https://www.youtube.com/@YOUR_CHANNEL" target="_blank" style="text-decoration:none;color:inherit;">
-      <div class="yt-thumb"><img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=500&q=80" alt="Video thumbnail"><div class="yt-play">▶</div></div>
-      <div class="yt-info"><h3>Feeding the Needy — A Day in the Field</h3><p>Following our team during a weekly food distribution camp</p></div>
-    </a>
-  </div>
-  <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:18px;">* Replace YOUR_CHANNEL link and thumbnails with your actual YouTube videos.</p>
-</section> -->
 
 <!-- JOIN FORMS -->
 <section id="join" class="forms-section">
@@ -543,13 +464,12 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
       </div>
     </div>
     <div class="id-card-foot">
-      <div><div class="id-card-id">ID: PAP-VOL-YEAR-0000</div><div class="id-card-site">pupilsandpeoples.org</div></div>
+      <div><div class="id-card-id">ID: PNP-VOL-YEAR-0000</div><div class="id-card-site">pupilsandpeoples.org</div></div>
     </div>
   </div>
   <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:14px;">This is a sample preview. Your card will have your actual name, ID and details.</p>
 </section>
 
-<!-- DONATE UPI -->
 <!-- DONATE UPI -->
 <section id="donate" class="donate-section">
   <div class="section-label">Support Our Work</div>
@@ -571,8 +491,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     </div>
   </div> -->
 
-
- <div class="donate-apps">
+  <div class="donate-apps">
     <span class="donate-app">Google Pay</span>
     <span class="donate-app">PhonePe</span>
     <span class="donate-app">Paytm</span>
@@ -590,15 +509,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <div class="footer-brand">
       <h3>Pupils & Peoples Foundation</h3>
       <p>An organisation rooted in service, devotion and compassion — working across education, nutrition, environment and spirituality.</p>
-      <p style="margin-top:14px;font-size:12px;">📍 Your Address, City — PIN<br>📞 +91 XXXXX XXXXX<br>✉️ pupilsandpeoples@gmail.com</p>
-      <div class="social-row">
-        <a href="#" class="social-icon" title="Facebook">📘</a>
-        <a href="#" class="social-icon" title="Instagram">📷</a>
-        <a href="#" class="social-icon" title="YouTube">▶️</a>
-        <a href="#" class="social-icon" title="Twitter / X">🐦</a>
-        <a href="#" class="social-icon" title="WhatsApp">💬</a>
-      </div>
-      <p style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:8px;">* Social media links to be added.</p>
+      <!-- <p style="margin-top:14px;font-size:12px;">📍 Your Address, City — PIN<br>📞 +91 XXXXX XXXXX<br>✉️ pupilsandpeoples@gmail.com</p> -->
     </div>
     <div class="footer-links">
       <h4>Quick Links</h4>
