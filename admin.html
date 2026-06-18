@@ -197,7 +197,12 @@ tr:hover td{background:#fafaf9;}
       <div class="sidebar-item" data-page="donations" onclick="goPage('donations')"><span class="sidebar-icon">🧾</span> Donations / Receipts</div>
       <div class="sidebar-item" data-page="products" onclick="goPage('products')"><span class="sidebar-icon">📦</span> Products</div>
       <div class="sidebar-item" data-page="sales" onclick="goPage('sales')"><span class="sidebar-icon">🧮</span> Sales / Invoice</div>
-      <div class="sidebar-item" data-page="staff" onclick="goPage('staff')"><span class="sidebar-icon">👥</span> Staff</div>
+      <div class="sidebar-item" data-page="expenses" onclick="goPage('expenses')"><span class="sidebar-icon">💸</span> Expenses</div>
+      <div class="sidebar-item" data-page="purchases" onclick="goPage('purchases')"><span class="sidebar-icon">🛒</span> Purchases</div>
+      <div class="sidebar-item" data-page="staffhr" onclick="goPage('staffhr')"><span class="sidebar-icon">🪪</span> Staff Details (HR)</div>
+      <div class="sidebar-item" data-page="salary" onclick="goPage('salary')"><span class="sidebar-icon">💰</span> Salary</div>
+      <div class="sidebar-item" data-page="reimbursements" onclick="goPage('reimbursements')"><span class="sidebar-icon">🧾</span> Reimbursements <span class="sidebar-badge red" id="badge-reimburse">0</span></div>
+      <div class="sidebar-item" data-page="staff" onclick="goPage('staff')"><span class="sidebar-icon">👥</span> Staff Logins</div>
       <div class="sidebar-item" data-page="settings" onclick="goPage('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
     </nav>
 
@@ -212,6 +217,28 @@ tr:hover td{background:#fafaf9;}
           <div class="stat-card"><div class="stat-label">Pending Approval</div><div class="stat-num red" id="s-pending">0</div></div>
           <div class="stat-card"><div class="stat-label">Approved Total</div><div class="stat-num blue" id="s-approved">0</div></div>
         </div>
+
+        <h3 style="font-family:'Playfair Display',serif;font-size:17px;margin:24px 0 12px;" id="finance-overview-title">💰 Finance Overview</h3>
+        <div class="stats-row" id="finance-stats-row">
+          <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-num green" id="f-income">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Outgo</div><div class="stat-num red" id="f-outgo">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Net Balance</div><div class="stat-num blue" id="f-balance">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Active Staff</div><div class="stat-num orange" id="f-staffcount">0</div></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Donations Received</div><div class="stat-num green" id="f-donations">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Product Sales</div><div class="stat-num green" id="f-sales">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Expenses</div><div class="stat-num red" id="f-expenses">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Purchases</div><div class="stat-num red" id="f-purchases">₹0</div></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Salary Paid</div><div class="stat-num red" id="f-salary">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Reimbursed</div><div class="stat-num red" id="f-reimbursed">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Reimbursements</div><div class="stat-num orange" id="f-pending-reimburse">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Purchase Payments</div><div class="stat-num orange" id="f-pending-purchase">₹0</div></div>
+        </div>
+
+        <h3 style="font-family:'Playfair Display',serif;font-size:17px;margin:24px 0 12px;">Recent Volunteer / Member Activity</h3>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Name</th><th>Type</th><th>Assigned ID</th><th>Email</th><th>City</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
@@ -356,6 +383,94 @@ tr:hover td{background:#fafaf9;}
         </div>
       </div>
 
+      <!-- EXPENSES -->
+      <div class="page" id="page-expenses">
+        <div class="page-header">
+          <h2 class="page-title">Expenses</h2>
+          <button class="save-btn" onclick="openExpenseForm()">+ Add Expense</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Expenses</div><div class="stat-num red" id="exp-total">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-num orange" id="exp-month">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Vendor</th><th>Amount</th><th>Mode</th><th>Approved By</th><th>Actions</th></tr></thead>
+            <tbody id="expenses-tbody"><tr><td colspan="8" class="empty-state">No expenses recorded yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PURCHASES -->
+      <div class="page" id="page-purchases">
+        <div class="page-header">
+          <h2 class="page-title">Purchases</h2>
+          <button class="save-btn" onclick="openPurchaseForm()">+ Add Purchase</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Purchases</div><div class="stat-num red" id="pur-total">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Payment</div><div class="stat-num orange" id="pur-pending">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Item</th><th>Supplier</th><th>Qty</th><th>Amount</th><th>Invoice No</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="purchases-tbody"><tr><td colspan="9" class="empty-state">No purchases recorded yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STAFF HR DETAILS -->
+      <div class="page" id="page-staffhr">
+        <div class="page-header">
+          <h2 class="page-title">Staff Details (HR)</h2>
+          <button class="save-btn" onclick="openStaffHRForm()">+ Add Staff Member</button>
+        </div>
+        <div class="notice">🔒 Sensitive fields (Bank Account, Aadhar) are masked in this list view for security. Full details are only visible when editing.</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Emp ID</th><th>Name</th><th>Department</th><th>Type</th><th>Join Date</th><th>Monthly Salary</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="staffhr-tbody"><tr><td colspan="8" class="empty-state">No staff HR records yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SALARY -->
+      <div class="page" id="page-salary">
+        <div class="page-header">
+          <h2 class="page-title">Salary Payments</h2>
+          <button class="save-btn" onclick="openSalaryForm()">+ Record Salary Payment</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Salary Paid</div><div class="stat-num red" id="sal-total">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Records</div><div class="stat-num orange" id="sal-count">0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Month</th><th>Employee</th><th>Basic</th><th>Deductions</th><th>Net Paid</th><th>Payment Date</th><th>Mode</th><th>Actions</th></tr></thead>
+            <tbody id="salary-tbody"><tr><td colspan="8" class="empty-state">No salary records yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REIMBURSEMENTS -->
+      <div class="page" id="page-reimbursements">
+        <div class="page-header">
+          <h2 class="page-title">Reimbursements</h2>
+          <button class="save-btn" onclick="openReimburseForm()">+ Submit Reimbursement</button>
+        </div>
+        <div class="notice" id="reimburse-notice">ℹ️ Submit your own expense reimbursement requests here. Admin will review and mark them as Paid.</div>
+        <div class="stats-row" id="reimburse-stats">
+          <div class="stat-card"><div class="stat-label">Pending Requests</div><div class="stat-num orange" id="rb-pending">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Paid</div><div class="stat-num green" id="rb-paid">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Staff Name</th><th>Reason</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="reimburse-tbody"><tr><td colspan="6" class="empty-state">No reimbursement requests yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- SETTINGS -->
       <div class="page" id="page-settings">
         <div class="page-header"><h2 class="page-title">Settings</h2></div>
@@ -425,14 +540,17 @@ tr:hover td{background:#fafaf9;}
       </div>
     </div>
     <div class="modal-actions">
+      <button class="modal-approve" style="background:#2563EB" onclick="previewReceiptForm()">👁 Preview</button>
       <button class="modal-approve" onclick="generateReceipt()">Generate Receipt</button>
       <button class="modal-close-btn" onclick="closeReceiptForm()">Cancel</button>
     </div>
     <div id="receipt-result" style="display:none;margin-top:16px;">
       <div class="notice" style="background:var(--green-light);border-color:var(--green);color:var(--green-dark);">✅ Receipt generated: <strong id="receipt-result-no"></strong></div>
       <div class="modal-actions">
-        <button class="modal-approve" onclick="sendReceiptViaEmail()">📧 Send via Email</button>
-        <button class="modal-approve" style="background:#22C55E" onclick="sendReceiptViaWhatsApp()">💬 Send via WhatsApp</button>
+        <button class="modal-approve" style="background:#2563EB" onclick="viewGeneratedReceipt()">👁 View</button>
+        <button class="modal-approve" style="background:#7C3AED" onclick="downloadGeneratedReceipt()">⬇ Download</button>
+        <button class="modal-approve" onclick="sendReceiptViaEmail()">📧 Email</button>
+        <button class="modal-approve" style="background:#22C55E" onclick="sendReceiptViaWhatsApp()">💬 WhatsApp</button>
       </div>
     </div>
   </div>
@@ -444,7 +562,7 @@ tr:hover td{background:#fafaf9;}
     <button class="modal-close" onclick="closeProductForm()">✕</button>
     <h3 id="product-modal-title">📦 Add Product</h3>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">SKU / Code *</label><input class="settings-input" id="p-sku" placeholder="PAP-001"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">SKU / Code *</label><input class="settings-input" id="p-sku" placeholder="PNP-001"></div>
       <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Product Name *</label><input class="settings-input" id="p-name" placeholder="Handmade Diya Set"></div>
       <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Category</label><input class="settings-input" id="p-category" placeholder="Handicrafts"></div>
       <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Selling Price (₹) *</label><input class="settings-input" id="p-price" type="number" placeholder="150"></div>
@@ -494,14 +612,17 @@ tr:hover td{background:#fafaf9;}
       </div>
     </div>
     <div class="modal-actions">
+      <button class="modal-approve" style="background:#2563EB" onclick="previewInvoiceForm()">👁 Preview</button>
       <button class="modal-approve" onclick="saveInvoice()">Generate Invoice</button>
       <button class="modal-close-btn" onclick="closeInvoiceForm()">Cancel</button>
     </div>
     <div id="invoice-result" style="display:none;margin-top:16px;">
       <div class="notice" style="background:var(--green-light);border-color:var(--green);color:var(--green-dark);">✅ Invoice generated: <strong id="invoice-result-no"></strong></div>
       <div class="modal-actions">
-        <button class="modal-approve" onclick="sendInvoiceViaEmail()">📧 Send via Email</button>
-        <button class="modal-approve" style="background:#22C55E" onclick="sendInvoiceViaWhatsApp()">💬 Send via WhatsApp</button>
+        <button class="modal-approve" style="background:#2563EB" onclick="viewGeneratedInvoice()">👁 View</button>
+        <button class="modal-approve" style="background:#7C3AED" onclick="downloadGeneratedInvoice()">⬇ Download</button>
+        <button class="modal-approve" onclick="sendInvoiceViaEmail()">📧 Email</button>
+        <button class="modal-approve" style="background:#22C55E" onclick="sendInvoiceViaWhatsApp()">💬 WhatsApp</button>
       </div>
     </div>
   </div>
@@ -538,6 +659,154 @@ tr:hover td{background:#fafaf9;}
     <div class="modal-actions">
       <button class="modal-approve" onclick="saveStaffForm()">Save Staff Member</button>
       <button class="modal-close-btn" onclick="closeStaffForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPENSE FORM MODAL -->
+<div class="modal-overlay" id="expense-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeExpenseForm()">✕</button>
+    <h3>💸 Add Expense</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Date *</label><input class="settings-input" id="exp-date" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Category *</label>
+        <select class="settings-input" id="exp-category">
+          <option>Office Supplies</option><option>Utilities</option><option>Transport</option>
+          <option>Event Cost</option><option>Maintenance</option><option>Rent</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Description *</label><input class="settings-input" id="exp-description" placeholder="What was this expense for?"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="exp-amount" type="number" placeholder="500"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Vendor</label><input class="settings-input" id="exp-vendor" placeholder="Vendor / shop name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Mode</label>
+        <select class="settings-input" id="exp-mode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Card</option><option>Cheque</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Approved By</label><input class="settings-input" id="exp-approved" placeholder="Approver name"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Bill / Receipt URL</label><input class="settings-input" id="exp-bill" placeholder="https://drive.google.com/... (optional)"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveExpenseForm()">Save Expense</button>
+      <button class="modal-close-btn" onclick="closeExpenseForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PURCHASE FORM MODAL -->
+<div class="modal-overlay" id="purchase-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closePurchaseForm()">✕</button>
+    <h3>🛒 Add Purchase</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Date *</label><input class="settings-input" id="pur-date" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Item *</label><input class="settings-input" id="pur-item" placeholder="What was purchased"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Supplier *</label><input class="settings-input" id="pur-supplier" placeholder="Supplier name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Quantity</label><input class="settings-input" id="pur-qty" type="number" placeholder="10"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="pur-amount" type="number" placeholder="2000"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Invoice No</label><input class="settings-input" id="pur-invoice" placeholder="Supplier invoice number"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Status</label>
+        <select class="settings-input" id="pur-status"><option>Pending</option><option>Paid</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Due Date</label><input class="settings-input" id="pur-duedate" type="date"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Notes</label><input class="settings-input" id="pur-notes" placeholder="Optional notes"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="savePurchaseForm()">Save Purchase</button>
+      <button class="modal-close-btn" onclick="closePurchaseForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF HR FORM MODAL -->
+<div class="modal-overlay" id="staffhr-modal">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="closeStaffHRForm()">✕</button>
+    <h3 id="staffhr-modal-title">🪪 Add Staff Member (HR)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Employee ID *</label><input class="settings-input" id="hr-empid" placeholder="EMP-001"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Full Name *</label><input class="settings-input" id="hr-name" placeholder="Full name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Department</label><input class="settings-input" id="hr-dept" placeholder="e.g. Education, Operations"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Employment Type</label>
+        <select class="settings-input" id="hr-type"><option>Full-time</option><option>Part-time</option><option>Volunteer-Paid</option><option>Contract</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Join Date</label><input class="settings-input" id="hr-joindate" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Monthly Salary (₹)</label><input class="settings-input" id="hr-salary" type="number" placeholder="15000"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Phone</label><input class="settings-input" id="hr-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Email</label><input class="settings-input" id="hr-email" placeholder="staff@email.com"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Address</label><input class="settings-input" id="hr-address" placeholder="Full address"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">PAN</label><input class="settings-input" id="hr-pan" placeholder="ABCDE1234F"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Aadhar Number</label><input class="settings-input" id="hr-aadhar" placeholder="XXXX XXXX XXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Bank Name</label><input class="settings-input" id="hr-bankname" placeholder="Bank name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Account Number</label><input class="settings-input" id="hr-account" placeholder="Account number"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">IFSC Code</label><input class="settings-input" id="hr-ifsc" placeholder="IFSC code"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Status</label>
+        <select class="settings-input" id="hr-status"><option>Active</option><option>Inactive</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveStaffHRForm()">Save Staff Record</button>
+      <button class="modal-close-btn" onclick="closeStaffHRForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SALARY FORM MODAL -->
+<div class="modal-overlay" id="salary-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeSalaryForm()">✕</button>
+    <h3>💰 Record Salary Payment</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Month *</label><input class="settings-input" id="sal-month" type="month"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Employee *</label>
+        <select class="settings-input" id="sal-employee" onchange="onSalaryEmployeeChange()"></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Basic Salary (₹) *</label><input class="settings-input" id="sal-basic" type="number" placeholder="15000"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Deductions (₹)</label><input class="settings-input" id="sal-deductions" type="number" placeholder="0" value="0"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Date</label><input class="settings-input" id="sal-paydate" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Mode</label>
+        <select class="settings-input" id="sal-mode"><option>Bank Transfer</option><option>Cash</option><option>UPI</option><option>Cheque</option></select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Notes</label><input class="settings-input" id="sal-notes" placeholder="Optional notes"></div>
+    </div>
+    <div style="text-align:right;margin-top:10px;font-size:15px;font-weight:700;color:var(--saffron);">Net Pay: ₹<span id="sal-net-preview">0</span></div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveSalaryForm()">Save Salary Record</button>
+      <button class="modal-close-btn" onclick="closeSalaryForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REIMBURSEMENT FORM MODAL -->
+<div class="modal-overlay" id="reimburse-modal">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="closeReimburseForm()">✕</button>
+    <h3>🧾 Submit Reimbursement Request</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Your Name *</label><input class="settings-input" id="rb-name" placeholder="Full name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Date *</label><input class="settings-input" id="rb-date" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="rb-amount" type="number" placeholder="500"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Reason *</label><input class="settings-input" id="rb-reason" placeholder="e.g. Travel for event, Medical, Supplies"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Notes</label><input class="settings-input" id="rb-notes" placeholder="Optional notes"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveReimburseForm()">Submit Request</button>
+      <button class="modal-close-btn" onclick="closeReimburseForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENT PREVIEW MODAL (Receipt / Invoice viewer) -->
+<div class="modal-overlay" id="preview-modal" style="z-index:3000;">
+  <div class="modal" style="max-width:680px;padding:20px;">
+    <button class="modal-close" onclick="closePreviewModal()">✕</button>
+    <h3 id="preview-modal-title" style="margin-bottom:12px;">Document Preview</h3>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f0f0f0;">
+      <iframe id="preview-iframe" style="width:100%;height:520px;border:none;display:block;background:white;"></iframe>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" style="background:#7C3AED" onclick="downloadFromPreview()">⬇ Download as HTML</button>
+      <button class="modal-approve" style="background:#475569" onclick="printFromPreview()">🖨 Print / Save as PDF</button>
+      <button class="modal-close-btn" onclick="closePreviewModal()">Close</button>
     </div>
   </div>
 </div>
@@ -620,6 +889,11 @@ function applyRolePermissions(role) {
     donations: role === 'Admin',
     products: role === 'Admin',
     sales: role === 'Admin',
+    expenses: role === 'Admin',
+    purchases: role === 'Admin',
+    staffhr: role === 'Admin',
+    salary: role === 'Admin',
+    reimbursements: true, // all roles can view/submit their own
     staff: role === 'Admin',
     settings: role === 'Admin'
   };
@@ -627,6 +901,17 @@ function applyRolePermissions(role) {
     const el = document.querySelector('[data-page="' + key + '"]');
     if (el) el.style.display = allItems[key] ? 'flex' : 'none';
   });
+  // Finance overview on the dashboard is Admin-only
+  const financeTitle = document.getElementById('finance-overview-title');
+  const financeRows = document.querySelectorAll('#finance-stats-row, #finance-stats-row + .stats-row, #finance-stats-row + .stats-row + .stats-row');
+  const showFinance = role === 'Admin';
+  if (financeTitle) financeTitle.style.display = showFinance ? 'block' : 'none';
+  document.querySelectorAll('.stats-row').forEach(function(row) {
+    if (row.id === 'finance-stats-row' || row.querySelector('#f-donations') || row.querySelector('#f-salary')) {
+      row.style.display = showFinance ? 'grid' : 'none';
+    }
+  });
+  if (showFinance) loadFinanceSummary();
 }
 function doLogout() {
   document.getElementById('login-screen').style.display = 'flex';
@@ -970,7 +1255,7 @@ function setSearch(type, val) {
 function doApprove(rowId) {
   const row = allData.find(r => r._id === rowId);
   if (!row) return;
-  const prefix     = isVol(row) ? 'PAP-VOL' : 'PAP-MEM';
+  const prefix     = isVol(row) ? 'PNP-VOL' : 'PNP-MEM';
   const assignedId = prefix + '-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
   showToast('Approving...', '');
   callSheet({
@@ -1141,10 +1426,15 @@ function goPage(name) {
   if (item) item.classList.add('active');
 
   // Lazy-load data for new modules when their page is opened
-  if (name === 'donations') loadDonations();
-  if (name === 'products')  loadProducts();
-  if (name === 'sales')     loadSalesData();
-  if (name === 'staff')     loadStaffData();
+  if (name === 'donations')       loadDonations();
+  if (name === 'products')        loadProducts();
+  if (name === 'sales')           loadSalesData();
+  if (name === 'staff')           loadStaffData();
+  if (name === 'expenses')        loadExpenses();
+  if (name === 'purchases')       loadPurchases();
+  if (name === 'staffhr')         loadStaffHR();
+  if (name === 'salary')          loadSalaries();
+  if (name === 'reimbursements')  loadReimbursements();
 }
 
 // =============================================
@@ -1158,6 +1448,49 @@ function showToast(msg, type) {
   t.style.animation = 'slideUp 0.3s ease';
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.style.display = 'none', 4000);
+}
+
+// =============================================
+//  GENERIC DOCUMENT PREVIEW / DOWNLOAD / PRINT
+//  Used by both Receipts and Invoices
+// =============================================
+let currentPreviewHtml = '';
+let currentPreviewFilename = 'document.html';
+
+function showPreview(title, html) {
+  currentPreviewHtml = html;
+  document.getElementById('preview-modal-title').textContent = title;
+  const iframe = document.getElementById('preview-iframe');
+  iframe.srcdoc = html;
+  document.getElementById('preview-modal').classList.add('show');
+}
+function closePreviewModal() {
+  document.getElementById('preview-modal').classList.remove('show');
+}
+function downloadHtml(html, filename) {
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || 'document.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function downloadFromPreview() {
+  if (!currentPreviewHtml) return;
+  const name = (document.getElementById('preview-modal-title').textContent || 'document').replace(/[^a-z0-9]+/gi, '_');
+  downloadHtml(currentPreviewHtml, name + '.html');
+}
+function printFromPreview() {
+  const iframe = document.getElementById('preview-iframe');
+  try {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  } catch(e) {
+    showToast('Could not open print dialog', 'red');
+  }
 }
 
 // =============================================
@@ -1229,27 +1562,42 @@ function doDonorLookup() {
   });
 }
 
-function generateReceipt() {
-  const name = document.getElementById('r-name').value.trim();
-  const amount = document.getElementById('r-amount').value;
-  if (!name || !amount) { showToast('Donor name and amount are required', 'red'); return; }
-
-  const payload = {
-    action: 'saveDonation',
-    donorName: name,
+// Build payload object from the receipt form fields (without saving to sheet)
+function gatherReceiptFormData() {
+  return {
+    donorName: document.getElementById('r-name').value.trim(),
     phone: document.getElementById('r-phone').value,
     email: document.getElementById('r-email').value,
     address: document.getElementById('r-address').value,
     pan: document.getElementById('r-pan').value,
-    amount: amount,
+    amount: document.getElementById('r-amount').value,
     paymentMode: document.getElementById('r-mode').value,
     purpose: document.getElementById('r-purpose').value,
     receiptType: document.getElementById('r-type').value
   };
+}
+
+// Preview before saving — uses a temporary receipt number so nothing is written to the sheet yet
+function previewReceiptForm() {
+  const data = gatherReceiptFormData();
+  if (!data.donorName || !data.amount) { showToast('Donor name and amount are required', 'red'); return; }
+  const tempReceiptNo = (data.receiptType === '80G' ? 'PNP-80G-PREVIEW' : 'PNP-RCT-PREVIEW');
+  const payload = Object.assign({ action: 'previewReceipt', receiptNo: tempReceiptNo }, data);
+  callSheet(payload, function(res) {
+    if (res && res.success) showPreview('Receipt Preview', res.html);
+    else showToast('❌ Could not generate preview', 'red');
+  });
+}
+
+function generateReceipt() {
+  const data = gatherReceiptFormData();
+  if (!data.donorName || !data.amount) { showToast('Donor name and amount are required', 'red'); return; }
+
+  const payload = Object.assign({ action: 'saveDonation' }, data);
 
   callSheet(payload, function(res) {
     if (res && res.success) {
-      lastReceiptData = Object.assign({}, payload, { receiptNo: res.receiptNo });
+      lastReceiptData = Object.assign({}, data, { receiptNo: res.receiptNo });
       document.getElementById('receipt-result-no').textContent = res.receiptNo;
       document.getElementById('receipt-result').style.display = 'block';
       showToast('✅ Receipt ' + res.receiptNo + ' generated!', 'green');
@@ -1257,6 +1605,22 @@ function generateReceipt() {
     } else {
       showToast('❌ Failed to generate receipt', 'red');
     }
+  });
+}
+
+function viewGeneratedReceipt() {
+  if (!lastReceiptData) return;
+  callSheet(Object.assign({ action: 'previewReceipt' }, lastReceiptData), function(res) {
+    if (res && res.success) showPreview('Receipt — ' + lastReceiptData.receiptNo, res.html);
+    else showToast('❌ Could not load receipt', 'red');
+  });
+}
+
+function downloadGeneratedReceipt() {
+  if (!lastReceiptData) return;
+  callSheet(Object.assign({ action: 'previewReceipt' }, lastReceiptData), function(res) {
+    if (res && res.success) downloadHtml(res.html, lastReceiptData.receiptNo + '.html');
+    else showToast('❌ Could not download receipt', 'red');
   });
 }
 
@@ -1387,10 +1751,15 @@ function saveProductForm() {
 }
 
 function removeProduct(sku) {
-  if (!confirm('Delete this product permanently?')) return;
+  if (!confirm('Delete this product permanently?\n\nSKU: ' + sku)) return;
+  showToast('Deleting...', '');
   callSheet({ action: 'deleteProduct', sku: sku }, function(res) {
-    if (res && res.success) { showToast('Product deleted', 'green'); loadProducts(); }
-    else showToast('❌ Delete failed', 'red');
+    if (res && res.success) {
+      showToast('✅ Product deleted', 'green');
+      loadProducts();
+    } else {
+      showToast('❌ Delete failed: ' + (res && res.error ? res.error : 'Unknown error — check Apps Script is redeployed'), 'red');
+    }
   });
 }
 
@@ -1438,17 +1807,31 @@ function openInvoiceForm() {
   invoiceItems = [];
   ['inv-name','inv-phone','inv-email','inv-address'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('invoice-result').style.display = 'none';
-  populateProductSelect();
   renderInvoiceItems();
   document.getElementById('invoice-modal').classList.add('show');
+  // Always fetch the freshest product list right before showing the dropdown
+  const sel = document.getElementById('inv-product-select');
+  sel.innerHTML = '<option value="">Loading products...</option>';
+  callSheet({ action: 'getProducts' }, function(res) {
+    if (res && res.success) {
+      productsCache = res.data || [];
+      populateProductSelect();
+    } else {
+      sel.innerHTML = '<option value="">Failed to load products</option>';
+    }
+  });
 }
 function closeInvoiceForm() { document.getElementById('invoice-modal').classList.remove('show'); }
 
 function populateProductSelect() {
   const sel = document.getElementById('inv-product-select');
+  if (!productsCache.length) {
+    sel.innerHTML = '<option value="">No products yet — add one in the Products tab</option>';
+    return;
+  }
   sel.innerHTML = productsCache.map(function(p) {
-    return '<option value="' + p['SKU'] + '">' + p['Name'] + ' — ₹' + p['Price'] + '</option>';
-  }).join('') || '<option value="">No products available — add some first</option>';
+    return '<option value="' + p['SKU'] + '">' + p['Name'] + ' — ₹' + p['Price'] + ' (Stock: ' + p['Stock Qty'] + ')</option>';
+  }).join('');
 }
 
 function addInvoiceItem() {
@@ -1487,18 +1870,13 @@ function renderInvoiceItems() {
   document.getElementById('inv-total').textContent = (subtotal + tax).toFixed(2);
 }
 
-function saveInvoice() {
-  const name = document.getElementById('inv-name').value.trim();
-  if (!name) { showToast('Customer name required', 'red'); return; }
-  if (!invoiceItems.length) { showToast('Add at least one item', 'red'); return; }
-
+// Build payload from current invoice form + items (without saving)
+function gatherInvoiceFormData() {
   let subtotal = 0, tax = 0;
   invoiceItems.forEach(function(it) { const lt = it.qty*it.price; subtotal += lt; tax += lt*(it.tax/100); });
   const total = subtotal + tax;
-
-  const payload = {
-    action: 'saveSale',
-    customerName: name,
+  return {
+    customerName: document.getElementById('inv-name').value.trim(),
     phone: document.getElementById('inv-phone').value,
     email: document.getElementById('inv-email').value,
     address: document.getElementById('inv-address').value,
@@ -1506,10 +1884,29 @@ function saveInvoice() {
     subtotal: subtotal.toFixed(2), tax: tax.toFixed(2), total: total.toFixed(2),
     paymentMode: document.getElementById('inv-mode').value
   };
+}
+
+function previewInvoiceForm() {
+  const data = gatherInvoiceFormData();
+  if (!data.customerName) { showToast('Customer name required', 'red'); return; }
+  if (!invoiceItems.length) { showToast('Add at least one item', 'red'); return; }
+  const payload = Object.assign({ action: 'previewInvoice', invoiceNo: 'PNP-INV-PREVIEW' }, data);
+  callSheet(payload, function(res) {
+    if (res && res.success) showPreview('Invoice Preview', res.html);
+    else showToast('❌ Could not generate preview', 'red');
+  });
+}
+
+function saveInvoice() {
+  const data = gatherInvoiceFormData();
+  if (!data.customerName) { showToast('Customer name required', 'red'); return; }
+  if (!invoiceItems.length) { showToast('Add at least one item', 'red'); return; }
+
+  const payload = Object.assign({ action: 'saveSale' }, data);
 
   callSheet(payload, function(res) {
     if (res && res.success) {
-      lastInvoiceData = Object.assign({}, payload, { invoiceNo: res.invoiceNo });
+      lastInvoiceData = Object.assign({}, data, { invoiceNo: res.invoiceNo });
       document.getElementById('invoice-result-no').textContent = res.invoiceNo;
       document.getElementById('invoice-result').style.display = 'block';
       showToast('✅ Invoice ' + res.invoiceNo + ' generated!', 'green');
@@ -1518,6 +1915,22 @@ function saveInvoice() {
     } else {
       showToast('❌ Failed to generate invoice', 'red');
     }
+  });
+}
+
+function viewGeneratedInvoice() {
+  if (!lastInvoiceData) return;
+  callSheet(Object.assign({ action: 'previewInvoice' }, lastInvoiceData), function(res) {
+    if (res && res.success) showPreview('Invoice — ' + lastInvoiceData.invoiceNo, res.html);
+    else showToast('❌ Could not load invoice', 'red');
+  });
+}
+
+function downloadGeneratedInvoice() {
+  if (!lastInvoiceData) return;
+  callSheet(Object.assign({ action: 'previewInvoice' }, lastInvoiceData), function(res) {
+    if (res && res.success) downloadHtml(res.html, lastInvoiceData.invoiceNo + '.html');
+    else showToast('❌ Could not download invoice', 'red');
   });
 }
 
@@ -1639,6 +2052,489 @@ function removeStaff(username) {
   callSheet({ action: 'deleteStaff', username: username }, function(res) {
     if (res && res.success) { showToast('Staff removed', 'green'); loadStaffData(); }
     else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  FINANCE SUMMARY (Dashboard rollup)
+// =============================================
+function loadFinanceSummary() {
+  callSheet({ action: 'getFinanceSummary' }, function(res) {
+    if (!res || !res.success) return;
+    const s = res.summary;
+    const fmt = function(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
+    document.getElementById('f-income').textContent          = fmt(s.totalIncome);
+    document.getElementById('f-outgo').textContent            = fmt(s.totalOutgo);
+    document.getElementById('f-balance').textContent          = fmt(s.netBalance);
+    document.getElementById('f-staffcount').textContent       = s.staffCount;
+    document.getElementById('f-donations').textContent        = fmt(s.totalDonations);
+    document.getElementById('f-sales').textContent             = fmt(s.totalSales);
+    document.getElementById('f-expenses').textContent         = fmt(s.totalExpenses);
+    document.getElementById('f-purchases').textContent        = fmt(s.totalPurchases);
+    document.getElementById('f-salary').textContent           = fmt(s.totalSalaryPaid);
+    document.getElementById('f-reimbursed').textContent       = fmt(s.totalReimbursed);
+    document.getElementById('f-pending-reimburse').textContent= fmt(s.pendingReimburse);
+    document.getElementById('f-pending-purchase').textContent = fmt(s.pendingPurchases);
+    const balEl = document.getElementById('f-balance');
+    balEl.className = 'stat-num ' + (s.netBalance >= 0 ? 'green' : 'red');
+  });
+}
+
+// =============================================
+//  EXPENSES
+// =============================================
+let expensesCache = [];
+
+function loadExpenses() {
+  callSheet({ action: 'getExpenses' }, function(res) {
+    if (res && res.success) { expensesCache = res.data || []; renderExpensesTable(); }
+  });
+}
+
+function renderExpensesTable() {
+  const tbody = document.getElementById('expenses-tbody');
+  if (!expensesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No expenses recorded yet.</td></tr>';
+  } else {
+    tbody.innerHTML = expensesCache.slice().reverse().map(function(e) {
+      const idx = expensesCache.indexOf(e);
+      return '<tr>'
+        + '<td style="font-size:12px">' + (e['Date']||'') + '</td>'
+        + '<td><span class="badge" style="background:var(--saffron-light);color:var(--saffron-dark)">' + (e['Category']||'') + '</span></td>'
+        + '<td style="font-size:13px">' + (e['Description']||'') + '</td>'
+        + '<td style="font-size:12px">' + (e['Vendor']||'—') + '</td>'
+        + '<td style="font-weight:700;color:var(--red)">₹' + parseFloat(e['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (e['Payment Mode']||'') + '</td>'
+        + '<td style="font-size:12px">' + (e['Approved By']||'—') + '</td>'
+        + '<td><button class="act-btn act-reject" onclick="removeExpense(' + e._rowIndex + ')">🗑️</button>'
+        + (e['Bill URL'] ? ' <a class="act-btn act-view" href="' + e['Bill URL'] + '" target="_blank" style="text-decoration:none;">📎 Bill</a>' : '')
+        + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+  const total = expensesCache.reduce(function(s,e){return s+(parseFloat(e['Amount'])||0);},0);
+  const thisMonth = new Date().toISOString().slice(0,7);
+  const monthTotal = expensesCache.filter(function(e){ return (e['Date']||'').toString().slice(0,7) === thisMonth || (e['Timestamp']||'').toString().slice(0,7) === thisMonth; })
+    .reduce(function(s,e){return s+(parseFloat(e['Amount'])||0);},0);
+  document.getElementById('exp-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('exp-month').textContent = '₹' + monthTotal.toLocaleString('en-IN');
+}
+
+function openExpenseForm() {
+  ['exp-description','exp-amount','exp-vendor','exp-approved','exp-bill'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('exp-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('expense-modal').classList.add('show');
+}
+function closeExpenseForm() { document.getElementById('expense-modal').classList.remove('show'); }
+
+function saveExpenseForm() {
+  const desc = document.getElementById('exp-description').value.trim();
+  const amount = document.getElementById('exp-amount').value;
+  if (!desc || !amount) { showToast('Description and amount are required', 'red'); return; }
+  const payload = {
+    action: 'saveExpense',
+    date: document.getElementById('exp-date').value,
+    category: document.getElementById('exp-category').value,
+    description: desc,
+    amount: amount,
+    vendor: document.getElementById('exp-vendor').value,
+    paymentMode: document.getElementById('exp-mode').value,
+    billUrl: document.getElementById('exp-bill').value,
+    approvedBy: document.getElementById('exp-approved').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Expense saved!', 'green'); closeExpenseForm(); loadExpenses(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function removeExpense(rowIndex) {
+  if (!confirm('Delete this expense record?')) return;
+  callSheet({ action: 'deleteExpense', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) { showToast('Expense deleted', 'green'); loadExpenses(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  PURCHASES
+// =============================================
+let purchasesCache = [];
+
+function loadPurchases() {
+  callSheet({ action: 'getPurchases' }, function(res) {
+    if (res && res.success) { purchasesCache = res.data || []; renderPurchasesTable(); }
+  });
+}
+
+function renderPurchasesTable() {
+  const tbody = document.getElementById('purchases-tbody');
+  if (!purchasesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No purchases recorded yet.</td></tr>';
+  } else {
+    tbody.innerHTML = purchasesCache.slice().reverse().map(function(p) {
+      const isPending = p['Payment Status'] === 'Pending';
+      return '<tr>'
+        + '<td style="font-size:12px">' + (p['Date']||'') + '</td>'
+        + '<td><strong>' + (p['Item']||'') + '</strong></td>'
+        + '<td style="font-size:12px">' + (p['Supplier']||'') + '</td>'
+        + '<td>' + (p['Quantity']||'') + '</td>'
+        + '<td style="font-weight:700;color:var(--red)">₹' + parseFloat(p['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (p['Invoice No']||'—') + '</td>'
+        + '<td style="font-size:12px">' + (p['Due Date']||'—') + '</td>'
+        + '<td>' + (isPending ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Paid</span>') + '</td>'
+        + '<td><div class="action-btns">'
+        + (isPending ? '<button class="act-btn act-approve" onclick="markPurchasePaid(' + p._rowIndex + ')">✓ Mark Paid</button>' : '')
+        + '<button class="act-btn act-reject" onclick="removePurchase(' + p._rowIndex + ')">🗑️</button>'
+        + '</div></td>'
+        + '</tr>';
+    }).join('');
+  }
+  const total = purchasesCache.reduce(function(s,p){return s+(parseFloat(p['Amount'])||0);},0);
+  const pending = purchasesCache.filter(function(p){return p['Payment Status']==='Pending';}).reduce(function(s,p){return s+(parseFloat(p['Amount'])||0);},0);
+  document.getElementById('pur-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('pur-pending').textContent = '₹' + pending.toLocaleString('en-IN');
+}
+
+function openPurchaseForm() {
+  ['pur-item','pur-supplier','pur-qty','pur-amount','pur-invoice','pur-duedate','pur-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('pur-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('pur-status').value = 'Pending';
+  document.getElementById('purchase-modal').classList.add('show');
+}
+function closePurchaseForm() { document.getElementById('purchase-modal').classList.remove('show'); }
+
+function savePurchaseForm() {
+  const item = document.getElementById('pur-item').value.trim();
+  const supplier = document.getElementById('pur-supplier').value.trim();
+  const amount = document.getElementById('pur-amount').value;
+  if (!item || !supplier || !amount) { showToast('Item, supplier and amount are required', 'red'); return; }
+  const payload = {
+    action: 'savePurchase',
+    date: document.getElementById('pur-date').value,
+    item: item, supplier: supplier,
+    quantity: document.getElementById('pur-qty').value,
+    amount: amount,
+    invoiceNo: document.getElementById('pur-invoice').value,
+    paymentStatus: document.getElementById('pur-status').value,
+    dueDate: document.getElementById('pur-duedate').value,
+    notes: document.getElementById('pur-notes').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Purchase saved!', 'green'); closePurchaseForm(); loadPurchases(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function markPurchasePaid(rowIndex) {
+  callSheet({ action: 'updatePurchaseStatus', rowIndex: rowIndex, status: 'Paid' }, function(res) {
+    if (res && res.success) { showToast('Marked as Paid', 'green'); loadPurchases(); }
+    else showToast('❌ Update failed', 'red');
+  });
+}
+
+function removePurchase(rowIndex) {
+  if (!confirm('Delete this purchase record?')) return;
+  callSheet({ action: 'deletePurchase', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) { showToast('Purchase deleted', 'green'); loadPurchases(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  STAFF HR DETAILS
+// =============================================
+let staffHRCache = [];
+let editingHREmpId = null;
+
+function loadStaffHR() {
+  callSheet({ action: 'getStaffHR' }, function(res) {
+    if (res && res.success) { staffHRCache = res.data || []; renderStaffHRTable(); }
+  });
+}
+
+function renderStaffHRTable() {
+  const tbody = document.getElementById('staffhr-tbody');
+  if (!staffHRCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No staff HR records yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = staffHRCache.map(function(h) {
+    return '<tr>'
+      + '<td style="font-weight:700;color:var(--saffron);font-size:12px">' + h['Employee ID'] + '</td>'
+      + '<td><strong>' + h['Full Name'] + '</strong></td>'
+      + '<td style="font-size:12px">' + (h['Department']||'—') + '</td>'
+      + '<td style="font-size:12px">' + (h['Employment Type']||'—') + '</td>'
+      + '<td style="font-size:12px">' + (h['Join Date']||'—') + '</td>'
+      + '<td>₹' + parseFloat(h['Monthly Salary']||0).toLocaleString('en-IN') + '</td>'
+      + '<td>' + (h['Status']==='Inactive' ? '<span class="badge badge-rejected">Inactive</span>' : '<span class="badge badge-approved">Active</span>') + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="editStaffHR(\'' + h['Employee ID'] + '\')">✏️ Edit</button>'
+      + '<button class="act-btn act-reject" onclick="removeStaffHR(\'' + h['Employee ID'] + '\')">🗑️</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function openStaffHRForm() {
+  editingHREmpId = null;
+  document.getElementById('staffhr-modal-title').textContent = '🪪 Add Staff Member (HR)';
+  ['hr-empid','hr-name','hr-dept','hr-salary','hr-phone','hr-email','hr-address','hr-pan','hr-aadhar','hr-bankname','hr-account','hr-ifsc'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('hr-type').value = 'Full-time';
+  document.getElementById('hr-status').value = 'Active';
+  document.getElementById('staffhr-modal').classList.add('show');
+}
+function closeStaffHRForm() { document.getElementById('staffhr-modal').classList.remove('show'); }
+
+function editStaffHR(empId) {
+  // Note: list view has masked Account/Aadhar — fetch fresh unmasked values is not exposed by design,
+  // so editing preserves existing values unless the admin retypes them.
+  const h = staffHRCache.find(function(x){ return x['Employee ID'] === empId; });
+  if (!h) return;
+  editingHREmpId = empId;
+  document.getElementById('staffhr-modal-title').textContent = '✏️ Edit Staff Member';
+  document.getElementById('hr-empid').value = h['Employee ID'];
+  document.getElementById('hr-name').value = h['Full Name'];
+  document.getElementById('hr-dept').value = h['Department']||'';
+  document.getElementById('hr-type').value = h['Employment Type']||'Full-time';
+  document.getElementById('hr-joindate').value = h['Join Date']||'';
+  document.getElementById('hr-salary').value = h['Monthly Salary']||'';
+  document.getElementById('hr-phone').value = h['Phone']||'';
+  document.getElementById('hr-email').value = h['Email']||'';
+  document.getElementById('hr-address').value = h['Address']||'';
+  document.getElementById('hr-pan').value = h['PAN']||'';
+  document.getElementById('hr-aadhar').value = ''; // masked — retype if changing
+  document.getElementById('hr-bankname').value = h['Bank Name']||'';
+  document.getElementById('hr-account').value = ''; // masked — retype if changing
+  document.getElementById('hr-ifsc').value = h['IFSC Code']||'';
+  document.getElementById('hr-status').value = h['Status']||'Active';
+  document.getElementById('staffhr-modal').classList.add('show');
+}
+
+function saveStaffHRForm() {
+  const empId = document.getElementById('hr-empid').value.trim();
+  const name = document.getElementById('hr-name').value.trim();
+  if (!empId || !name) { showToast('Employee ID and Name are required', 'red'); return; }
+  const payload = {
+    action: 'saveStaffHR', employeeId: empId, fullName: name,
+    department: document.getElementById('hr-dept').value,
+    employmentType: document.getElementById('hr-type').value,
+    joinDate: document.getElementById('hr-joindate').value,
+    monthlySalary: document.getElementById('hr-salary').value,
+    phone: document.getElementById('hr-phone').value,
+    email: document.getElementById('hr-email').value,
+    address: document.getElementById('hr-address').value,
+    pan: document.getElementById('hr-pan').value,
+    aadhar: document.getElementById('hr-aadhar').value,
+    bankName: document.getElementById('hr-bankname').value,
+    accountNumber: document.getElementById('hr-account').value,
+    ifsc: document.getElementById('hr-ifsc').value,
+    status: document.getElementById('hr-status').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Staff record saved!', 'green'); closeStaffHRForm(); loadStaffHR(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function removeStaffHR(empId) {
+  if (!confirm('Delete this staff HR record?')) return;
+  callSheet({ action: 'deleteStaffHR', employeeId: empId }, function(res) {
+    if (res && res.success) { showToast('Staff record deleted', 'green'); loadStaffHR(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  SALARY
+// =============================================
+let salariesCache = [];
+
+function loadSalaries() {
+  callSheet({ action: 'getSalaries' }, function(res) {
+    if (res && res.success) { salariesCache = res.data || []; renderSalariesTable(); }
+  });
+  if (!staffHRCache.length) loadStaffHRForDropdown();
+}
+
+function loadStaffHRForDropdown() {
+  callSheet({ action: 'getStaffHR' }, function(res) {
+    if (res && res.success) staffHRCache = res.data || [];
+  });
+}
+
+function renderSalariesTable() {
+  const tbody = document.getElementById('salary-tbody');
+  if (!salariesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No salary records yet.</td></tr>';
+  } else {
+    tbody.innerHTML = salariesCache.slice().reverse().map(function(s) {
+      return '<tr>'
+        + '<td style="font-size:12px">' + (s['Month']||'') + '</td>'
+        + '<td><strong>' + (s['Employee Name']||'') + '</strong></td>'
+        + '<td>₹' + parseFloat(s['Basic Salary']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="color:var(--red)">₹' + parseFloat(s['Deductions']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-weight:700;color:var(--green)">₹' + parseFloat(s['Net Paid']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (s['Payment Date']||'') + '</td>'
+        + '<td style="font-size:12px">' + (s['Payment Mode']||'') + '</td>'
+        + '<td><button class="act-btn act-reject" onclick="removeSalary(' + s._rowIndex + ')">🗑️</button></td>'
+        + '</tr>';
+    }).join('');
+  }
+  const total = salariesCache.reduce(function(s,r){return s+(parseFloat(r['Net Paid'])||0);},0);
+  document.getElementById('sal-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('sal-count').textContent = salariesCache.length;
+}
+
+function openSalaryForm() {
+  document.getElementById('sal-month').value = new Date().toISOString().slice(0,7);
+  document.getElementById('sal-paydate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('sal-basic').value = '';
+  document.getElementById('sal-deductions').value = '0';
+  document.getElementById('sal-notes').value = '';
+  document.getElementById('sal-net-preview').textContent = '0';
+  const sel = document.getElementById('sal-employee');
+  sel.innerHTML = staffHRCache.length
+    ? staffHRCache.map(function(h){ return '<option value="' + h['Employee ID'] + '">' + h['Full Name'] + ' (' + h['Employee ID'] + ')</option>'; }).join('')
+    : '<option value="">No staff in HR records — add one first</option>';
+  onSalaryEmployeeChange();
+  document.getElementById('salary-modal').classList.add('show');
+  ['sal-basic','sal-deductions'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', updateSalaryPreview);
+  });
+}
+function closeSalaryForm() { document.getElementById('salary-modal').classList.remove('show'); }
+
+function onSalaryEmployeeChange() {
+  const empId = document.getElementById('sal-employee').value;
+  const h = staffHRCache.find(function(x){ return x['Employee ID'] === empId; });
+  if (h && h['Monthly Salary']) {
+    document.getElementById('sal-basic').value = h['Monthly Salary'];
+    updateSalaryPreview();
+  }
+}
+function updateSalaryPreview() {
+  const basic = parseFloat(document.getElementById('sal-basic').value) || 0;
+  const deduct = parseFloat(document.getElementById('sal-deductions').value) || 0;
+  document.getElementById('sal-net-preview').textContent = (basic - deduct).toLocaleString('en-IN');
+}
+
+function saveSalaryForm() {
+  const empId = document.getElementById('sal-employee').value;
+  const h = staffHRCache.find(function(x){ return x['Employee ID'] === empId; });
+  const basic = document.getElementById('sal-basic').value;
+  if (!empId || !basic) { showToast('Select employee and enter basic salary', 'red'); return; }
+  const payload = {
+    action: 'saveSalary',
+    month: document.getElementById('sal-month').value,
+    employeeId: empId,
+    employeeName: h ? h['Full Name'] : empId,
+    basicSalary: basic,
+    deductions: document.getElementById('sal-deductions').value,
+    paymentDate: document.getElementById('sal-paydate').value,
+    paymentMode: document.getElementById('sal-mode').value,
+    notes: document.getElementById('sal-notes').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Salary recorded! Net: ₹' + res.netPaid, 'green'); closeSalaryForm(); loadSalaries(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function removeSalary(rowIndex) {
+  if (!confirm('Delete this salary record?')) return;
+  callSheet({ action: 'deleteSalary', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) { showToast('Salary record deleted', 'green'); loadSalaries(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  REIMBURSEMENTS
+// =============================================
+let reimburseCache = [];
+
+function loadReimbursements() {
+  callSheet({ action: 'getReimbursements' }, function(res) {
+    if (res && res.success) {
+      reimburseCache = res.data || [];
+      renderReimburseTable();
+      const pendingCount = reimburseCache.filter(function(r){ return r['Status'] === 'Pending'; }).length;
+      const badge = document.getElementById('badge-reimburse');
+      if (badge) badge.textContent = pendingCount;
+    }
+  });
+  // Admin sees approve/reject controls; Staff/Coordinator only see their own + can submit
+  const notice = document.getElementById('reimburse-notice');
+  if (notice) {
+    notice.textContent = CURRENT_ROLE === 'Admin'
+      ? 'ℹ️ Review reimbursement requests submitted by staff and mark them Paid once processed.'
+      : 'ℹ️ Submit your own expense reimbursement requests here. Admin will review and mark them as Paid.';
+  }
+}
+
+function renderReimburseTable() {
+  const tbody = document.getElementById('reimburse-tbody');
+  // Admin sees all; non-admin sees only their own submissions
+  const visible = CURRENT_ROLE === 'Admin'
+    ? reimburseCache
+    : reimburseCache.filter(function(r){ return r['Staff Name'] === CURRENT_NAME; });
+
+  if (!visible.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No reimbursement requests yet.</td></tr>';
+  } else {
+    tbody.innerHTML = visible.slice().reverse().map(function(r) {
+      const isPending = r['Status'] === 'Pending';
+      return '<tr>'
+        + '<td style="font-size:12px">' + (r['Date']||'') + '</td>'
+        + '<td><strong>' + (r['Staff Name']||'') + '</strong></td>'
+        + '<td style="font-size:13px">' + (r['Reason']||'') + '</td>'
+        + '<td style="font-weight:700">₹' + parseFloat(r['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td>' + (isPending ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Paid</span>') + '</td>'
+        + '<td>' + (CURRENT_ROLE === 'Admin' && isPending ? '<button class="act-btn act-approve" onclick="markReimbursePaid(' + r._rowIndex + ')">✓ Mark Paid</button>' : '—') + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+  const pending = reimburseCache.filter(function(r){return r['Status']==='Pending';}).length;
+  const paidTotal = reimburseCache.filter(function(r){return r['Status']==='Paid';}).reduce(function(s,r){return s+(parseFloat(r['Amount'])||0);},0);
+  document.getElementById('rb-pending').textContent = pending;
+  document.getElementById('rb-paid').textContent = '₹' + paidTotal.toLocaleString('en-IN');
+}
+
+function openReimburseForm() {
+  document.getElementById('rb-name').value = CURRENT_NAME !== 'Administrator' ? CURRENT_NAME : '';
+  document.getElementById('rb-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('rb-amount').value = '';
+  document.getElementById('rb-reason').value = '';
+  document.getElementById('rb-notes').value = '';
+  document.getElementById('reimburse-modal').classList.add('show');
+}
+function closeReimburseForm() { document.getElementById('reimburse-modal').classList.remove('show'); }
+
+function saveReimburseForm() {
+  const name = document.getElementById('rb-name').value.trim();
+  const amount = document.getElementById('rb-amount').value;
+  const reason = document.getElementById('rb-reason').value.trim();
+  if (!name || !amount || !reason) { showToast('Name, amount and reason are required', 'red'); return; }
+  const payload = {
+    action: 'saveReimbursement',
+    staffName: name,
+    username: CURRENT_NAME,
+    date: document.getElementById('rb-date').value,
+    reason: reason,
+    amount: amount,
+    notes: document.getElementById('rb-notes').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Reimbursement request submitted!', 'green'); closeReimburseForm(); loadReimbursements(); }
+    else showToast('❌ Submission failed', 'red');
+  });
+}
+
+function markReimbursePaid(rowIndex) {
+  callSheet({ action: 'updateReimbursement', rowIndex: rowIndex, status: 'Paid' }, function(res) {
+    if (res && res.success) { showToast('Marked as Paid', 'green'); loadReimbursements(); }
+    else showToast('❌ Update failed', 'red');
   });
 }
 

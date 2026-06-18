@@ -11,9 +11,20 @@ const SHEET_DONATIONS = 'Donations';
 const SHEET_PRODUCTS  = 'Products';
 const SHEET_SALES     = 'Sales';
 const SHEET_STAFF     = 'Staff';
+const SHEET_EXPENSES  = 'Expenses';
+const SHEET_PURCHASES = 'Purchases';
+const SHEET_STAFF_HR  = 'StaffHR';
+const SHEET_SALARY    = 'Salary';
+const SHEET_REIMBURSE = 'Reimbursements';
 const ORG_NAME        = 'Pupils & Peoples Foundation';
 const ORG_WEBSITE     = 'pupilsandpeoples.org';
-const ORG_ADDRESS     = 'Your Address, City, State — PIN';
+const ORG_EMAIL       = 'pupilsandpeoples@gmail.com';
+const ORG_PHONE       = '+91 XXXXX XXXXX';
+const ORG_ADDRESS     = 'Your Head Office Address, City, State — PIN'; // main / registered address
+const ORG_BRANCHES     = [
+  // Add more branches as needed — shown at the bottom of every receipt
+  // { name: 'Branch Name', address: 'Branch address here' },
+];
 const ORG_PAN         = 'AAAAA0000A'; // PAN for 80G receipt
 const ORG_80G_NO      = 'AAAAA0000A/80G/000001/2025-26'; // 80G registration number — update once registered
 const ORG_LOGO_URL    = ''; // paste a public image URL for your logo, used in receipts
@@ -56,6 +67,7 @@ function doGet(e) {
 
       case 'lookupDonor':      result = lookupDonor(p.query); break;
       case 'saveDonation':     result = saveDonation(p); break;
+      case 'previewReceipt':   result = previewReceipt(p); break;
       case 'getDonations':     result = getDonations(); break;
       case 'sendReceipt':      result = sendReceiptEmail(p); break;
 
@@ -65,11 +77,35 @@ function doGet(e) {
 
       case 'getSales':         result = getSales(); break;
       case 'saveSale':         result = saveSale(p); break;
+      case 'previewInvoice':   result = previewInvoice(p); break;
       case 'sendInvoice':      result = sendInvoiceEmail(p); break;
 
       case 'getStaff':         result = getStaffList(); break;
       case 'saveStaff':        result = saveStaff(p); break;
       case 'deleteStaff':      result = deleteStaff(p.username); break;
+
+      case 'getExpenses':      result = getExpenses(); break;
+      case 'saveExpense':      result = saveExpense(p); break;
+      case 'deleteExpense':    result = deleteExpense(p.rowIndex); break;
+
+      case 'getPurchases':     result = getPurchases(); break;
+      case 'savePurchase':     result = savePurchase(p); break;
+      case 'deletePurchase':   result = deletePurchase(p.rowIndex); break;
+      case 'updatePurchaseStatus': result = updatePurchaseStatus(p.rowIndex, p.status); break;
+
+      case 'getStaffHR':       result = getStaffHR(); break;
+      case 'saveStaffHR':      result = saveStaffHR(p); break;
+      case 'deleteStaffHR':    result = deleteStaffHR(p.employeeId); break;
+
+      case 'getSalaries':      result = getSalaries(); break;
+      case 'saveSalary':       result = saveSalary(p); break;
+      case 'deleteSalary':     result = deleteSalary(p.rowIndex); break;
+
+      case 'getReimbursements':   result = getReimbursements(); break;
+      case 'saveReimbursement':   result = saveReimbursement(p); break;
+      case 'updateReimbursement': result = updateReimbursementStatus(p.rowIndex, p.status); break;
+
+      case 'getFinanceSummary':   result = getFinanceSummary(); break;
 
       default:
         if (p.name) {
@@ -137,6 +173,8 @@ function sheetToObjects(sheet) {
   const headers = values[0];
   const rows = [];
   for (let i = 1; i < values.length; i++) {
+    const isBlankRow = values[i].every(function(cell) { return cell === '' || cell === null || cell === undefined; });
+    if (isBlankRow) continue; // skip ghost/blank rows
     const row = {};
     headers.forEach(function(h, j) { row[h] = values[i][j] !== undefined ? values[i][j] : ''; });
     row._rowIndex = i + 1;
@@ -351,37 +389,63 @@ function sendReceiptEmail(p) {
   }
 }
 
+// Preview-only — builds the receipt HTML without saving or sending anything
+function previewReceipt(p) {
+  const isVol80G = p.receiptType === '80G';
+  const html = buildReceiptHtml(p, isVol80G);
+  return { success: true, html: html };
+}
+
 function buildReceiptHtml(p, is80g) {
   const logoBlock = ORG_LOGO_URL
-    ? '<img src="' + ORG_LOGO_URL + '" style="height:50px;" alt="logo">'
-    : '<div style="width:50px;height:50px;border-radius:50%;background:white;display:inline-block;text-align:center;line-height:50px;font-weight:700;color:#FF6B00;font-family:Georgia,serif;">P&P</div>';
+    ? '<img src="' + ORG_LOGO_URL + '" style="height:56px;display:block;" alt="logo">'
+    : '<div style="width:56px;height:56px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;color:#FF6B00;font-family:Georgia,serif;font-size:15px;">P&amp;P</div>';
 
   const amountWords = numberToWordsIndian(parseInt(p.amount) || 0);
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'});
+  const timeStr = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+
+  const branchesHtml = ORG_BRANCHES.length
+    ? '<div style="margin-top:10px;padding-top:10px;border-top:1px dashed #ddd;">'
+      + '<div style="font-size:10px;font-weight:700;color:#6B5C4E;letter-spacing:0.5px;margin-bottom:4px;">OTHER BRANCHES</div>'
+      + ORG_BRANCHES.map(function(b) {
+          return '<div style="font-size:10px;color:#999;line-height:1.5;">' + b.name + ' — ' + b.address + '</div>';
+        }).join('')
+      + '</div>'
+    : '';
 
   return '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#F7F5F2;font-family:Georgia,Arial,serif;">'
   + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F5F2;padding:30px 0;"><tr><td align="center">'
-  + '<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;">'
+  + '<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;">'
 
-  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:24px 32px;">'
+  // HEADER — logo + org name + reg address
+  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:22px 32px;">'
   + '<table width="100%"><tr>'
-  + '<td>' + logoBlock + '</td>'
-  + '<td align="right">'
-  + '<div style="color:white;font-size:18px;font-weight:700;font-family:Georgia,serif;">' + ORG_NAME + '</div>'
-  + '<div style="color:rgba(255,255,255,0.85);font-size:11px;margin-top:2px;">' + ORG_ADDRESS + '</div>'
-  + '</td></tr></table>'
+  + '<td style="width:60px;">' + logoBlock + '</td>'
+  + '<td style="padding-left:14px;">'
+  + '<div style="color:white;font-size:19px;font-weight:700;font-family:Georgia,serif;">' + ORG_NAME + '</div>'
+  + '<div style="color:rgba(255,255,255,0.9);font-size:11px;margin-top:3px;">' + ORG_ADDRESS + '</div>'
+  + '<div style="color:rgba(255,255,255,0.8);font-size:10px;margin-top:2px;">✉ ' + ORG_EMAIL + ' &nbsp;|&nbsp; ☎ ' + ORG_PHONE + ' &nbsp;|&nbsp; 🌐 ' + ORG_WEBSITE + '</div>'
+  + '</td>'
+  + '</tr></table>'
   + '</td></tr>'
 
-  + '<tr><td style="padding:24px 32px 8px;text-align:center;">'
-  + '<div style="font-size:20px;font-weight:700;letter-spacing:1px;color:#1A1612;">' + (is80g ? 'DONATION RECEIPT (Section 80G)' : 'DONATION RECEIPT') + '</div>'
-  + (is80g ? '<div style="font-size:11px;color:#6B5C4E;margin-top:4px;">80G Registration No: ' + ORG_80G_NO + ' &nbsp;|&nbsp; PAN: ' + ORG_PAN + '</div>' : '')
+  // RECEIPT TITLE BAR
+  + '<tr><td style="padding:20px 32px 6px;text-align:center;">'
+  + '<div style="font-size:21px;font-weight:700;letter-spacing:1px;color:#1A1612;">' + (is80g ? 'DONATION RECEIPT (Section 80G)' : 'DONATION RECEIPT') + '</div>'
+  + (is80g ? '<div style="font-size:11px;color:#6B5C4E;margin-top:5px;">80G Registration No: ' + ORG_80G_NO + ' &nbsp;|&nbsp; PAN: ' + ORG_PAN + '</div>' : '')
   + '</td></tr>'
 
-  + '<tr><td style="padding:16px 32px;">'
-  + '<table width="100%" style="font-size:13px;color:#1A1612;">'
-  + '<tr><td style="padding:4px 0;width:50%;"><strong>Receipt No:</strong> ' + p.receiptNo + '</td><td style="padding:4px 0;text-align:right;"><strong>Date:</strong> ' + dateStr + '</td></tr>'
-  + '</table>'
-  + '<hr style="border:none;border-top:1px solid #eee;margin:16px 0;">'
+  // RECEIPT NO + DATE BAR
+  + '<tr><td style="padding:14px 32px;">'
+  + '<table width="100%" style="background:#FFF0E0;border-radius:8px;"><tr>'
+  + '<td style="padding:10px 16px;font-size:13px;color:#1A1612;"><strong>Receipt No:</strong> <span style="color:#FF6B00;font-weight:700;">' + p.receiptNo + '</span></td>'
+  + '<td style="padding:10px 16px;text-align:right;font-size:13px;color:#1A1612;"><strong>Date:</strong> ' + dateStr + ' &nbsp;<span style="color:#999;font-size:11px;">(' + timeStr + ')</span></td>'
+  + '</tr></table>'
+  + '</td></tr>'
+
+  // DONOR DETAILS
+  + '<tr><td style="padding:6px 32px 16px;">'
   + '<table width="100%" style="font-size:13px;color:#1A1612;">'
   + '<tr><td style="padding:5px 0;color:#6B5C4E;width:160px;">Donor Name</td><td style="padding:5px 0;font-weight:600;">' + p.donorName + '</td></tr>'
   + (p.address ? '<tr><td style="padding:5px 0;color:#6B5C4E;">Address</td><td style="padding:5px 0;">' + p.address + '</td></tr>' : '')
@@ -394,7 +458,7 @@ function buildReceiptHtml(p, is80g) {
 
   + '<div style="background:#E8F5EE;border-radius:8px;padding:18px 20px;margin:20px 0;text-align:center;">'
   + '<div style="font-size:12px;color:#6B5C4E;margin-bottom:4px;">AMOUNT DONATED</div>'
-  + '<div style="font-size:30px;font-weight:700;color:#2D7A4F;font-family:Georgia,serif;">₹' + parseFloat(p.amount).toLocaleString('en-IN') + '</div>'
+  + '<div style="font-size:32px;font-weight:700;color:#2D7A4F;font-family:Georgia,serif;">₹' + parseFloat(p.amount).toLocaleString('en-IN') + '</div>'
   + '<div style="font-size:12px;color:#6B5C4E;margin-top:4px;">(Rupees ' + amountWords + ' Only)</div>'
   + '</div>'
 
@@ -402,9 +466,13 @@ function buildReceiptHtml(p, is80g) {
 
   + '</td></tr>'
 
-  + '<tr><td style="padding:20px 32px;text-align:center;border-top:1px solid #eee;">'
-  + '<p style="font-size:11px;color:#999;margin:0;">This is a computer-generated receipt and does not require a physical signature.</p>'
-  + '<p style="font-size:12px;color:#1A1612;margin:8px 0 0;font-weight:600;">' + ORG_NAME + ' &nbsp;|&nbsp; ' + ORG_WEBSITE + '</p>'
+  // FOOTER — signature line + branches
+  + '<tr><td style="padding:18px 32px 8px;border-top:1px solid #eee;">'
+  + '<table width="100%"><tr>'
+  + '<td style="font-size:11px;color:#999;">This is a computer-generated receipt and does not require a physical signature.</td>'
+  + '<td style="text-align:right;"><div style="font-size:12px;color:#1A1612;font-weight:700;">' + ORG_NAME + '</div><div style="font-size:10px;color:#999;margin-top:2px;">Authorised Signatory</div></td>'
+  + '</tr></table>'
+  + branchesHtml
   + '</td></tr>'
 
   + '</table></td></tr></table></body></html>';
@@ -536,6 +604,11 @@ function sendInvoiceEmail(p) {
   }
 }
 
+// Preview-only — builds the invoice HTML without saving or sending anything
+function previewInvoice(p) {
+  return { success: true, html: buildInvoiceHtml(p) };
+}
+
 function buildInvoiceHtml(p) {
   const items = JSON.parse(p.items || '[]');
   const itemRows = items.map(function(it) {
@@ -547,17 +620,25 @@ function buildInvoiceHtml(p) {
       + '</tr>';
   }).join('');
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'});
+  const logoBlock = ORG_LOGO_URL
+    ? '<img src="' + ORG_LOGO_URL + '" style="height:50px;display:block;" alt="logo">'
+    : '<div style="width:50px;height:50px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;color:#FF6B00;font-family:Georgia,serif;">P&amp;P</div>';
 
   return '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#F7F5F2;font-family:Arial,sans-serif;">'
   + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F5F2;padding:30px 0;"><tr><td align="center">'
-  + '<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;">'
-  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:24px 32px;">'
-  + '<span style="color:white;font-size:18px;font-weight:700;">' + ORG_NAME + '</span>'
-  + '<div style="color:rgba(255,255,255,0.85);font-size:11px;margin-top:4px;">' + ORG_ADDRESS + '</div>'
+  + '<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;">'
+  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:22px 32px;">'
+  + '<table width="100%"><tr>'
+  + '<td style="width:60px;">' + logoBlock + '</td>'
+  + '<td style="padding-left:14px;">'
+  + '<div style="color:white;font-size:18px;font-weight:700;">' + ORG_NAME + '</div>'
+  + '<div style="color:rgba(255,255,255,0.9);font-size:11px;margin-top:3px;">' + ORG_ADDRESS + '</div>'
+  + '<div style="color:rgba(255,255,255,0.8);font-size:10px;margin-top:2px;">✉ ' + ORG_EMAIL + ' &nbsp;|&nbsp; ☎ ' + ORG_PHONE + '</div>'
+  + '</td></tr></table>'
   + '</td></tr>'
   + '<tr><td style="padding:20px 32px;">'
   + '<table width="100%"><tr>'
-  + '<td><strong>Invoice No:</strong> ' + p.invoiceNo + '</td>'
+  + '<td><strong>Invoice No:</strong> <span style="color:#FF6B00;font-weight:700;">' + p.invoiceNo + '</span></td>'
   + '<td align="right"><strong>Date:</strong> ' + dateStr + '</td>'
   + '</tr></table>'
   + '<hr style="border:none;border-top:1px solid #eee;margin:14px 0;">'
@@ -651,5 +732,251 @@ function staffLogin(username, password) {
     role: match['Role'],
     fullName: match['Full Name'],
     category: match['Category'] || ''
+  };
+}
+
+// ============================================================
+//  EXPENSES
+// ============================================================
+const EXPENSE_HEADERS = ['Timestamp','Date','Category','Description','Amount','Vendor','Payment Mode','Bill URL','Approved By','Status'];
+
+function getExpenses() {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_EXPENSES);
+  if (!sheet) return { success: true, data: [] };
+  return { success: true, data: sheetToObjects(sheet) };
+}
+
+function saveExpense(p) {
+  const sheet = getOrCreateSheet(SHEET_EXPENSES, EXPENSE_HEADERS);
+  sheet.appendRow([
+    new Date().toISOString(), p.date || new Date().toLocaleDateString('en-IN'),
+    p.category||'', p.description||'', p.amount||0, p.vendor||'',
+    p.paymentMode||'Cash', p.billUrl||'', p.approvedBy||'', p.status||'Paid'
+  ]);
+  return { success: true };
+}
+
+function deleteExpense(rowIndex) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_EXPENSES);
+  if (!sheet) return { success: false, error: 'No expenses sheet' };
+  sheet.deleteRow(parseInt(rowIndex));
+  return { success: true };
+}
+
+// ============================================================
+//  PURCHASES
+// ============================================================
+const PURCHASE_HEADERS = ['Timestamp','Date','Item','Supplier','Quantity','Amount','Invoice No','Payment Status','Due Date','Notes'];
+
+function getPurchases() {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_PURCHASES);
+  if (!sheet) return { success: true, data: [] };
+  return { success: true, data: sheetToObjects(sheet) };
+}
+
+function savePurchase(p) {
+  const sheet = getOrCreateSheet(SHEET_PURCHASES, PURCHASE_HEADERS);
+  sheet.appendRow([
+    new Date().toISOString(), p.date || new Date().toLocaleDateString('en-IN'),
+    p.item||'', p.supplier||'', p.quantity||0, p.amount||0,
+    p.invoiceNo||'', p.paymentStatus||'Pending', p.dueDate||'', p.notes||''
+  ]);
+  return { success: true };
+}
+
+function deletePurchase(rowIndex) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_PURCHASES);
+  if (!sheet) return { success: false, error: 'No purchases sheet' };
+  sheet.deleteRow(parseInt(rowIndex));
+  return { success: true };
+}
+
+function updatePurchaseStatus(rowIndex, status) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_PURCHASES);
+  if (!sheet) return { success: false, error: 'No purchases sheet' };
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const statusCol = headers.indexOf('Payment Status') + 1;
+  if (statusCol) sheet.getRange(parseInt(rowIndex), statusCol).setValue(status);
+  return { success: true };
+}
+
+// ============================================================
+//  STAFF HR DETAILS (full HR record — separate from login Staff sheet)
+// ============================================================
+const STAFF_HR_HEADERS = ['Employee ID','Full Name','Department','Employment Type','Join Date','Phone','Email','Address','PAN','Aadhar','Bank Name','Account Number','IFSC Code','Monthly Salary','Status'];
+
+function getStaffHR() {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_STAFF_HR);
+  if (!sheet) return { success: true, data: [] };
+  const data = sheetToObjects(sheet);
+  // Mask sensitive fields in list view
+  const safe = data.map(function(d) {
+    const c = Object.assign({}, d);
+    if (c['Account Number']) c['Account Number'] = '••••' + String(c['Account Number']).slice(-4);
+    if (c['Aadhar']) c['Aadhar'] = '••••••••' + String(c['Aadhar']).slice(-4);
+    return c;
+  });
+  return { success: true, data: safe };
+}
+
+function saveStaffHR(p) {
+  const sheet = getOrCreateSheet(SHEET_STAFF_HR, STAFF_HR_HEADERS);
+  const values = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < values.length; i++) {
+    if (values[i][0] === p.employeeId) {
+      sheet.getRange(i+1, 1, 1, STAFF_HR_HEADERS.length).setValues([[
+        p.employeeId, p.fullName, p.department||'', p.employmentType||'Full-time',
+        p.joinDate||'', p.phone||'', p.email||'', p.address||'',
+        p.pan||'', p.aadhar||'', p.bankName||'', p.accountNumber||'', p.ifsc||'',
+        p.monthlySalary||0, p.status||'Active'
+      ]]);
+      return { success: true, updated: true };
+    }
+  }
+  sheet.appendRow([
+    p.employeeId, p.fullName, p.department||'', p.employmentType||'Full-time',
+    p.joinDate||'', p.phone||'', p.email||'', p.address||'',
+    p.pan||'', p.aadhar||'', p.bankName||'', p.accountNumber||'', p.ifsc||'',
+    p.monthlySalary||0, p.status||'Active'
+  ]);
+  return { success: true, created: true };
+}
+
+function deleteStaffHR(employeeId) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_STAFF_HR);
+  if (!sheet) return { success: false, error: 'No StaffHR sheet' };
+  const values = sheet.getDataRange().getValues();
+  for (let i = 1; i < values.length; i++) {
+    if (values[i][0] === employeeId) { sheet.deleteRow(i+1); return { success: true }; }
+  }
+  return { success: false, error: 'Employee ID not found' };
+}
+
+// ============================================================
+//  SALARY (monthly fixed salary records)
+// ============================================================
+const SALARY_HEADERS = ['Timestamp','Month','Employee ID','Employee Name','Basic Salary','Deductions','Net Paid','Payment Date','Payment Mode','Notes'];
+
+function getSalaries() {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_SALARY);
+  if (!sheet) return { success: true, data: [] };
+  return { success: true, data: sheetToObjects(sheet) };
+}
+
+function saveSalary(p) {
+  const sheet = getOrCreateSheet(SHEET_SALARY, SALARY_HEADERS);
+  const basic = parseFloat(p.basicSalary) || 0;
+  const deductions = parseFloat(p.deductions) || 0;
+  const net = basic - deductions;
+  sheet.appendRow([
+    new Date().toISOString(), p.month||'', p.employeeId||'', p.employeeName||'',
+    basic, deductions, net, p.paymentDate || new Date().toLocaleDateString('en-IN'),
+    p.paymentMode||'Bank Transfer', p.notes||''
+  ]);
+  return { success: true, netPaid: net };
+}
+
+function deleteSalary(rowIndex) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_SALARY);
+  if (!sheet) return { success: false, error: 'No salary sheet' };
+  sheet.deleteRow(parseInt(rowIndex));
+  return { success: true };
+}
+
+// ============================================================
+//  REIMBURSEMENTS (staff can self-submit from their login)
+// ============================================================
+const REIMBURSE_HEADERS = ['Timestamp','Staff Name','Username','Date','Reason','Amount','Status','Notes'];
+
+function getReimbursements() {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_REIMBURSE);
+  if (!sheet) return { success: true, data: [] };
+  return { success: true, data: sheetToObjects(sheet) };
+}
+
+function saveReimbursement(p) {
+  const sheet = getOrCreateSheet(SHEET_REIMBURSE, REIMBURSE_HEADERS);
+  sheet.appendRow([
+    new Date().toISOString(), p.staffName||'', p.username||'',
+    p.date || new Date().toLocaleDateString('en-IN'), p.reason||'',
+    p.amount||0, 'Pending', p.notes||''
+  ]);
+  return { success: true };
+}
+
+function updateReimbursementStatus(rowIndex, status) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_REIMBURSE);
+  if (!sheet) return { success: false, error: 'No reimbursements sheet' };
+  const headers   = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const statusCol = headers.indexOf('Status') + 1;
+  if (statusCol) sheet.getRange(parseInt(rowIndex), statusCol).setValue(status);
+  return { success: true };
+}
+
+// ============================================================
+//  FINANCE SUMMARY — rolled-up numbers for the admin dashboard
+// ============================================================
+function getFinanceSummary() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+  function sumColumn(sheetName, colName, filterFn) {
+    const sheet = ss.getSheetByName(sheetName);
+    if (!sheet) return 0;
+    const rows = sheetToObjects(sheet);
+    return rows
+      .filter(function(r) { return filterFn ? filterFn(r) : true; })
+      .reduce(function(sum, r) { return sum + (parseFloat(r[colName]) || 0); }, 0);
+  }
+  function countRows(sheetName, filterFn) {
+    const sheet = ss.getSheetByName(sheetName);
+    if (!sheet) return 0;
+    const rows = sheetToObjects(sheet);
+    return filterFn ? rows.filter(filterFn).length : rows.length;
+  }
+
+  const totalExpenses     = sumColumn(SHEET_EXPENSES, 'Amount');
+  const totalPurchases    = sumColumn(SHEET_PURCHASES, 'Amount');
+  const pendingPurchases  = sumColumn(SHEET_PURCHASES, 'Amount', function(r){ return r['Payment Status'] === 'Pending'; });
+  const totalSalaryPaid   = sumColumn(SHEET_SALARY, 'Net Paid');
+  const totalReimbursed   = sumColumn(SHEET_REIMBURSE, 'Amount', function(r){ return r['Status'] === 'Paid'; });
+  const pendingReimburse  = sumColumn(SHEET_REIMBURSE, 'Amount', function(r){ return r['Status'] === 'Pending'; });
+  const pendingReimburseCount = countRows(SHEET_REIMBURSE, function(r){ return r['Status'] === 'Pending'; });
+  const totalDonations    = sumColumn(SHEET_DONATIONS, 'Amount');
+  const totalSales        = sumColumn(SHEET_SALES, 'Total');
+  const staffCount        = countRows(SHEET_STAFF_HR, function(r){ return r['Status'] === 'Active'; });
+
+  const totalIncome  = totalDonations + totalSales;
+  const totalOutgo   = totalExpenses + totalPurchases + totalSalaryPaid + totalReimbursed;
+  const netBalance   = totalIncome - totalOutgo;
+
+  return {
+    success: true,
+    summary: {
+      totalExpenses: totalExpenses,
+      totalPurchases: totalPurchases,
+      pendingPurchases: pendingPurchases,
+      totalSalaryPaid: totalSalaryPaid,
+      totalReimbursed: totalReimbursed,
+      pendingReimburse: pendingReimburse,
+      pendingReimburseCount: pendingReimburseCount,
+      totalDonations: totalDonations,
+      totalSales: totalSales,
+      totalIncome: totalIncome,
+      totalOutgo: totalOutgo,
+      netBalance: netBalance,
+      staffCount: staffCount
+    }
   };
 }
