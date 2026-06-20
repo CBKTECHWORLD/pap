@@ -209,6 +209,39 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
 .admin-link{color:rgba(255,255,255,0.25);font-size:11px;text-decoration:none;transition:color 0.2s;}
 .admin-link:hover{color:rgba(255,255,255,0.6);}
 
+.nav-logo {
+    width: 70px;
+    height: 70px;
+}
+
+.nav-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.sdg-icon-box img {
+    width: 120px;
+    height: 120px;
+}
+
+
+@media (max-width: 768px) {
+    .sdg-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .sdg-icon-box img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .sdg-icon-box span {
+        font-size: 13px;
+    }
+}
+
 @media(max-width:768px){
   nav .nav-links{display:none;}
   .hero-floats{display:none;}
@@ -216,15 +249,19 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
   .form-grid{grid-template-columns:1fr;}
   .hero{padding:90px 5% 50px;}
 }
+
+
 </style>
 </head>
 <body>
 
 <nav>
   <a href="#" class="nav-brand">
-    <div class="nav-logo">P&P</div>
-    <span class="nav-brand-text">Pupils <span>&</span> Peoples</span>
-  </a>
+    <div class="nav-logo">
+        <img src="img/paplogo1.png" alt="Pupils and Peoples Foundation logo">
+    </div>
+    <span class="nav-brand-text">Pupils <span>and</span> Peoples</span>
+</a>
   <ul class="nav-links">
     <li><a href="#services">Our Work</a></li>
     <li><a href="#team">Team</a></li>
@@ -241,7 +278,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
   <div class="hero-content">
     <div class="hero-badge">🪔 Serving Humanity Since 2018</div>
     <h1>Nurturing Lives,<br><em>Building Futures</em></h1>
-    <p>We believe every child deserves an education and no one should sleep hungry. Pupils & Peoples Foundation is committed to holistic community upliftment through education, nutrition, environment and devotion.</p>
+    <p>We believe every child deserves an education and no one should sleep hungry. Pupils and Peoples Foundation is committed to holistic community upliftment through education, nutrition, environment and devotion.</p>
     <div class="hero-actions">
       <a href="#join" class="btn-primary">Become a Volunteer</a>
       <a href="#services" class="btn-secondary">Our Services</a>
@@ -351,13 +388,53 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <p class="section-subtitle">Our work directly contributes to the following United Nations SDGs.</p>
   </div>
   <div class="sdg-grid">
-    <div class="sdg-icon-box"><div class="sdg-placeholder">1</div><span>No Poverty</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">2</div><span>Zero Hunger</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">3</div><span>Good Health</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">4</div><span>Quality Education</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">13</div><span>Climate Action</span></div>
-    <div class="sdg-icon-box"><div class="sdg-placeholder">15</div><span>Life on Land</span></div>
-  </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-01.png" alt="SDG 1 - No Poverty">
+        <span>No Poverty</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-02.png" alt="SDG 2 - Zero Hunger">
+        <span>Zero Hunger</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-03.png" alt="SDG 3 - Good Health and Well-being">
+        <span>Good Health</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-04.png" alt="SDG 4 - Quality Education">
+        <span>Quality Education</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-06.png" alt="SDG 6 - Clean Water and Sanitation">
+        <span>Clean Water</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-07.png" alt="SDG 7 - Affordable and Clean Energy">
+        <span>Clean Energy</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-13.png" alt="SDG 13 - Climate Action">
+        <span>Climate Action</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-14.png" alt="SDG 14 - Life Below Water">
+        <span>Life Below Water</span>
+    </div>
+
+    <div class="sdg-icon-box">
+        <img src="img/E-WEB-Goal-15.png" alt="SDG 15 - Life on Land">
+        <span>Life on Land</span>
+    </div>
+
+</div>
   <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:16px;">* Official SDG icons to be added — placeholders shown above.</p>
 </section>
 
@@ -410,7 +487,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" style="background:white;">
+<!-- <section id="gallery" style="background:white;">
   <div class="section-header">
     <div class="section-label">Moments We Cherish</div>
     <h2 class="section-title">Our Gallery</h2>
@@ -427,10 +504,10 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     <div class="gallery-item"><img src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=500&q=80" alt="Community event" loading="lazy"><div class="gallery-caption">Community Event</div></div>
   </div>
   <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:18px;">* Sample images shown — replace with your own event photos.</p>
-</section>
+</section> -->
 
 <!-- YOUTUBE VIDEOS -->
-<section id="videos" class="testi-bg">
+<!-- <section id="videos" class="testi-bg">
   <div class="section-header">
     <div class="section-label">Watch Our Story</div>
     <h2 class="section-title">Featured Videos</h2>
@@ -451,7 +528,7 @@ footer{background:var(--text);color:rgba(255,255,255,0.65);padding:48px 5% 24px;
     </a>
   </div>
   <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:18px;">* Replace YOUR_CHANNEL link and thumbnails with your actual YouTube videos.</p>
-</section>
+</section> -->
 
 <!-- JOIN FORMS -->
 <section id="join" class="forms-section">

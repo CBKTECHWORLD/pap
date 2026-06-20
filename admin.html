@@ -4,27 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard — Pupils & Peoples Foundation</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --saffron:#FF6B00;--saffron-light:#FFF0E0;--saffron-dark:#C44D00;
-  --green:#2D7A4F;--green-light:#E8F5EE;--green-dark:#1A4D30;
+  --saffron:#B8862E;--saffron-light:#FBF3E3;--saffron-dark:#96701F;
+  --green:#0E4F4F;--green-light:#EAF4F3;--green-dark:#0A3D3D;
   --red:#DC2626;--red-light:#FEE2E2;--yellow:#FEF3C7;--yellow-text:#92400E;
-  --bg:#F7F5F2;--white:#FFFFFF;--text:#1A1612;--muted:#6B5C4E;
-  --border:rgba(0,0,0,0.09);--radius:12px;
+  --bg:#F7F5F2;--white:#FFFFFF;--text:#16201F;--muted:#5C6A68;
+  --border:rgba(14,79,79,0.12);--radius:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
 
 /* LOGIN */
 #login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--green-dark),var(--green));display:flex;align-items:center;justify-content:center;z-index:9999;}
 .login-box{background:white;border-radius:20px;padding:40px;width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
-.login-logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:white;font-size:16px;margin:0 auto 16px;}
-.login-box h2{font-family:'Playfair Display',serif;margin-bottom:6px;font-size:22px;}
+.login-logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-dark));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:white;font-size:16px;margin:0 auto 16px;overflow:hidden;}
+.login-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.login-box h2{font-family:'Fraunces',serif;margin-bottom:6px;font-size:22px;}
 .login-box p{font-size:13px;color:var(--muted);margin-bottom:28px;}
-.login-box input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px;background:var(--bg);}
+.login-box input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:12px;background:var(--bg);}
 .login-box input:focus{border-color:var(--saffron);}
-.login-btn{width:100%;background:var(--saffron);color:white;border:none;border-radius:100px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.login-btn{width:100%;background:var(--saffron);color:white;border:none;border-radius:100px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
 .login-btn:hover{background:var(--saffron-dark);}
 .login-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
 
@@ -32,13 +33,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 #app{display:none;min-height:100vh;flex-direction:column;}
 header{background:white;border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,0.04);}
 .header-brand{display:flex;align-items:center;gap:10px;}
-.header-logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:white;font-size:11px;}
+.header-logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:white;font-size:11px;}
 .header-title{font-weight:600;font-size:15px;}
 .header-sub{font-size:11px;color:var(--muted);}
 .header-right{display:flex;align-items:center;gap:12px;}
-.refresh-btn{background:var(--green-light);color:var(--green-dark);border:none;padding:7px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.refresh-btn{background:var(--green-light);color:var(--green-dark);border:none;padding:7px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;}
 .refresh-btn:hover{background:var(--green);color:white;}
-.logout-btn{background:none;border:1.5px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.logout-btn{background:none;border:1.5px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;}
 .logout-btn:hover{border-color:var(--red);color:var(--red);}
 
 .main{display:flex;flex:1;}
@@ -58,7 +59,7 @@ header{background:white;border-bottom:1px solid var(--border);padding:0 24px;hei
 .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:24px;}
 .stat-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
 .stat-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;}
-.stat-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;}
+.stat-num{font-family:'Fraunces',serif;font-size:30px;font-weight:700;}
 .stat-num.orange{color:var(--saffron);}
 .stat-num.green{color:var(--green);}
 .stat-num.red{color:var(--red);}
@@ -66,12 +67,12 @@ header{background:white;border-bottom:1px solid var(--border);padding:0 24px;hei
 
 /* PAGE HEADER */
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
-.page-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
+.page-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .filter-tabs{display:flex;gap:6px;}
-.f-tab{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.f-tab{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all 0.2s;font-family:'Inter',sans-serif;}
 .f-tab.active{background:var(--saffron);border-color:var(--saffron);color:white;}
-.search-box{padding:8px 14px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;width:200px;background:white;}
+.search-box{padding:8px 14px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:200px;background:white;}
 .search-box:focus{border-color:var(--saffron);}
 
 /* TABLE */
@@ -87,7 +88,7 @@ tr:hover td{background:#fafaf9;}
 .badge-approved{background:var(--green-light);color:var(--green-dark);}
 .badge-rejected{background:var(--red-light);color:var(--red);}
 .action-btns{display:flex;gap:5px;flex-wrap:wrap;}
-.act-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;}
+.act-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all 0.2s;white-space:nowrap;}
 .act-approve{background:var(--green-light);color:var(--green-dark);}
 .act-approve:hover{background:var(--green);color:white;}
 .act-reject{background:var(--red-light);color:var(--red);}
@@ -108,20 +109,20 @@ tr:hover td{background:#fafaf9;}
 .modal-overlay.show{display:flex;}
 .modal{background:white;border-radius:20px;padding:28px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
 .modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);}
-.modal h3{font-family:'Playfair Display',serif;font-size:19px;margin-bottom:16px;}
+.modal h3{font-family:'Fraunces',serif;font-size:19px;margin-bottom:16px;}
 .detail-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
 .detail-row:last-child{border-bottom:none;}
 .detail-label{color:var(--muted);font-weight:600;flex-shrink:0;margin-right:12px;}
 .detail-value{color:var(--text);font-weight:500;text-align:right;}
 .modal-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
-.modal-approve{flex:1;min-width:120px;background:var(--green);color:white;border:none;border-radius:100px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.modal-approve{flex:1;min-width:120px;background:var(--green);color:white;border:none;border-radius:100px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
 .modal-approve:hover{background:var(--green-dark);}
-.modal-reject{flex:1;min-width:100px;background:var(--red-light);color:var(--red);border:1.5px solid var(--red);border-radius:100px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.modal-close-btn{flex:1;min-width:80px;background:var(--bg);color:var(--muted);border:1.5px solid var(--border);border-radius:100px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.modal-reject{flex:1;min-width:100px;background:var(--red-light);color:var(--red);border:1.5px solid var(--red);border-radius:100px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.modal-close-btn{flex:1;min-width:80px;background:var(--bg);color:var(--muted);border:1.5px solid var(--border);border-radius:100px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
 
 /* ID CARD IN MODAL */
 .id-preview{border:2px solid var(--saffron);border-radius:14px;overflow:hidden;margin-top:16px;}
-.id-prev-head{background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));padding:12px 16px;color:white;font-size:13px;font-weight:700;font-family:'Playfair Display',serif;}
+.id-prev-head{background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));padding:12px 16px;color:white;font-size:13px;font-weight:700;font-family:'Fraunces',serif;}
 .id-prev-body{padding:14px 16px;font-size:12px;background:white;}
 .id-prev-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--border);}
 .id-prev-row:last-child{border-bottom:none;}
@@ -138,9 +139,9 @@ tr:hover td{background:#fafaf9;}
 .settings-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;}
 .settings-card h3{font-size:15px;font-weight:600;margin-bottom:4px;}
 .settings-card p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
-.settings-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg);}
+.settings-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:var(--bg);}
 .settings-input:focus{border-color:var(--saffron);}
-.save-btn{background:var(--saffron);color:white;border:none;border-radius:100px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:10px;transition:background 0.2s;}
+.save-btn{background:var(--saffron);color:white;border:none;border-radius:100px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px;transition:background 0.2s;}
 .save-btn:hover{background:var(--saffron-dark);}
 .save-btn.green{background:var(--green);}
 .save-btn.green:hover{background:var(--green-dark);}
@@ -159,12 +160,23 @@ tr:hover td{background:#fafaf9;}
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">P&P</div>
-    <h2>Admin Login</h2>
+    <div class="login-logo"><img src="logo.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
+    <h2>Welcome Back</h2>
     <p>Pupils & Peoples Foundation<br>Admin Dashboard</p>
-    <input type="text" id="login-user" placeholder="Username" autocomplete="off">
-    <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">Login →</button>
+
+    <label style="display:block;text-align:left;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">I am logging in as</label>
+    <select id="login-role" onchange="onLoginRoleChange()" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;background:var(--bg);color:var(--text);">
+      <option value="">Select your role…</option>
+      <option value="Admin">Admin</option>
+      <option value="Coordinator">Coordinator</option>
+      <option value="Staff">Staff</option>
+    </select>
+
+    <div id="login-credentials" style="display:none;">
+      <input type="text" id="login-user" placeholder="Username" autocomplete="off">
+      <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="login-btn" onclick="doLogin()">Login →</button>
+    </div>
     <div class="login-err" id="login-err">❌ Invalid username or password</div>
   </div>
 </div>
@@ -218,7 +230,7 @@ tr:hover td{background:#fafaf9;}
           <div class="stat-card"><div class="stat-label">Approved Total</div><div class="stat-num blue" id="s-approved">0</div></div>
         </div>
 
-        <h3 style="font-family:'Playfair Display',serif;font-size:17px;margin:24px 0 12px;" id="finance-overview-title">💰 Finance Overview</h3>
+        <h3 style="font-family:'Fraunces',serif;font-size:17px;margin:24px 0 12px;" id="finance-overview-title">💰 Finance Overview</h3>
         <div class="stats-row" id="finance-stats-row">
           <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-num green" id="f-income">₹0</div></div>
           <div class="stat-card"><div class="stat-label">Total Outgo</div><div class="stat-num red" id="f-outgo">₹0</div></div>
@@ -238,7 +250,7 @@ tr:hover td{background:#fafaf9;}
           <div class="stat-card"><div class="stat-label">Pending Purchase Payments</div><div class="stat-num orange" id="f-pending-purchase">₹0</div></div>
         </div>
 
-        <h3 style="font-family:'Playfair Display',serif;font-size:17px;margin:24px 0 12px;">Recent Volunteer / Member Activity</h3>
+        <h3 style="font-family:'Fraunces',serif;font-size:17px;margin:24px 0 12px;">Recent Volunteer / Member Activity</h3>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Name</th><th>Type</th><th>Assigned ID</th><th>Email</th><th>City</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
@@ -562,7 +574,7 @@ tr:hover td{background:#fafaf9;}
     <button class="modal-close" onclick="closeProductForm()">✕</button>
     <h3 id="product-modal-title">📦 Add Product</h3>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">SKU / Code *</label><input class="settings-input" id="p-sku" placeholder="PNP-001"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">SKU / Code *</label><input class="settings-input" id="p-sku" placeholder="PAP-001"></div>
       <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Product Name *</label><input class="settings-input" id="p-name" placeholder="Handmade Diya Set"></div>
       <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Category</label><input class="settings-input" id="p-category" placeholder="Handicrafts"></div>
       <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Selling Price (₹) *</label><input class="settings-input" id="p-price" type="number" placeholder="150"></div>
@@ -830,36 +842,56 @@ const state = {
 // =============================================
 //  AUTH
 // =============================================
+// Reveal username/password fields once a role is chosen
+function onLoginRoleChange() {
+  const role = document.getElementById('login-role').value;
+  const credBlock = document.getElementById('login-credentials');
+  if (role) {
+    credBlock.style.display = 'block';
+    document.getElementById('login-user').focus();
+  } else {
+    credBlock.style.display = 'none';
+  }
+  document.getElementById('login-err').style.display = 'none';
+}
+
 function doLogin() {
+  const selectedRole = document.getElementById('login-role').value;
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
+  if (!selectedRole) { showLoginError('Please select your role first'); return; }
   if (!u || !p) return;
 
   // Try server-side login first (covers Admin, Staff, Coordinator from sheet)
   SHEET_URL = localStorage.getItem('sheetUrl') || '';
   if (!SHEET_URL) {
     // No URL set yet — fall back to built-in admin only
-    if (u === 'admin' && p === (localStorage.getItem('adminPass') || DEFAULT_PASS)) {
+    if (selectedRole === 'Admin' && u === 'admin' && p === (localStorage.getItem('adminPass') || DEFAULT_PASS)) {
       enterApp('Admin', 'Administrator', '');
     } else {
-      showLoginError();
+      showLoginError(selectedRole !== 'Admin' ? 'No Apps Script URL configured yet — only Admin can log in until Settings → Sheet URL is set' : 'Invalid username or password');
     }
     return;
   }
 
   callSheet({ action: 'login', username: u, password: p }, function(res) {
     if (res && res.success) {
+      if (res.role !== selectedRole) {
+        showLoginError('These credentials belong to a ' + res.role + ' account, not ' + selectedRole + '. Select the correct role.');
+        return;
+      }
       enterApp(res.role, res.fullName, res.category || '');
     } else {
-      showLoginError();
+      showLoginError('Invalid username or password');
     }
   });
 }
 
-function showLoginError() {
+function showLoginError(msg) {
   const err = document.getElementById('login-err');
+  err.textContent = '❌ ' + (msg || 'Invalid username or password');
   err.style.display = 'block';
-  setTimeout(() => err.style.display = 'none', 3000);
+  setTimeout(() => err.style.display = 'none', 4000);
 }
 
 let CURRENT_ROLE = 'Admin';
@@ -918,6 +950,9 @@ function doLogout() {
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-pass').value = '';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-role').value = '';
+  document.getElementById('login-credentials').style.display = 'none';
 }
 function changePass() {
   const np = document.getElementById('new-pass').value;
@@ -1256,7 +1291,7 @@ function setSearch(type, val) {
 function doApprove(rowId) {
   const row = allData.find(r => r._id === rowId);
   if (!row) return;
-  const prefix     = isVol(row) ? 'PNP-VOL' : 'PNP-MEM';
+  const prefix     = isVol(row) ? 'PAP-VOL' : 'PAP-MEM';
   const assignedId = prefix + '-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
   showToast('Approving...', '');
   callSheet({
@@ -1582,7 +1617,7 @@ function gatherReceiptFormData() {
 function previewReceiptForm() {
   const data = gatherReceiptFormData();
   if (!data.donorName || !data.amount) { showToast('Donor name and amount are required', 'red'); return; }
-  const tempReceiptNo = (data.receiptType === '80G' ? 'PNP-80G-PREVIEW' : 'PNP-RCT-PREVIEW');
+  const tempReceiptNo = (data.receiptType === '80G' ? 'PAP-80G-PREVIEW' : 'PAP-RCT-PREVIEW');
   const payload = Object.assign({ action: 'previewReceipt', receiptNo: tempReceiptNo }, data);
   callSheet(payload, function(res) {
     if (res && res.success) showPreview('Receipt Preview', res.html);
@@ -1912,7 +1947,7 @@ function previewInvoiceForm() {
   const data = gatherInvoiceFormData();
   if (!data.customerName) { showToast('Customer name required', 'red'); return; }
   if (!invoiceItems.length) { showToast('Add at least one item', 'red'); return; }
-  const payload = Object.assign({ action: 'previewInvoice', invoiceNo: 'PNP-INV-PREVIEW' }, data);
+  const payload = Object.assign({ action: 'previewInvoice', invoiceNo: 'PAP-INV-PREVIEW' }, data);
   callSheet(payload, function(res) {
     if (res && res.success) showPreview('Invoice Preview', res.html);
     else showToast('❌ Could not generate preview', 'red');
