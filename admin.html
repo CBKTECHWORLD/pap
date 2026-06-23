@@ -130,14 +130,16 @@ tr:hover td{background:#fafaf9;}
 
 @media(max-width:768px){
 
+    /* ── MENU TOGGLE ── */
     .menu-toggle{
         display:block;
     }
 
+    /* ── SIDEBAR ── */
     .sidebar{
-        display:block;          /* keep it in DOM so JS can work */
+        display:block;
         position:fixed;
-        left:-260px;            /* hidden off-screen by default */
+        left:-260px;
         top:0;
         width:250px;
         height:100vh;
@@ -147,17 +149,127 @@ tr:hover td{background:#fafaf9;}
         box-shadow:0 0 20px rgba(0,0,0,0.15);
         overflow-y:auto;
     }
-
     .sidebar.show{
-        left:0;                 /* slide in */
+        left:0;
     }
-
     .sidebar-close{
         display:block;
     }
 
+    /* ── HEADER: compact on mobile ── */
+    header{
+        height:auto;
+        padding:8px 12px;
+        gap:8px;
+        flex-wrap:nowrap;
+    }
+    .header-brand{
+        gap:6px;
+        flex:1;
+        min-width:0;          /* allow text to truncate */
+    }
+    .header-title{
+        font-size:13px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+    .header-sub{
+        display:none;         /* hide subtitle on mobile */
+    }
+
+    /* ── LOGO: constrain the nav-logo image ── */
+    .nav-logo img{
+        width:32px !important;
+        height:32px !important;
+        border-radius:50%;
+        object-fit:cover;
+    }
+
+    /* ── HEADER RIGHT: hide less-important items ── */
+    .header-right{
+        gap:6px;
+        flex-shrink:0;
+    }
+    #last-sync{
+        display:none;         /* hide "Synced X:XX pm" on mobile */
+    }
+    #header-role-name{
+        font-size:11px;
+        padding:4px 8px;
+        max-width:90px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .refresh-btn{
+        padding:6px 10px;
+        font-size:12px;
+    }
+    .logout-btn{
+        padding:6px 10px;
+        font-size:12px;
+    }
+
+    /* ── CONTENT ── */
     .content{
-        padding:16px;
+        padding:12px;
+    }
+
+    /* ── MODALS: full screen on mobile ── */
+    .modal-overlay{
+        padding:0;
+        align-items:flex-end;  /* sheet slides up from bottom */
+    }
+    .modal{
+        border-radius:20px 20px 0 0;
+        max-height:92vh;
+        width:100%;
+        max-width:100% !important;
+        padding:20px 16px;
+    }
+
+    /* ── ALL FORM GRIDS: single column on mobile ── */
+    .modal [style*="grid-template-columns"],
+    .modal div[style*="grid-template-columns"]{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:10px !important;
+    }
+    /* Settings-input full width already, but ensure no overflow */
+    .settings-input{
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    /* ── STATS CARDS: 2 per row on mobile ── */
+    .stats-row{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+    .stat-num{
+        font-size:22px;
+    }
+
+    /* ── FILTER TABS: wrap nicely ── */
+    .controls{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    .filter-tabs{
+        flex-wrap:wrap;
+    }
+    .search-box{
+        width:100%;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .page-title{
+        font-size:18px;
     }
 }
 
