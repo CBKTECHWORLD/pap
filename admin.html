@@ -127,20 +127,6 @@ tr:hover td{background:#fafaf9;}
   display:none;
 }
 
-@media(max-width:768px){
-
-  .sidebar-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.4);
-    z-index:9998;
-  }
-
-  .sidebar.show + .sidebar-overlay{
-    display:block;
-  }
-}
-
 
 @media(max-width:768px){
 
@@ -149,20 +135,21 @@ tr:hover td{background:#fafaf9;}
     }
 
     .sidebar{
-        display:none;
+        display:block;          /* keep it in DOM so JS can work */
         position:fixed;
-        left:-260px;
+        left:-260px;            /* hidden off-screen by default */
         top:0;
         width:250px;
         height:100vh;
         z-index:9999;
         background:white;
-        transition:0.3s;
+        transition:left 0.3s ease;
         box-shadow:0 0 20px rgba(0,0,0,0.15);
+        overflow-y:auto;
     }
 
     .sidebar.show{
-        left:0;
+        left:0;                 /* slide in */
     }
 
     .sidebar-close{
@@ -232,14 +219,14 @@ tr:hover td{background:#fafaf9;}
 
 .sidebar-overlay{
     display:none;
-}
-
-.sidebar.show ~ .sidebar-overlay{
-    display:block;
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.4);
     z-index:9998;
+}
+
+.sidebar-overlay.show{
+    display:block;
 }
 
 </style>
@@ -1142,8 +1129,8 @@ function showLoadingRows() {
 
 function toggleSidebar() {
     document.querySelector('.sidebar').classList.toggle('show');
+    document.querySelector('.sidebar-overlay').classList.toggle('show');
 }
-
 // =============================================
 //  HELPERS
 // =============================================
