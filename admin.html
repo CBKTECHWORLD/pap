@@ -105,6 +105,56 @@ tr:hover td{background:#fafaf9;}
     height: auto;
 }
 
+.menu-toggle{
+    display:none;
+    background:none;
+    border:none;
+    font-size:28px;
+    cursor:pointer;
+    color:var(--green);
+}
+
+.sidebar-close{
+    display:none;
+    text-align:right;
+    padding:10px 20px;
+    font-size:24px;
+    cursor:pointer;
+    color:var(--green);
+}
+
+@media(max-width:768px){
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .sidebar{
+        display:block;
+        position:fixed;
+        left:-260px;
+        top:0;
+        width:250px;
+        height:100vh;
+        z-index:9999;
+        background:white;
+        transition:0.3s;
+        box-shadow:0 0 20px rgba(0,0,0,0.15);
+    }
+
+    .sidebar.show{
+        left:0;
+    }
+
+    .sidebar-close{
+        display:block;
+    }
+
+    .content{
+        padding:16px;
+    }
+}
+
 /* LOADING */
 .loading-row td{text-align:center;padding:40px;color:var(--muted);}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--saffron);border-radius:50%;animation:spin 0.7s linear infinite;margin-right:8px;vertical-align:middle;}
@@ -166,7 +216,7 @@ tr:hover td{background:#fafaf9;}
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo"><img src="logo.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
+    <div class="login-logo"><img src="img/paplogo1.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
     <h2>Welcome Back</h2>
     <p>Pupils & Peoples Foundation<br>Admin Dashboard</p>
 
@@ -190,6 +240,7 @@ tr:hover td{background:#fafaf9;}
 <!-- APP -->
 <div id="app">
   <header>
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="header-brand">
       <div class="nav-logo">
         <img src="./img/paplogo1.png" alt="Pupils and Peoples Foundation logo">
@@ -197,7 +248,7 @@ tr:hover td{background:#fafaf9;}
       <!-- <div class="header-logo">P&P</div> -->
       <div>
         <div class="header-title">Admin Dashboard</div>
-        <div class="header-sub">Pupils & Peoples Foundation</div>
+        <div class="header-sub">Pupils and Peoples Foundation</div>
       </div>
     </div>
     <div class="header-right">
@@ -210,6 +261,7 @@ tr:hover td{background:#fafaf9;}
 
   <div class="main">
     <nav class="sidebar">
+      <div class="sidebar-close" onclick="toggleSidebar()">✕</div>
       <div class="sidebar-item active" data-page="dashboard" onclick="goPage('dashboard')"><span class="sidebar-icon">🏠</span> Dashboard</div>
       <div class="sidebar-item" data-page="volunteers" onclick="goPage('volunteers')"><span class="sidebar-icon">🙋</span> Volunteers <span class="sidebar-badge" id="badge-vol">0</span></div>
       <div class="sidebar-item" data-page="members" onclick="goPage('members')"><span class="sidebar-icon">🎟️</span> Members <span class="sidebar-badge" id="badge-mem">0</span></div>
@@ -852,6 +904,10 @@ const state = {
 //  AUTH
 // =============================================
 // Reveal username/password fields once a role is chosen
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('show');
+}
+
 function onLoginRoleChange() {
   const role = document.getElementById('login-role').value;
   const credBlock = document.getElementById('login-credentials');
@@ -1464,9 +1520,12 @@ function closeModal() { document.getElementById('detail-modal').classList.remove
 // =============================================
 function goPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
   const target = document.getElementById('page-' + name);
   if (target) target.classList.add('active');
+
   document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+
   const item = document.querySelector('[data-page="' + name + '"]');
   if (item) item.classList.add('active');
 
@@ -1480,6 +1539,11 @@ function goPage(name) {
   if (name === 'staffhr')         loadStaffHR();
   if (name === 'salary')          loadSalaries();
   if (name === 'reimbursements')  loadReimbursements();
+
+  // Close sidebar on mobile after selecting a menu
+  if (window.innerWidth <= 768) {
+    document.querySelector('.sidebar').classList.remove('show');
+  }
 }
 
 // =============================================
