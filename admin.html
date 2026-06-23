@@ -149,7 +149,7 @@ tr:hover td{background:#fafaf9;}
     }
 
     .sidebar{
-        display:block;
+        display:none;
         position:fixed;
         left:-260px;
         top:0;
@@ -225,9 +225,23 @@ tr:hover td{background:#fafaf9;}
 .notice{background:var(--yellow);border:1px solid #F59E0B;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:var(--yellow-text);line-height:1.6;}
 
 @media(max-width:768px){
-  .sidebar{display:none;}
-  .content{padding:16px;}
+  .content{
+    padding:16px;
+  }
 }
+
+.sidebar-overlay{
+    display:none;
+}
+
+.sidebar.show ~ .sidebar-overlay{
+    display:block;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.4);
+    z-index:9998;
+}
+
 </style>
 </head>
 <body>
@@ -297,7 +311,7 @@ tr:hover td{background:#fafaf9;}
       <div class="sidebar-item" data-page="staff" onclick="goPage('staff')"><span class="sidebar-icon">👥</span> Staff Logins</div>
       <div class="sidebar-item" data-page="settings" onclick="goPage('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
     </nav>
-
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <main class="content">
 
       <!-- DASHBOARD -->
