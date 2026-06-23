@@ -1220,7 +1220,9 @@ function callSheet(params, callback) {
 
 function loadData() {
   if (!SHEET_URL) {
-    showLoadingRows();
+    ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
+      showErrorRows(id, 8, 'No Apps Script URL set. Go to Settings and paste your URL.');
+    });
     showToast('⚠️ Paste your Apps Script URL in Settings first', 'red');
     return;
   }
@@ -1231,6 +1233,9 @@ function loadData() {
       document.getElementById('last-sync').textContent = 'Synced ' + new Date().toLocaleTimeString('en-IN');
       renderAll();
     } else {
+      ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
+        showErrorRows(id, 8, res && res.error ? res.error : 'Failed to load. Tap Refresh Data to retry.');
+      });
       showToast('❌ Failed to load data. ' + (res && res.error ? res.error : ''), 'red');
     }
   });
@@ -1239,8 +1244,18 @@ function loadData() {
 function showLoadingRows() {
   ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = '<tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading from Google Sheet...</td></tr>';
+    if (el) el.innerHTML = '<tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading...</td></tr>';
   });
+}
+
+function showErrorRows(tbodyId, colspan, message) {
+  const el = document.getElementById(tbodyId);
+  if (el) el.innerHTML = '<tr><td colspan="' + colspan + '" class="empty-state" style="color:var(--red)">⚠️ ' + (message || 'Could not load data. Check your Apps Script URL in Settings.') + '</td></tr>';
+}
+
+function setLoadingRow(tbodyId, colspan) {
+  const el = document.getElementById(tbodyId);
+  if (el) el.innerHTML = '<tr class="loading-row"><td colspan="' + colspan + '"><span class="spinner"></span> Loading...</td></tr>';
 }
 
 
@@ -1762,13 +1777,13 @@ let donationsCache = [];
 let lastReceiptData = null;
 
 function loadDonations() {
+  setLoadingRow('donations-tbody', 7);
   callSheet({ action: 'getDonations' }, function(res) {
-    if (res && res.success) {
-      donationsCache = res.data || [];
-      renderDonationsTable();
-    }
+    if (res && res.success) { donationsCache = res.data || []; renderDonationsTable(); }
+    else showErrorRows('donations-tbody', 7);
   });
 }
+
 
 function renderDonationsTable() {
   const tbody = document.getElementById('donations-tbody');
@@ -1926,11 +1941,10 @@ let productsCache = [];
 let editingProductSku = null;
 
 function loadProducts() {
+  setLoadingRow('products-tbody', 8);
   callSheet({ action: 'getProducts' }, function(res) {
-    if (res && res.success) {
-      productsCache = res.data || [];
-      renderProductsTable();
-    }
+    if (res && res.success) { productsCache = res.data || []; renderProductsTable(); }
+    else showErrorRows('products-tbody', 8);
   });
 }
 
@@ -2033,11 +2047,10 @@ let invoiceItems = [];
 let lastInvoiceData = null;
 
 function loadSalesData() {
+  setLoadingRow('sales-tbody', 7);
   callSheet({ action: 'getSales' }, function(res) {
-    if (res && res.success) {
-      salesCache = res.data || [];
-      renderSalesTable();
-    }
+    if (res && res.success) { salesCache = res.data || []; renderSalesTable(); }
+    else showErrorRows('sales-tbody', 7);
   });
   if (!productsCache.length) loadProducts();
 }
@@ -2240,11 +2253,10 @@ function sendInvoiceViaWhatsApp() {
 let staffCache = [];
 
 function loadStaffData() {
+  setLoadingRow('staff-tbody', 7);
   callSheet({ action: 'getStaff' }, function(res) {
-    if (res && res.success) {
-      staffCache = res.data || [];
-      renderStaffTable();
-    }
+    if (res && res.success) { staffCache = res.data || []; renderStaffTable(); }
+    else showErrorRows('staff-tbody', 7);
   });
 }
 
@@ -2369,8 +2381,10 @@ function loadFinanceSummary() {
 let expensesCache = [];
 
 function loadExpenses() {
+  setLoadingRow('expenses-tbody', 8);
   callSheet({ action: 'getExpenses' }, function(res) {
     if (res && res.success) { expensesCache = res.data || []; renderExpensesTable(); }
+    else showErrorRows('expenses-tbody', 8);
   });
 }
 
@@ -2445,8 +2459,10 @@ function removeExpense(rowIndex) {
 let purchasesCache = [];
 
 function loadPurchases() {
+  setLoadingRow('purchases-tbody', 9);
   callSheet({ action: 'getPurchases' }, function(res) {
     if (res && res.success) { purchasesCache = res.data || []; renderPurchasesTable(); }
+    else showErrorRows('purchases-tbody', 9);
   });
 }
 
@@ -2531,8 +2547,10 @@ let staffHRCache = [];
 let editingHREmpId = null;
 
 function loadStaffHR() {
+  setLoadingRow('staffhr-tbody', 8);
   callSheet({ action: 'getStaffHR' }, function(res) {
     if (res && res.success) { staffHRCache = res.data || []; renderStaffHRTable(); }
+    else showErrorRows('staffhr-tbody', 8);
   });
 }
 
@@ -2634,8 +2652,10 @@ function removeStaffHR(empId) {
 let salariesCache = [];
 
 function loadSalaries() {
+  setLoadingRow('salary-tbody', 8);
   callSheet({ action: 'getSalaries' }, function(res) {
     if (res && res.success) { salariesCache = res.data || []; renderSalariesTable(); }
+    else showErrorRows('salary-tbody', 8);
   });
   if (!staffHRCache.length) loadStaffHRForDropdown();
 }
@@ -2738,6 +2758,7 @@ function removeSalary(rowIndex) {
 let reimburseCache = [];
 
 function loadReimbursements() {
+  setLoadingRow('reimburse-tbody', 6);
   callSheet({ action: 'getReimbursements' }, function(res) {
     if (res && res.success) {
       reimburseCache = res.data || [];
@@ -2745,6 +2766,8 @@ function loadReimbursements() {
       const pendingCount = reimburseCache.filter(function(r){ return r['Status'] === 'Pending'; }).length;
       const badge = document.getElementById('badge-reimburse');
       if (badge) badge.textContent = pendingCount;
+    } else {
+      showErrorRows('reimburse-tbody', 6);
     }
   });
   // Admin sees approve/reject controls; Staff/Coordinator only see their own + can submit
