@@ -34,7 +34,7 @@ const ADMIN_EMAIL     = 'pupilsandpeoples@gmail.com';
 //  GENERATE UNIQUE IDs
 // ============================================================
 function generateId(type) {
-  const prefix = type === 'member' ? 'PNP-MEM' : 'PNP-VOL';
+  const prefix = type === 'member' ? 'PAP-MEM' : 'PAP-VOL';
   const year   = new Date().getFullYear();
   const num    = Math.floor(1000 + Math.random() * 9000);
   return prefix + '-' + year + '-' + num;
@@ -42,12 +42,12 @@ function generateId(type) {
 function generateReceiptNo(is80g) {
   const year = new Date().getFullYear();
   const num  = Math.floor(10000 + Math.random() * 90000);
-  return (is80g ? 'PNP-80G-' : 'PNP-RCT-') + year + '-' + num;
+  return (is80g ? 'PAP-80G-' : 'PAP-RCT-') + year + '-' + num;
 }
 function generateInvoiceNo() {
   const year = new Date().getFullYear();
   const num  = Math.floor(1000 + Math.random() * 9000);
-  return 'PNP-INV-' + year + '-' + num;
+  return 'PAP-INV-' + year + '-' + num;
 }
 
 // ============================================================
@@ -162,7 +162,7 @@ function getOrCreateSheet(name, headers) {
   if (!sheet) {
     sheet = ss.insertSheet(name);
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    sheet.getRange(1, 1, 1, headers.length).setBackground('#FF6B00').setFontColor('#FFFFFF').setFontWeight('bold');
+    sheet.getRange(1, 1, 1, headers.length).setBackground('#0E4F4F').setFontColor('#FFFFFF').setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
   return sheet;
@@ -288,22 +288,22 @@ function buildIdCardHtml(data, roleLabel, isVol) {
   return '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#F7F5F2;font-family:Arial,sans-serif;">'
   + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F5F2;padding:32px 0;"><tr><td align="center">'
   + '<table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">'
-  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:24px 32px;">'
+  + '<tr><td style="background:linear-gradient(135deg,#0E4F4F,#0A3D3D);padding:24px 32px;">'
   + '<span style="color:white;font-size:20px;font-weight:700;">' + ORG_NAME + '</span></td></tr>'
   + '<tr><td style="padding:28px 32px 0;">'
   + '<p style="font-size:15px;color:#1A1612;margin:0 0 8px;">Dear <strong>' + data.name + '</strong>,</p>'
   + '<p style="font-size:14px;color:#6B5C4E;line-height:1.7;margin:0 0 24px;">Your application has been <span style="color:#2D7A4F;font-weight:700;">approved</span>! Here is your official ID card.</p>'
   + '</td></tr>'
   + '<tr><td style="padding:0 32px 28px;">'
-  + '<table width="100%" cellpadding="0" cellspacing="0" style="border:2px solid #FF6B00;border-radius:14px;overflow:hidden;max-width:380px;margin:0 auto;">'
-  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:14px 18px;"><span style="color:white;font-size:14px;font-weight:700;">' + ORG_NAME + '</span></td></tr>'
+  + '<table width="100%" cellpadding="0" cellspacing="0" style="border:2px solid #0E4F4F;border-radius:14px;overflow:hidden;max-width:380px;margin:0 auto;">'
+  + '<tr><td style="background:linear-gradient(135deg,#0E4F4F,#0A3D3D);padding:14px 18px;"><span style="color:white;font-size:14px;font-weight:700;">' + ORG_NAME + '</span></td></tr>'
   + '<tr><td style="background:white;padding:20px 18px 14px;text-align:center;">'
   + '<div style="font-size:20px;font-weight:700;color:#1A1612;">' + data.name + '</div>'
-  + '<div style="font-size:11px;color:#FF6B00;font-weight:700;letter-spacing:1px;margin-top:3px;text-transform:uppercase;">' + roleLabel + '</div>'
+  + '<div style="font-size:11px;color:#0E4F4F;font-weight:700;letter-spacing:1px;margin-top:3px;text-transform:uppercase;">' + roleLabel + '</div>'
   + '</td></tr>'
   + '<tr><td style="background:white;padding:0 18px 14px;">'
   + '<table width="100%" cellpadding="0" cellspacing="0" style="font-size:12px;">'
-  + '<tr><td style="padding:5px 0;border-bottom:0.5px solid #eee;color:#6B5C4E;">ID Number</td><td style="padding:5px 0;border-bottom:0.5px solid #eee;text-align:right;font-weight:700;color:#FF6B00;">' + data.assignedId + '</td></tr>'
+  + '<tr><td style="padding:5px 0;border-bottom:0.5px solid #eee;color:#6B5C4E;">ID Number</td><td style="padding:5px 0;border-bottom:0.5px solid #eee;text-align:right;font-weight:700;color:#0E4F4F;">' + data.assignedId + '</td></tr>'
   + '<tr><td style="padding:5px 0;border-bottom:0.5px solid #eee;color:#6B5C4E;">Mobile</td><td style="padding:5px 0;border-bottom:0.5px solid #eee;text-align:right;font-weight:600;">' + data.phone + '</td></tr>'
   + '<tr><td style="padding:5px 0;border-bottom:0.5px solid #eee;color:#6B5C4E;">City</td><td style="padding:5px 0;border-bottom:0.5px solid #eee;text-align:right;font-weight:600;">' + data.city + '</td></tr>'
   + '<tr><td style="padding:5px 0;border-bottom:0.5px solid #eee;color:#6B5C4E;">' + (isVol ? 'Area of Work' : 'Plan') + '</td><td style="padding:5px 0;border-bottom:0.5px solid #eee;text-align:right;font-weight:600;">' + (isVol ? (data.interest||'General') : (data.plan||'Silver')) + '</td></tr>'
@@ -399,7 +399,7 @@ function previewReceipt(p) {
 function buildReceiptHtml(p, is80g) {
   const logoBlock = ORG_LOGO_URL
     ? '<img src="' + ORG_LOGO_URL + '" style="height:56px;display:block;" alt="logo">'
-    : '<div style="width:56px;height:56px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;color:#FF6B00;font-family:Georgia,serif;font-size:15px;">P&amp;P</div>';
+    : '<div style="width:56px;height:56px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0E4F4F;font-family:Georgia,serif;font-size:15px;">P&amp;P</div>';
 
   const amountWords = numberToWordsIndian(parseInt(p.amount) || 0);
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'});
@@ -419,7 +419,7 @@ function buildReceiptHtml(p, is80g) {
   + '<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;">'
 
   // HEADER — logo + org name + reg address
-  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:22px 32px;">'
+  + '<tr><td style="background:linear-gradient(135deg,#0E4F4F,#0A3D3D);padding:22px 32px;">'
   + '<table width="100%"><tr>'
   + '<td style="width:60px;">' + logoBlock + '</td>'
   + '<td style="padding-left:14px;">'
@@ -439,7 +439,7 @@ function buildReceiptHtml(p, is80g) {
   // RECEIPT NO + DATE BAR
   + '<tr><td style="padding:14px 32px;">'
   + '<table width="100%" style="background:#FFF0E0;border-radius:8px;"><tr>'
-  + '<td style="padding:10px 16px;font-size:13px;color:#1A1612;"><strong>Receipt No:</strong> <span style="color:#FF6B00;font-weight:700;">' + p.receiptNo + '</span></td>'
+  + '<td style="padding:10px 16px;font-size:13px;color:#1A1612;"><strong>Receipt No:</strong> <span style="color:#0E4F4F;font-weight:700;">' + p.receiptNo + '</span></td>'
   + '<td style="padding:10px 16px;text-align:right;font-size:13px;color:#1A1612;"><strong>Date:</strong> ' + dateStr + ' &nbsp;<span style="color:#999;font-size:11px;">(' + timeStr + ')</span></td>'
   + '</tr></table>'
   + '</td></tr>'
@@ -525,7 +525,7 @@ function saveProduct(p) {
 
   // Check if SKU already exists → update instead of duplicate
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === p.sku) {
+    if (String(values[i][0]) === String(p.sku)) {
       sheet.getRange(i+1, 1, 1, PRODUCT_HEADERS.length).setValues([[
         p.sku, p.name, p.category||'', p.price||0, p.costPrice||0,
         p.stockQty||0, p.unit||'pcs', p.tax||0, p.description||'', p.imageUrl||'', values[i][10]
@@ -548,7 +548,7 @@ function deleteProduct(sku) {
   if (!sheet) return { success: false, error: 'No products sheet' };
   const values = sheet.getDataRange().getValues();
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === sku) { sheet.deleteRow(i+1); return { success: true }; }
+    if (String(values[i][0]) === String(sku)) { sheet.deleteRow(i+1); return { success: true }; }
   }
   return { success: false, error: 'SKU not found' };
 }
@@ -576,7 +576,7 @@ function saveSale(p) {
     const values = prodSheet.getDataRange().getValues();
     items.forEach(function(item) {
       for (let i = 1; i < values.length; i++) {
-        if (values[i][0] === item.sku) {
+        if (String(values[i][0]) === String(item.sku)) {
           const currentStock = values[i][5] || 0;
           prodSheet.getRange(i+1, 6).setValue(Math.max(0, currentStock - item.qty));
           break;
@@ -622,12 +622,12 @@ function buildInvoiceHtml(p) {
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'});
   const logoBlock = ORG_LOGO_URL
     ? '<img src="' + ORG_LOGO_URL + '" style="height:50px;display:block;" alt="logo">'
-    : '<div style="width:50px;height:50px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;color:#FF6B00;font-family:Georgia,serif;">P&amp;P</div>';
+    : '<div style="width:50px;height:50px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0E4F4F;font-family:Georgia,serif;">P&amp;P</div>';
 
   return '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#F7F5F2;font-family:Arial,sans-serif;">'
   + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F5F2;padding:30px 0;"><tr><td align="center">'
   + '<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ddd;">'
-  + '<tr><td style="background:linear-gradient(135deg,#FF6B00,#C44D00);padding:22px 32px;">'
+  + '<tr><td style="background:linear-gradient(135deg,#0E4F4F,#0A3D3D);padding:22px 32px;">'
   + '<table width="100%"><tr>'
   + '<td style="width:60px;">' + logoBlock + '</td>'
   + '<td style="padding-left:14px;">'
@@ -638,7 +638,7 @@ function buildInvoiceHtml(p) {
   + '</td></tr>'
   + '<tr><td style="padding:20px 32px;">'
   + '<table width="100%"><tr>'
-  + '<td><strong>Invoice No:</strong> <span style="color:#FF6B00;font-weight:700;">' + p.invoiceNo + '</span></td>'
+  + '<td><strong>Invoice No:</strong> <span style="color:#0E4F4F;font-weight:700;">' + p.invoiceNo + '</span></td>'
   + '<td align="right"><strong>Date:</strong> ' + dateStr + '</td>'
   + '</tr></table>'
   + '<hr style="border:none;border-top:1px solid #eee;margin:14px 0;">'
@@ -652,7 +652,7 @@ function buildInvoiceHtml(p) {
   + '<table width="100%" style="margin-top:14px;font-size:13px;">'
   + '<tr><td style="text-align:right;padding:4px 0;color:#6B5C4E;">Subtotal</td><td style="text-align:right;padding:4px 0;width:100px;">₹' + p.subtotal + '</td></tr>'
   + '<tr><td style="text-align:right;padding:4px 0;color:#6B5C4E;">Tax</td><td style="text-align:right;padding:4px 0;">₹' + p.tax + '</td></tr>'
-  + '<tr><td style="text-align:right;padding:8px 0;font-weight:700;font-size:16px;">Total</td><td style="text-align:right;padding:8px 0;font-weight:700;font-size:16px;color:#FF6B00;">₹' + p.total + '</td></tr>'
+  + '<tr><td style="text-align:right;padding:8px 0;font-weight:700;font-size:16px;">Total</td><td style="text-align:right;padding:8px 0;font-weight:700;font-size:16px;color:#0E4F4F;">₹' + p.total + '</td></tr>'
   + '</table>'
   + '</td></tr>'
   + '<tr><td style="padding:18px 32px;text-align:center;border-top:1px solid #eee;">'
@@ -683,7 +683,7 @@ function saveStaff(p) {
   const values = sheet.getDataRange().getValues();
 
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === p.username) {
+    if (String(values[i][0]) === String(p.username)) {
       // Update existing — keep old password if new one not provided
       const pass = p.password || values[i][1];
       sheet.getRange(i+1, 1, 1, STAFF_HEADERS.length).setValues([[
@@ -705,7 +705,7 @@ function deleteStaff(username) {
   if (!sheet) return { success: false, error: 'No staff sheet' };
   const values = sheet.getDataRange().getValues();
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === username) { sheet.deleteRow(i+1); return { success: true }; }
+    if (String(values[i][0]) === String(username)) { sheet.deleteRow(i+1); return { success: true }; }
   }
   return { success: false, error: 'Username not found' };
 }
@@ -830,7 +830,7 @@ function saveStaffHR(p) {
   const values = sheet.getDataRange().getValues();
 
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === p.employeeId) {
+    if (String(values[i][0]) === String(p.employeeId)) {
       sheet.getRange(i+1, 1, 1, STAFF_HR_HEADERS.length).setValues([[
         p.employeeId, p.fullName, p.department||'', p.employmentType||'Full-time',
         p.joinDate||'', p.phone||'', p.email||'', p.address||'',
@@ -855,7 +855,7 @@ function deleteStaffHR(employeeId) {
   if (!sheet) return { success: false, error: 'No StaffHR sheet' };
   const values = sheet.getDataRange().getValues();
   for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === employeeId) { sheet.deleteRow(i+1); return { success: true }; }
+    if (String(values[i][0]) === String(employeeId)) { sheet.deleteRow(i+1); return { success: true }; }
   }
   return { success: false, error: 'Employee ID not found' };
 }

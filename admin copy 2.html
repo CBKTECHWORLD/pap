@@ -1,0 +1,2857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Pupils & Peoples Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --saffron:#B8862E;--saffron-light:#FBF3E3;--saffron-dark:#96701F;
+  --green:#0E4F4F;--green-light:#EAF4F3;--green-dark:#0A3D3D;
+  --red:#DC2626;--red-light:#FEE2E2;--yellow:#FEF3C7;--yellow-text:#92400E;
+  --bg:#F7F5F2;--white:#FFFFFF;--text:#16201F;--muted:#5C6A68;
+  --border:rgba(14,79,79,0.12);--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--green-dark),var(--green));display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:white;border-radius:20px;padding:40px;width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+.login-logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-dark));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:white;font-size:16px;margin:0 auto 16px;overflow:hidden;}
+.login-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.login-box h2{font-family:'Fraunces',serif;margin-bottom:6px;font-size:22px;}
+.login-box p{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.login-box input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:12px;background:var(--bg);}
+.login-box input:focus{border-color:var(--saffron);}
+.login-btn{width:100%;background:var(--saffron);color:white;border:none;border-radius:100px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
+.login-btn:hover{background:var(--saffron-dark);}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh;flex-direction:column;}
+header{background:white;border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,0.04);}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.header-logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:white;font-size:11px;}
+.header-title{font-weight:600;font-size:15px;}
+.header-sub{font-size:11px;color:var(--muted);}
+.header-right{display:flex;align-items:center;gap:12px;}
+.refresh-btn{background:var(--green-light);color:var(--green-dark);border:none;padding:7px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;}
+.refresh-btn:hover{background:var(--green);color:white;}
+.logout-btn{background:none;border:1.5px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+
+.main{display:flex;flex:1;}
+.sidebar{width:220px;background:white;border-right:1px solid var(--border);padding:16px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;flex-shrink:0;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);transition:all 0.2s;border-left:3px solid transparent;}
+.sidebar-item:hover{background:var(--bg);color:var(--text);}
+.sidebar-item.active{background:var(--saffron-light);color:var(--saffron-dark);border-left-color:var(--saffron);font-weight:600;}
+.sidebar-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-badge{margin-left:auto;background:var(--saffron);color:white;border-radius:100px;padding:1px 8px;font-size:11px;font-weight:700;}
+.sidebar-badge.red{background:var(--red);}
+
+.content{flex:1;padding:24px;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+.stat-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;}
+.stat-num{font-family:'Fraunces',serif;font-size:30px;font-weight:700;}
+.stat-num.orange{color:var(--saffron);}
+.stat-num.green{color:var(--green);}
+.stat-num.red{color:var(--red);}
+.stat-num.blue{color:#2563EB;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.filter-tabs{display:flex;gap:6px;}
+.f-tab{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all 0.2s;font-family:'Inter',sans-serif;}
+.f-tab.active{background:var(--saffron);border-color:var(--saffron);color:white;}
+.search-box{padding:8px 14px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:200px;background:white;}
+.search-box:focus{border-color:var(--saffron);}
+
+/* TABLE */
+.table-wrap{background:white;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+thead tr{background:var(--bg);}
+th{padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:10px 12px;font-size:13px;border-bottom:0.5px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafaf9;}
+.badge{display:inline-block;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:700;}
+.badge-pending{background:var(--yellow);color:var(--yellow-text);}
+.badge-approved{background:var(--green-light);color:var(--green-dark);}
+.badge-rejected{background:var(--red-light);color:var(--red);}
+.action-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.act-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all 0.2s;white-space:nowrap;}
+.act-approve{background:var(--green-light);color:var(--green-dark);}
+.act-approve:hover{background:var(--green);color:white;}
+.act-reject{background:var(--red-light);color:var(--red);}
+.act-reject:hover{background:var(--red);color:white;}
+.act-view{background:var(--saffron-light);color:var(--saffron-dark);}
+.act-view:hover{background:var(--saffron);color:white;}
+.act-resend{background:#EDE9FE;color:#5B21B6;}
+.act-resend:hover{background:#7C3AED;color:white;}
+.empty-state{padding:48px;text-align:center;color:var(--muted);font-size:14px;}
+
+
+.nav-logo img {
+    width: 80px;      /* Adjust as needed */
+    height: auto;
+}
+
+.menu-toggle{
+    display:none;
+    background:none;
+    border:none;
+    font-size:28px;
+    cursor:pointer;
+    color:var(--green);
+}
+
+.sidebar-close{
+    display:none;
+    text-align:right;
+    padding:10px 20px;
+    font-size:24px;
+    cursor:pointer;
+    color:var(--green);
+}
+
+.sidebar-overlay{
+  display:none;
+}
+
+
+@media(max-width:768px){
+
+    /* ── MENU TOGGLE ── */
+    .menu-toggle{
+        display:block;
+    }
+
+    /* ── SIDEBAR ── */
+   .sidebar{
+    display:block;
+    position:fixed;
+    left:-260px;
+    top:0;
+    width:250px;
+    height:100vh;
+    z-index:9999;
+    background:white;
+    transition:left 0.3s ease;
+    box-shadow:0 0 20px rgba(0,0,0,0.15);
+    overflow-y:auto;
+    pointer-events:none;        /* ← can't intercept clicks when hidden */
+    visibility:hidden;          /* ← also removes it from accessibility tree */
+}
+
+   .sidebar.show{
+    left:0;
+    pointer-events:auto;        /* ← re-enable clicks when open */
+    visibility:visible;
+}
+    .sidebar-close{
+        display:block;
+    }
+
+    /* ── HEADER: compact on mobile ── */
+    header{
+        height:auto;
+        padding:8px 12px;
+        gap:8px;
+        flex-wrap:nowrap;
+    }
+    .header-brand{
+        gap:6px;
+        flex:1;
+        min-width:0;          /* allow text to truncate */
+    }
+    .header-title{
+        font-size:13px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+    .header-sub{
+        display:none;         /* hide subtitle on mobile */
+    }
+
+    /* ── LOGO: constrain the nav-logo image ── */
+    .nav-logo img{
+        width:32px !important;
+        height:32px !important;
+        border-radius:50%;
+        object-fit:cover;
+    }
+
+    /* ── HEADER RIGHT: hide less-important items ── */
+    .header-right{
+        gap:6px;
+        flex-shrink:0;
+    }
+    #last-sync{
+        display:none;         /* hide "Synced X:XX pm" on mobile */
+    }
+    #header-role-name{
+        font-size:11px;
+        padding:4px 8px;
+        max-width:90px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .refresh-btn{
+        padding:6px 10px;
+        font-size:12px;
+    }
+    .logout-btn{
+        padding:6px 10px;
+        font-size:12px;
+    }
+
+    /* ── CONTENT ── */
+    .content{
+        padding:12px;
+    }
+
+    /* ── MODALS: full screen on mobile ── */
+    .modal-overlay{
+        padding:0;
+        align-items:flex-end;  /* sheet slides up from bottom */
+    }
+    .modal{
+        border-radius:20px 20px 0 0;
+        max-height:92vh;
+        width:100%;
+        max-width:100% !important;
+        padding:20px 16px;
+    }
+
+    /* ── ALL FORM GRIDS: single column on mobile ── */
+    .modal [style*="grid-template-columns"],
+    .modal div[style*="grid-template-columns"]{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:10px !important;
+    }
+    /* Settings-input full width already, but ensure no overflow */
+    .settings-input{
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    /* ── STATS CARDS: 2 per row on mobile ── */
+    .stats-row{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+    .stat-num{
+        font-size:22px;
+    }
+
+    /* ── FILTER TABS: wrap nicely ── */
+    .controls{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    .filter-tabs{
+        flex-wrap:wrap;
+    }
+    .search-box{
+        width:100%;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .page-title{
+        font-size:18px;
+    }
+}
+
+/* LOADING */
+.loading-row td{text-align:center;padding:40px;color:var(--muted);}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--saffron);border-radius:50%;animation:spin 0.7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{background:white;border-radius:20px;padding:28px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);}
+.modal h3{font-family:'Fraunces',serif;font-size:19px;margin-bottom:16px;}
+.detail-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-label{color:var(--muted);font-weight:600;flex-shrink:0;margin-right:12px;}
+.detail-value{color:var(--text);font-weight:500;text-align:right;}
+.modal-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+.modal-approve{flex:1;min-width:120px;background:var(--green);color:white;border:none;border-radius:100px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
+.modal-approve:hover{background:var(--green-dark);}
+.modal-reject{flex:1;min-width:100px;background:var(--red-light);color:var(--red);border:1.5px solid var(--red);border-radius:100px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.modal-close-btn{flex:1;min-width:80px;background:var(--bg);color:var(--muted);border:1.5px solid var(--border);border-radius:100px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* ID CARD IN MODAL */
+.id-preview{border:2px solid var(--saffron);border-radius:14px;overflow:hidden;margin-top:16px;}
+.id-prev-head{background:linear-gradient(135deg,var(--saffron),var(--saffron-dark));padding:12px 16px;color:white;font-size:13px;font-weight:700;font-family:'Fraunces',serif;}
+.id-prev-body{padding:14px 16px;font-size:12px;background:white;}
+.id-prev-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--border);}
+.id-prev-row:last-child{border-bottom:none;}
+.id-prev-foot{background:var(--green);padding:9px 16px;display:flex;justify-content:space-between;align-items:center;}
+.id-prev-foot span{color:white;font-size:11px;font-weight:700;letter-spacing:1px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1A1612;color:white;padding:12px 20px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+.toast.green{background:var(--green);}
+.toast.red{background:var(--red);}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* SETTINGS */
+.settings-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;}
+.settings-card h3{font-size:15px;font-weight:600;margin-bottom:4px;}
+.settings-card p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
+.settings-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:var(--bg);}
+.settings-input:focus{border-color:var(--saffron);}
+.save-btn{background:var(--saffron);color:white;border:none;border-radius:100px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px;transition:background 0.2s;}
+.save-btn:hover{background:var(--saffron-dark);}
+.save-btn.green{background:var(--green);}
+.save-btn.green:hover{background:var(--green-dark);}
+
+/* NOTICE BANNER */
+.notice{background:var(--yellow);border:1px solid #F59E0B;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:var(--yellow-text);line-height:1.6;}
+
+@media(max-width:768px){
+  .content{
+    padding:16px;
+  }
+}
+
+.sidebar-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.4);
+    z-index:9998;
+}
+
+.sidebar-overlay.show{
+    display:block;
+}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><img src="img/paplogo1.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
+    <h2>Welcome Back</h2>
+    <p>Pupils & Peoples Foundation<br>Admin Dashboard</p>
+
+    <label style="display:block;text-align:left;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">I am logging in as</label>
+    <select id="login-role" onchange="onLoginRoleChange()" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;background:var(--bg);color:var(--text);">
+      <option value="">Select your role…</option>
+      <option value="Admin">Admin</option>
+      <option value="Coordinator">Coordinator</option>
+      <option value="Staff">Staff</option>
+    </select>
+
+    <div id="login-credentials" style="display:none;">
+      <input type="text" id="login-user" placeholder="Username" autocomplete="off">
+      <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="login-btn" onclick="doLogin()">Login →</button>
+    </div>
+    <div class="login-err" id="login-err">❌ Invalid username or password</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="header-brand">
+      <div class="nav-logo">
+        <img src="./img/paplogo1.png" alt="Pupils and Peoples Foundation logo">
+    </div>
+      <!-- <div class="header-logo">P&P</div> -->
+      <div>
+        <div class="header-title">Admin Dashboard</div>
+        <div class="header-sub">Pupils and Peoples Foundation</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="refresh-btn" onclick="loadData()">⟳ Refresh Data</button>
+      <span style="font-size:13px;color:var(--muted)" id="last-sync">Not synced</span>
+      <span style="font-size:13px;color:var(--text);font-weight:600;background:var(--saffron-light);padding:5px 14px;border-radius:100px;" id="header-role-name">—</span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <nav class="sidebar">
+      <div class="sidebar-close" onclick="toggleSidebar()">✕</div>
+      <div class="sidebar-item active" data-page="dashboard" onclick="goPage('dashboard')"><span class="sidebar-icon">🏠</span> Dashboard</div>
+      <div class="sidebar-item" data-page="volunteers" onclick="goPage('volunteers')"><span class="sidebar-icon">🙋</span> Volunteers <span class="sidebar-badge" id="badge-vol">0</span></div>
+      <div class="sidebar-item" data-page="members" onclick="goPage('members')"><span class="sidebar-icon">🎟️</span> Members <span class="sidebar-badge" id="badge-mem">0</span></div>
+      <div class="sidebar-item" data-page="approved" onclick="goPage('approved')"><span class="sidebar-icon">✅</span> Approved</div>
+      <div class="sidebar-item" data-page="renewal" onclick="goPage('renewal')"><span class="sidebar-icon">🔄</span> Renewals <span class="sidebar-badge red" id="badge-renew">0</span></div>
+      <div class="sidebar-item" data-page="donations" onclick="goPage('donations')"><span class="sidebar-icon">🧾</span> Donations / Receipts</div>
+      <div class="sidebar-item" data-page="products" onclick="goPage('products')"><span class="sidebar-icon">📦</span> Products</div>
+      <div class="sidebar-item" data-page="sales" onclick="goPage('sales')"><span class="sidebar-icon">🧮</span> Sales / Invoice</div>
+      <div class="sidebar-item" data-page="expenses" onclick="goPage('expenses')"><span class="sidebar-icon">💸</span> Expenses</div>
+      <div class="sidebar-item" data-page="purchases" onclick="goPage('purchases')"><span class="sidebar-icon">🛒</span> Purchases</div>
+      <div class="sidebar-item" data-page="staffhr" onclick="goPage('staffhr')"><span class="sidebar-icon">🪪</span> Staff Details (HR)</div>
+      <div class="sidebar-item" data-page="salary" onclick="goPage('salary')"><span class="sidebar-icon">💰</span> Salary</div>
+      <div class="sidebar-item" data-page="reimbursements" onclick="goPage('reimbursements')"><span class="sidebar-icon">🧾</span> Reimbursements <span class="sidebar-badge red" id="badge-reimburse">0</span></div>
+      <div class="sidebar-item" data-page="staff" onclick="goPage('staff')"><span class="sidebar-icon">👥</span> Staff Logins</div>
+      <div class="sidebar-item" data-page="settings" onclick="goPage('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
+    </nav>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <main class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header"><h2 class="page-title">Dashboard Overview</h2></div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Volunteers</div><div class="stat-num orange" id="s-vol">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Members</div><div class="stat-num green" id="s-mem">0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Approval</div><div class="stat-num red" id="s-pending">0</div></div>
+          <div class="stat-card"><div class="stat-label">Approved Total</div><div class="stat-num blue" id="s-approved">0</div></div>
+        </div>
+
+        <h3 style="font-family:'Fraunces',serif;font-size:17px;margin:24px 0 12px;" id="finance-overview-title">💰 Finance Overview</h3>
+        <div class="stats-row" id="finance-stats-row">
+          <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-num green" id="f-income">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Outgo</div><div class="stat-num red" id="f-outgo">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Net Balance</div><div class="stat-num blue" id="f-balance">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Active Staff</div><div class="stat-num orange" id="f-staffcount">0</div></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Donations Received</div><div class="stat-num green" id="f-donations">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Product Sales</div><div class="stat-num green" id="f-sales">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Expenses</div><div class="stat-num red" id="f-expenses">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Purchases</div><div class="stat-num red" id="f-purchases">₹0</div></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Salary Paid</div><div class="stat-num red" id="f-salary">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Reimbursed</div><div class="stat-num red" id="f-reimbursed">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Reimbursements</div><div class="stat-num orange" id="f-pending-reimburse">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Purchase Payments</div><div class="stat-num orange" id="f-pending-purchase">₹0</div></div>
+        </div>
+
+        <h3 style="font-family:'Fraunces',serif;font-size:17px;margin:24px 0 12px;">Recent Volunteer / Member Activity</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Type</th><th>Assigned ID</th><th>Email</th><th>City</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="dash-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VOLUNTEERS -->
+      <div class="page" id="page-volunteers">
+        <div class="page-header">
+          <h2 class="page-title">Volunteer Applications</h2>
+          <div class="controls">
+            <div class="filter-tabs">
+              <button class="f-tab active" onclick="setFilter('vol','all',this)">All</button>
+              <button class="f-tab" onclick="setFilter('vol','Pending',this)">Pending</button>
+              <button class="f-tab" onclick="setFilter('vol','Approved',this)">Approved</button>
+              <button class="f-tab" onclick="setFilter('vol','Rejected',this)">Rejected</button>
+            </div>
+            <input class="search-box" placeholder="🔍 Search name..." oninput="setSearch('vol',this.value)">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assigned ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>City</th><th>Interest</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="vol-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="page" id="page-members">
+        <div class="page-header">
+          <h2 class="page-title">Membership Applications</h2>
+          <div class="controls">
+            <div class="filter-tabs">
+              <button class="f-tab active" onclick="setFilter('mem','all',this)">All</button>
+              <button class="f-tab" onclick="setFilter('mem','Pending',this)">Pending</button>
+              <button class="f-tab" onclick="setFilter('mem','Approved',this)">Approved</button>
+              <button class="f-tab" onclick="setFilter('mem','Rejected',this)">Rejected</button>
+            </div>
+            <input class="search-box" placeholder="🔍 Search name..." oninput="setSearch('mem',this.value)">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assigned ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>Plan</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="mem-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- APPROVED -->
+      <div class="page" id="page-approved">
+        <div class="page-header">
+          <h2 class="page-title">All Approved</h2>
+          <input class="search-box" placeholder="🔍 Search..." oninput="setSearch('approved',this.value)">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assigned ID</th><th>Name</th><th>Type</th><th>Email</th><th>City</th><th>Approved On</th><th>Valid Until</th><th>Actions</th></tr></thead>
+            <tbody id="approved-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RENEWALS -->
+      <div class="page" id="page-renewal">
+        <div class="page-header"><h2 class="page-title">Membership Renewals</h2></div>
+        <div class="notice">⚠️ Entries expiring within <strong>30 days</strong> appear here. Click <strong>Renew +1yr</strong> to extend and resend the ID card email.</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assigned ID</th><th>Name</th><th>Type</th><th>Email</th><th>Plan</th><th>Expires On</th><th>Days Left</th><th>Actions</th></tr></thead>
+            <tbody id="renewal-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DONATIONS / RECEIPTS -->
+      <div class="page" id="page-donations">
+        <div class="page-header">
+          <h2 class="page-title">Donations & Receipt Generator</h2>
+          <button class="save-btn" onclick="openReceiptForm()">+ New Donation Receipt</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Donors</div><div class="stat-num orange" id="d-total-donors">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Collected</div><div class="stat-num green" id="d-total-amount">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">80G Receipts</div><div class="stat-num blue" id="d-total-80g">0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Receipt No</th><th>Donor</th><th>Phone</th><th>Amount</th><th>Type</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="donations-tbody"><tr><td colspan="7" class="empty-state">Click "New Donation Receipt" to get started.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="page" id="page-products">
+        <div class="page-header">
+          <h2 class="page-title">Products (NGO Manufactured Items)</h2>
+          <button class="save-btn" onclick="openProductForm()">+ Add Product</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Unit</th><th>Tax%</th><th>Actions</th></tr></thead>
+            <tbody id="products-tbody"><tr><td colspan="8" class="empty-state">No products yet. Click "Add Product" to get started.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SALES / INVOICE -->
+      <div class="page" id="page-sales">
+        <div class="page-header">
+          <h2 class="page-title">Sales & Invoice Generator</h2>
+          <button class="save-btn" onclick="openInvoiceForm()">+ New Sale / Invoice</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Invoices</div><div class="stat-num orange" id="sa-total-inv">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Sales Value</div><div class="stat-num green" id="sa-total-value">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Invoice No</th><th>Customer</th><th>Items</th><th>Total</th><th>Mode</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="sales-tbody"><tr><td colspan="7" class="empty-state">Click "New Sale / Invoice" to get started.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STAFF -->
+      <div class="page" id="page-staff">
+        <div class="page-header">
+          <h2 class="page-title">Staff & Role Management</h2>
+          <button class="save-btn" onclick="openStaffForm()">+ Add Staff / Coordinator</button>
+        </div>
+        <div class="notice">ℹ️ <strong>Admin</strong> has full access. <strong>Coordinator</strong> can manage volunteers/members in their assigned category + view dashboard. <strong>Staff</strong> can only view/approve volunteers & members.</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Username</th><th>Full Name</th><th>Role</th><th>Category</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="staff-tbody"><tr><td colspan="7" class="empty-state">No staff added yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="page" id="page-expenses">
+        <div class="page-header">
+          <h2 class="page-title">Expenses</h2>
+          <button class="save-btn" onclick="openExpenseForm()">+ Add Expense</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Expenses</div><div class="stat-num red" id="exp-total">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-num orange" id="exp-month">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Vendor</th><th>Amount</th><th>Mode</th><th>Approved By</th><th>Actions</th></tr></thead>
+            <tbody id="expenses-tbody"><tr><td colspan="8" class="empty-state">No expenses recorded yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PURCHASES -->
+      <div class="page" id="page-purchases">
+        <div class="page-header">
+          <h2 class="page-title">Purchases</h2>
+          <button class="save-btn" onclick="openPurchaseForm()">+ Add Purchase</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Purchases</div><div class="stat-num red" id="pur-total">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Payment</div><div class="stat-num orange" id="pur-pending">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Item</th><th>Supplier</th><th>Qty</th><th>Amount</th><th>Invoice No</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="purchases-tbody"><tr><td colspan="9" class="empty-state">No purchases recorded yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STAFF HR DETAILS -->
+      <div class="page" id="page-staffhr">
+        <div class="page-header">
+          <h2 class="page-title">Staff Details (HR)</h2>
+          <button class="save-btn" onclick="openStaffHRForm()">+ Add Staff Member</button>
+        </div>
+        <div class="notice">🔒 Sensitive fields (Bank Account, Aadhar) are masked in this list view for security. Full details are only visible when editing.</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Emp ID</th><th>Name</th><th>Department</th><th>Type</th><th>Join Date</th><th>Monthly Salary</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="staffhr-tbody"><tr><td colspan="8" class="empty-state">No staff HR records yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SALARY -->
+      <div class="page" id="page-salary">
+        <div class="page-header">
+          <h2 class="page-title">Salary Payments</h2>
+          <button class="save-btn" onclick="openSalaryForm()">+ Record Salary Payment</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Salary Paid</div><div class="stat-num red" id="sal-total">₹0</div></div>
+          <div class="stat-card"><div class="stat-label">Records</div><div class="stat-num orange" id="sal-count">0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Month</th><th>Employee</th><th>Basic</th><th>Deductions</th><th>Net Paid</th><th>Payment Date</th><th>Mode</th><th>Actions</th></tr></thead>
+            <tbody id="salary-tbody"><tr><td colspan="8" class="empty-state">No salary records yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REIMBURSEMENTS -->
+      <div class="page" id="page-reimbursements">
+        <div class="page-header">
+          <h2 class="page-title">Reimbursements</h2>
+          <button class="save-btn" onclick="openReimburseForm()">+ Submit Reimbursement</button>
+        </div>
+        <div class="notice" id="reimburse-notice">ℹ️ Submit your own expense reimbursement requests here. Admin will review and mark them as Paid.</div>
+        <div class="stats-row" id="reimburse-stats">
+          <div class="stat-card"><div class="stat-label">Pending Requests</div><div class="stat-num orange" id="rb-pending">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Paid</div><div class="stat-num green" id="rb-paid">₹0</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Staff Name</th><th>Reason</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="reimburse-tbody"><tr><td colspan="6" class="empty-state">No reimbursement requests yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="page-header"><h2 class="page-title">Settings</h2></div>
+        <div class="settings-card">
+          <h3>🔗 Google Apps Script URL</h3>
+          <p>This is the Web App URL from your Google Apps Script deployment. All data is fetched from and saved to your Google Sheet via this URL.</p>
+          <input class="settings-input" id="sheet-url-input" placeholder="https://script.google.com/macros/s/.../exec">
+          <button class="save-btn" onclick="saveUrl()">Save URL</button>
+          <button class="save-btn green" onclick="testConnection()" style="margin-left:8px;">Test Connection</button>
+        </div>
+        <div class="settings-card">
+          <h3>📧 Email Sender</h3>
+          <p>ID cards are sent from <strong>pupilsandpeoples@gmail.com</strong> via Google Apps Script when you approve an application.</p>
+          <input class="settings-input" value="pupilsandpeoples@gmail.com" readonly>
+        </div>
+        <div class="settings-card">
+          <h3>🔑 Change Admin Password</h3>
+          <p>Change your admin login password. Stored securely in this browser.</p>
+          <input class="settings-input" type="password" id="new-pass" placeholder="New password (min 6 chars)">
+          <button class="save-btn" onclick="changePass()">Update Password</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modal-title">Application Details</h3>
+    <div id="modal-details"></div>
+    <div id="modal-id-card"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- RECEIPT GENERATOR MODAL -->
+<div class="modal-overlay" id="receipt-modal">
+  <div class="modal" style="max-width:540px;">
+    <button class="modal-close" onclick="closeReceiptForm()">✕</button>
+    <h3>🧾 New Donation Receipt</h3>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label style="font-size:13px;font-weight:600;color:var(--muted);">Lookup Donor by Phone or Email</label>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <input class="settings-input" id="r-lookup" placeholder="Enter phone or email to auto-fill" style="flex:1;">
+        <button class="save-btn" onclick="doDonorLookup()" style="margin:0;white-space:nowrap;">🔍 Lookup</button>
+      </div>
+      <div id="r-lookup-result" style="font-size:12px;color:var(--green);margin-top:6px;display:none;"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Donor Name *</label><input class="settings-input" id="r-name" placeholder="Full name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Phone</label><input class="settings-input" id="r-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Email</label><input class="settings-input" id="r-email" placeholder="donor@email.com"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">PAN (for 80G)</label><input class="settings-input" id="r-pan" placeholder="ABCDE1234F"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Address</label><input class="settings-input" id="r-address" placeholder="Full address"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="r-amount" type="number" placeholder="500"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Mode</label>
+        <select class="settings-input" id="r-mode"><option>UPI</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Purpose</label><input class="settings-input" id="r-purpose" placeholder="General Donation" value="General Donation"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Receipt Type</label>
+        <select class="settings-input" id="r-type"><option>Normal</option><option>80G</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" style="background:#2563EB" onclick="previewReceiptForm()">👁 Preview</button>
+      <button class="modal-approve" onclick="generateReceipt()">Generate Receipt</button>
+      <button class="modal-close-btn" onclick="closeReceiptForm()">Cancel</button>
+    </div>
+    <div id="receipt-result" style="display:none;margin-top:16px;">
+      <div class="notice" style="background:var(--green-light);border-color:var(--green);color:var(--green-dark);">✅ Receipt generated: <strong id="receipt-result-no"></strong></div>
+      <div class="modal-actions">
+        <button class="modal-approve" style="background:#2563EB" onclick="viewGeneratedReceipt()">👁 View</button>
+        <button class="modal-approve" style="background:#7C3AED" onclick="downloadGeneratedReceipt()">⬇ Download</button>
+        <button class="modal-approve" onclick="sendReceiptViaEmail()">📧 Email</button>
+        <button class="modal-approve" style="background:#22C55E" onclick="sendReceiptViaWhatsApp()">💬 WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT FORM MODAL -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="closeProductForm()">✕</button>
+    <h3 id="product-modal-title">📦 Add Product</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">SKU / Code *</label><input class="settings-input" id="p-sku" placeholder="PAP-001"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Product Name *</label><input class="settings-input" id="p-name" placeholder="Handmade Diya Set"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Category</label><input class="settings-input" id="p-category" placeholder="Handicrafts"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Selling Price (₹) *</label><input class="settings-input" id="p-price" type="number" placeholder="150"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Cost Price (₹)</label><input class="settings-input" id="p-cost" type="number" placeholder="80"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Stock Quantity *</label><input class="settings-input" id="p-stock" type="number" placeholder="50"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Unit</label><input class="settings-input" id="p-unit" placeholder="pcs" value="pcs"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Tax %</label><input class="settings-input" id="p-tax" type="number" placeholder="5" value="0"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Image URL</label><input class="settings-input" id="p-image" placeholder="https://..."></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Description</label><textarea class="settings-input" id="p-desc" placeholder="Short description" style="min-height:60px;"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveProductForm()">Save Product</button>
+      <button class="modal-close-btn" onclick="closeProductForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVOICE BUILDER MODAL -->
+<div class="modal-overlay" id="invoice-modal">
+  <div class="modal" style="max-width:600px;">
+    <button class="modal-close" onclick="closeInvoiceForm()">✕</button>
+    <h3>🧮 New Sale / Invoice</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Customer Name *</label><input class="settings-input" id="inv-name" placeholder="Customer name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Phone</label><input class="settings-input" id="inv-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Email</label><input class="settings-input" id="inv-email" placeholder="customer@email.com"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Mode</label>
+        <select class="settings-input" id="inv-mode"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank Transfer</option></select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Address</label><input class="settings-input" id="inv-address" placeholder="Delivery / billing address"></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;">
+      <label style="font-size:13px;font-weight:600;color:var(--muted);">Add Items</label>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <select class="settings-input" id="inv-product-select" style="flex:2;"></select>
+        <input class="settings-input" id="inv-qty" type="number" value="1" min="1" style="width:80px;">
+        <button class="save-btn" onclick="addInvoiceItem()" style="margin:0;">+ Add</button>
+        <button class="save-btn" onclick="refreshInvoiceProducts()" style="margin:0;background:#475569;" title="Reload products from sheet">⟳</button>
+      </div>
+      <table style="width:100%;margin-top:14px;font-size:13px;" id="inv-items-table">
+        <thead><tr style="background:var(--bg);"><th style="padding:6px;text-align:left;">Item</th><th style="padding:6px;">Qty</th><th style="padding:6px;text-align:right;">Price</th><th style="padding:6px;text-align:right;">Total</th><th></th></tr></thead>
+        <tbody id="inv-items-tbody"></tbody>
+      </table>
+      <div style="text-align:right;margin-top:10px;font-size:14px;">
+        <div>Subtotal: ₹<span id="inv-subtotal">0</span></div>
+        <div>Tax: ₹<span id="inv-tax">0</span></div>
+        <div style="font-weight:700;font-size:18px;color:var(--saffron);margin-top:4px;">Total: ₹<span id="inv-total">0</span></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" style="background:#2563EB" onclick="previewInvoiceForm()">👁 Preview</button>
+      <button class="modal-approve" onclick="saveInvoice()">Generate Invoice</button>
+      <button class="modal-close-btn" onclick="closeInvoiceForm()">Cancel</button>
+    </div>
+    <div id="invoice-result" style="display:none;margin-top:16px;">
+      <div class="notice" style="background:var(--green-light);border-color:var(--green);color:var(--green-dark);">✅ Invoice generated: <strong id="invoice-result-no"></strong></div>
+      <div class="modal-actions">
+        <button class="modal-approve" style="background:#2563EB" onclick="viewGeneratedInvoice()">👁 View</button>
+        <button class="modal-approve" style="background:#7C3AED" onclick="downloadGeneratedInvoice()">⬇ Download</button>
+        <button class="modal-approve" onclick="sendInvoiceViaEmail()">📧 Email</button>
+        <button class="modal-approve" style="background:#22C55E" onclick="sendInvoiceViaWhatsApp()">💬 WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF FORM MODAL -->
+<div class="modal-overlay" id="staff-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeStaffForm()">✕</button>
+    <h3 id="staff-modal-title">👥 Add Staff / Coordinator</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Username *</label><input class="settings-input" id="st-username" placeholder="jdoe"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Password *</label><input class="settings-input" id="st-password" type="text" placeholder="Set a password"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Full Name *</label><input class="settings-input" id="st-fullname" placeholder="Jane Doe"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Role *</label>
+        <select class="settings-input" id="st-role" onchange="toggleCategoryField()">
+          <option value="Staff">Staff</option>
+          <option value="Coordinator">Coordinator</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group" id="st-category-wrap"><label style="font-size:12px;font-weight:600;color:var(--muted);">Category (Coordinator only)</label>
+        <select class="settings-input" id="st-category">
+          <option>Education</option><option>Food Distribution</option><option>Tree Plantation</option>
+          <option>Animal Care</option><option>Temple Seva</option><option>Health Checkups</option><option>General</option>
+        </select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Email</label><input class="settings-input" id="st-email" placeholder="staff@email.com"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Phone</label><input class="settings-input" id="st-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Status</label>
+        <select class="settings-input" id="st-status"><option>Active</option><option>Inactive</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveStaffForm()">Save Staff Member</button>
+      <button class="modal-close-btn" onclick="closeStaffForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPENSE FORM MODAL -->
+<div class="modal-overlay" id="expense-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeExpenseForm()">✕</button>
+    <h3>💸 Add Expense</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Date *</label><input class="settings-input" id="exp-date" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Category *</label>
+        <select class="settings-input" id="exp-category">
+          <option>Office Supplies</option><option>Utilities</option><option>Transport</option>
+          <option>Event Cost</option><option>Maintenance</option><option>Rent</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Description *</label><input class="settings-input" id="exp-description" placeholder="What was this expense for?"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="exp-amount" type="number" placeholder="500"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Vendor</label><input class="settings-input" id="exp-vendor" placeholder="Vendor / shop name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Mode</label>
+        <select class="settings-input" id="exp-mode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Card</option><option>Cheque</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Approved By</label><input class="settings-input" id="exp-approved" placeholder="Approver name"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Bill / Receipt URL</label><input class="settings-input" id="exp-bill" placeholder="https://drive.google.com/... (optional)"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveExpenseForm()">Save Expense</button>
+      <button class="modal-close-btn" onclick="closeExpenseForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PURCHASE FORM MODAL -->
+<div class="modal-overlay" id="purchase-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closePurchaseForm()">✕</button>
+    <h3>🛒 Add Purchase</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Date *</label><input class="settings-input" id="pur-date" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Item *</label><input class="settings-input" id="pur-item" placeholder="What was purchased"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Supplier *</label><input class="settings-input" id="pur-supplier" placeholder="Supplier name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Quantity</label><input class="settings-input" id="pur-qty" type="number" placeholder="10"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="pur-amount" type="number" placeholder="2000"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Invoice No</label><input class="settings-input" id="pur-invoice" placeholder="Supplier invoice number"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Status</label>
+        <select class="settings-input" id="pur-status"><option>Pending</option><option>Paid</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Due Date</label><input class="settings-input" id="pur-duedate" type="date"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Notes</label><input class="settings-input" id="pur-notes" placeholder="Optional notes"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="savePurchaseForm()">Save Purchase</button>
+      <button class="modal-close-btn" onclick="closePurchaseForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF HR FORM MODAL -->
+<div class="modal-overlay" id="staffhr-modal">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="closeStaffHRForm()">✕</button>
+    <h3 id="staffhr-modal-title">🪪 Add Staff Member (HR)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Employee ID *</label><input class="settings-input" id="hr-empid" placeholder="EMP-001"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Full Name *</label><input class="settings-input" id="hr-name" placeholder="Full name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Department</label><input class="settings-input" id="hr-dept" placeholder="e.g. Education, Operations"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Employment Type</label>
+        <select class="settings-input" id="hr-type"><option>Full-time</option><option>Part-time</option><option>Volunteer-Paid</option><option>Contract</option></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Join Date</label><input class="settings-input" id="hr-joindate" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Monthly Salary (₹)</label><input class="settings-input" id="hr-salary" type="number" placeholder="15000"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Phone</label><input class="settings-input" id="hr-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Email</label><input class="settings-input" id="hr-email" placeholder="staff@email.com"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Address</label><input class="settings-input" id="hr-address" placeholder="Full address"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">PAN</label><input class="settings-input" id="hr-pan" placeholder="ABCDE1234F"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Aadhar Number</label><input class="settings-input" id="hr-aadhar" placeholder="XXXX XXXX XXXX"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Bank Name</label><input class="settings-input" id="hr-bankname" placeholder="Bank name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Account Number</label><input class="settings-input" id="hr-account" placeholder="Account number"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">IFSC Code</label><input class="settings-input" id="hr-ifsc" placeholder="IFSC code"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Status</label>
+        <select class="settings-input" id="hr-status"><option>Active</option><option>Inactive</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveStaffHRForm()">Save Staff Record</button>
+      <button class="modal-close-btn" onclick="closeStaffHRForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SALARY FORM MODAL -->
+<div class="modal-overlay" id="salary-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeSalaryForm()">✕</button>
+    <h3>💰 Record Salary Payment</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Month *</label><input class="settings-input" id="sal-month" type="month"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Employee *</label>
+        <select class="settings-input" id="sal-employee" onchange="onSalaryEmployeeChange()"></select>
+      </div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Basic Salary (₹) *</label><input class="settings-input" id="sal-basic" type="number" placeholder="15000"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Deductions (₹)</label><input class="settings-input" id="sal-deductions" type="number" placeholder="0" value="0"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Date</label><input class="settings-input" id="sal-paydate" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Payment Mode</label>
+        <select class="settings-input" id="sal-mode"><option>Bank Transfer</option><option>Cash</option><option>UPI</option><option>Cheque</option></select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Notes</label><input class="settings-input" id="sal-notes" placeholder="Optional notes"></div>
+    </div>
+    <div style="text-align:right;margin-top:10px;font-size:15px;font-weight:700;color:var(--saffron);">Net Pay: ₹<span id="sal-net-preview">0</span></div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveSalaryForm()">Save Salary Record</button>
+      <button class="modal-close-btn" onclick="closeSalaryForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REIMBURSEMENT FORM MODAL -->
+<div class="modal-overlay" id="reimburse-modal">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="closeReimburseForm()">✕</button>
+    <h3>🧾 Submit Reimbursement Request</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Your Name *</label><input class="settings-input" id="rb-name" placeholder="Full name"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Date *</label><input class="settings-input" id="rb-date" type="date"></div>
+      <div class="form-group"><label style="font-size:12px;font-weight:600;color:var(--muted);">Amount (₹) *</label><input class="settings-input" id="rb-amount" type="number" placeholder="500"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Reason *</label><input class="settings-input" id="rb-reason" placeholder="e.g. Travel for event, Medical, Supplies"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label style="font-size:12px;font-weight:600;color:var(--muted);">Notes</label><input class="settings-input" id="rb-notes" placeholder="Optional notes"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" onclick="saveReimburseForm()">Submit Request</button>
+      <button class="modal-close-btn" onclick="closeReimburseForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENT PREVIEW MODAL (Receipt / Invoice viewer) -->
+<div class="modal-overlay" id="preview-modal" style="z-index:3000;">
+  <div class="modal" style="max-width:680px;padding:20px;">
+    <button class="modal-close" onclick="closePreviewModal()">✕</button>
+    <h3 id="preview-modal-title" style="margin-bottom:12px;">Document Preview</h3>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f0f0f0;">
+      <iframe id="preview-iframe" style="width:100%;height:520px;border:none;display:block;background:white;"></iframe>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-approve" style="background:#7C3AED" onclick="downloadFromPreview()">⬇ Download as HTML</button>
+      <button class="modal-approve" style="background:#475569" onclick="printFromPreview()">🖨 Print / Save as PDF</button>
+      <button class="modal-close-btn" onclick="closePreviewModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================
+//  CONFIG
+// =============================================
+const DEFAULT_PASS = 'pnp@2025';
+let SHEET_URL = '';
+let allData   = [];
+
+// filters & search state
+const state = {
+  vol:      { filter:'all', search:'' },
+  mem:      { filter:'all', search:'' },
+  approved: { filter:'all', search:'' }
+};
+
+// =============================================
+//  AUTH
+// =============================================
+// Reveal username/password fields once a role is chosen
+
+
+function onLoginRoleChange() {
+  const role = document.getElementById('login-role').value;
+  const credBlock = document.getElementById('login-credentials');
+  if (role) {
+    credBlock.style.display = 'block';
+    document.getElementById('login-user').focus();
+  } else {
+    credBlock.style.display = 'none';
+  }
+  document.getElementById('login-err').style.display = 'none';
+}
+
+function doLogin() {
+  const selectedRole = document.getElementById('login-role').value;
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (!selectedRole) { showLoginError('Please select your role first'); return; }
+  if (!u || !p) return;
+
+  // Try server-side login first (covers Admin, Staff, Coordinator from sheet)
+  SHEET_URL = localStorage.getItem('sheetUrl') || '';
+  if (!SHEET_URL) {
+    // No URL set yet — fall back to built-in admin only
+    if (selectedRole === 'Admin' && u === 'admin' && p === (localStorage.getItem('adminPass') || DEFAULT_PASS)) {
+      enterApp('Admin', 'Administrator', '');
+    } else {
+      showLoginError(selectedRole !== 'Admin' ? 'No Apps Script URL configured yet — only Admin can log in until Settings → Sheet URL is set' : 'Invalid username or password');
+    }
+    return;
+  }
+
+  callSheet({ action: 'login', username: u, password: p }, function(res) {
+    if (res && res.success) {
+      if (res.role !== selectedRole) {
+        showLoginError('These credentials belong to a ' + res.role + ' account, not ' + selectedRole + '. Select the correct role.');
+        return;
+      }
+      enterApp(res.role, res.fullName, res.category || '');
+    } else {
+      showLoginError('Invalid username or password');
+    }
+  });
+}
+
+function showLoginError(msg) {
+  const err = document.getElementById('login-err');
+  err.textContent = '❌ ' + (msg || 'Invalid username or password');
+  err.style.display = 'block';
+  setTimeout(() => err.style.display = 'none', 4000);
+}
+
+let CURRENT_ROLE = 'Admin';
+let CURRENT_CATEGORY = '';
+let CURRENT_NAME = '';
+
+function enterApp(role, fullName, category) {
+  CURRENT_ROLE = role;
+  CURRENT_NAME = fullName;
+  CURRENT_CATEGORY = category;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('header-role-name').textContent = fullName + ' (' + role + ')';
+  applyRolePermissions(role);
+  const inp = document.getElementById('sheet-url-input');
+  if (inp && SHEET_URL) inp.value = SHEET_URL;
+  loadData();
+}
+
+// Hide/show sidebar items and pages based on role
+function applyRolePermissions(role) {
+  const allItems = {
+    dashboard: true,
+    volunteers: true,
+    members: true,
+    approved: role === 'Admin' || role === 'Coordinator',
+    renewal: role === 'Admin',
+    donations: role === 'Admin',
+    products: role === 'Admin',
+    sales: role === 'Admin',
+    expenses: role === 'Admin',
+    purchases: role === 'Admin',
+    staffhr: role === 'Admin',
+    salary: role === 'Admin',
+    reimbursements: true, // all roles can view/submit their own
+    staff: role === 'Admin',
+    settings: role === 'Admin'
+  };
+  Object.keys(allItems).forEach(function(key) {
+    const el = document.querySelector('[data-page="' + key + '"]');
+    if (el) el.style.display = allItems[key] ? 'flex' : 'none';
+  });
+  // Finance overview on the dashboard is Admin-only
+  const financeTitle = document.getElementById('finance-overview-title');
+  const financeRows = document.querySelectorAll('#finance-stats-row, #finance-stats-row + .stats-row, #finance-stats-row + .stats-row + .stats-row');
+  const showFinance = role === 'Admin';
+  if (financeTitle) financeTitle.style.display = showFinance ? 'block' : 'none';
+  document.querySelectorAll('.stats-row').forEach(function(row) {
+    if (row.id === 'finance-stats-row' || row.querySelector('#f-donations') || row.querySelector('#f-salary')) {
+      row.style.display = showFinance ? 'grid' : 'none';
+    }
+  });
+  if (showFinance) loadFinanceSummary();
+}
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-role').value = '';
+  document.getElementById('login-credentials').style.display = 'none';
+}
+function changePass() {
+  const np = document.getElementById('new-pass').value;
+  if (np.length < 6) { showToast('Password must be at least 6 characters', 'red'); return; }
+  localStorage.setItem('adminPass', np);
+  showToast('Password updated!', 'green');
+  document.getElementById('new-pass').value = '';
+}
+
+// =============================================
+//  SETTINGS
+// =============================================
+function saveUrl() {
+  const url = document.getElementById('sheet-url-input').value.trim();
+  if (!url) { showToast('Please enter a URL', 'red'); return; }
+  localStorage.setItem('sheetUrl', url);
+  SHEET_URL = url;
+  showToast('URL saved! Loading data...', 'green');
+  loadData();
+}
+function testConnection() {
+  if (!SHEET_URL) { showToast('Save the URL first', 'red'); return; }
+  showToast('Testing connection...', '');
+  callSheet({ action: 'getAll' }, function(res) {
+    if (res && res.success) showToast('✅ Connected! ' + (res.data ? res.data.length : 0) + ' records found.', 'green');
+    else showToast('❌ Connection failed. Check the URL.', 'red');
+  });
+}
+
+// =============================================
+//  FETCH DATA FROM SHEET via JSONP
+// =============================================
+let cbCount = 0;
+function callSheet(params, callback) {
+  if (!SHEET_URL) {
+    showToast('⚠️ Set the Apps Script URL in Settings first', 'red');
+    return;
+  }
+  const cbName = '__pnpCb' + (++cbCount);
+  window[cbName] = function(data) {
+    delete window[cbName];
+    const el = document.getElementById('jsonp-' + cbName);
+    if (el) el.remove();
+    callback(data);
+  };
+  const p = new URLSearchParams(params);
+  p.set('callback', cbName);
+  const script = document.createElement('script');
+  script.id = 'jsonp-' + cbName;
+  script.src = SHEET_URL + '?' + p.toString();
+  script.onerror = function() {
+    delete window[cbName];
+    script.remove();
+    showToast('❌ Could not reach Apps Script. Check URL.', 'red');
+  };
+  document.head.appendChild(script);
+  // timeout after 10s
+  setTimeout(function() {
+    if (window[cbName]) {
+      delete window[cbName];
+      showToast('⏱ Request timed out. Try refreshing.', 'red');
+    }
+  }, 10000);
+}
+
+function loadData() {
+  if (!SHEET_URL) {
+    ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
+      showErrorRows(id, 8, 'No Apps Script URL set. Go to Settings and paste your URL.');
+    });
+    showToast('⚠️ Paste your Apps Script URL in Settings first', 'red');
+    return;
+  }
+  showLoadingRows();
+  callSheet({ action: 'getAll' }, function(res) {
+    if (res && res.success && res.data) {
+      allData = res.data;
+      document.getElementById('last-sync').textContent = 'Synced ' + new Date().toLocaleTimeString('en-IN');
+      renderAll();
+    } else {
+      ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
+        showErrorRows(id, 8, res && res.error ? res.error : 'Failed to load. Tap Refresh Data to retry.');
+      });
+      showToast('❌ Failed to load data. ' + (res && res.error ? res.error : ''), 'red');
+    }
+  });
+}
+
+function showLoadingRows() {
+  ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading...</td></tr>';
+  });
+}
+
+function showErrorRows(tbodyId, colspan, message) {
+  const el = document.getElementById(tbodyId);
+  if (el) el.innerHTML = '<tr><td colspan="' + colspan + '" class="empty-state" style="color:var(--red)">⚠️ ' + (message || 'Could not load data. Check your Apps Script URL in Settings.') + '</td></tr>';
+}
+
+function setLoadingRow(tbodyId, colspan) {
+  const el = document.getElementById(tbodyId);
+  if (el) el.innerHTML = '<tr class="loading-row"><td colspan="' + colspan + '"><span class="spinner"></span> Loading...</td></tr>';
+}
+
+
+function toggleSidebar() {
+  const sidebar  = document.querySelector('.sidebar');
+  const overlay  = document.querySelector('.sidebar-overlay');
+  const isOpen   = sidebar.classList.toggle('show');
+  if (overlay) {
+    if (isOpen) overlay.classList.add('show');
+    else        overlay.classList.remove('show');
+  }
+}
+// =============================================
+//  HELPERS
+// =============================================
+function getField(row, ...keys) {
+  for (const k of keys) {
+    if (row[k] !== undefined && row[k] !== '') return row[k];
+  }
+  return '';
+}
+function getExpiryDate(row) {
+  const approvedOn = getField(row, 'Approved On', 'approvedOn');
+  if (!approvedOn) return null;
+  // parse dd/mm/yyyy or ISO
+  let d;
+  if (approvedOn.includes('/')) {
+    const parts = approvedOn.split('/');
+    d = new Date(parts[2], parts[1]-1, parts[0]);
+  } else {
+    d = new Date(approvedOn);
+  }
+  if (isNaN(d)) return null;
+  d.setFullYear(d.getFullYear() + 1);
+  return d;
+}
+function getDaysLeft(row) {
+  const exp = getExpiryDate(row);
+  if (!exp) return 999;
+  return Math.ceil((exp - new Date()) / (1000 * 60 * 60 * 24));
+}
+function statusBadge(s) {
+  const map = { Pending:'pending', Approved:'approved', Rejected:'rejected' };
+  const cls = map[s] || 'pending';
+  return '<span class="badge badge-' + cls + '">' + (s||'Pending') + '</span>';
+}
+function isVol(row) {
+  return row._sheetName === 'Volunteers';
+}
+
+// =============================================
+//  RENDER ALL
+// =============================================
+function renderAll() {
+  const vols    = allData.filter(r => r._sheetName === 'Volunteers');
+  const mems    = allData.filter(r => r._sheetName === 'Members');
+  const pending = allData.filter(r => (getField(r,'Status') || 'Pending') === 'Pending');
+  const approved= allData.filter(r => getField(r,'Status') === 'Approved');
+  const expiring= approved.filter(r => getDaysLeft(r) <= 30);
+
+  document.getElementById('s-vol').textContent     = vols.length;
+  document.getElementById('s-mem').textContent     = mems.length;
+  document.getElementById('s-pending').textContent = pending.length;
+  document.getElementById('s-approved').textContent= approved.length;
+  document.getElementById('badge-vol').textContent = vols.filter(r => (getField(r,'Status')||'Pending')==='Pending').length;
+  document.getElementById('badge-mem').textContent = mems.filter(r => (getField(r,'Status')||'Pending')==='Pending').length;
+  document.getElementById('badge-renew').textContent = expiring.length;
+
+  renderDash();
+  renderVol();
+  renderMem();
+  renderApproved();
+  renderRenewal();
+}
+
+// =============================================
+//  RENDER DASHBOARD
+// =============================================
+function renderDash() {
+  const tbody = document.getElementById('dash-tbody');
+  const rows  = allData.slice().reverse().slice(0, 15);
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No data yet. Forms will appear here once submitted.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(function(r) {
+    const name    = getField(r, 'Name');
+    const assignId= getField(r, 'Assigned ID') || '—';
+    const email   = getField(r, 'Email');
+    const city    = getField(r, 'City');
+    const ts      = getField(r, 'Timestamp') || '';
+    const status  = getField(r, 'Status') || 'Pending';
+    const type    = isVol(r) ? '🙋 Volunteer' : '🎟️ Member';
+    const dateStr = ts ? ts.slice(0,10) : '—';
+    return '<tr>'
+      + '<td><strong>' + name + '</strong></td>'
+      + '<td>' + type + '</td>'
+      + '<td style="font-size:11px;color:var(--saffron);font-weight:700">' + assignId + '</td>'
+      + '<td style="color:#888;font-size:12px">' + email + '</td>'
+      + '<td>' + city + '</td>'
+      + '<td style="font-size:12px">' + dateStr + '</td>'
+      + '<td>' + statusBadge(status) + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="viewDetail(\'' + r._id + '\')">View</button>'
+      + (status === 'Pending' ? '<button class="act-btn act-approve" onclick="doApprove(\'' + r._id + '\')">✓ Approve</button>' : '')
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+// =============================================
+//  RENDER VOLUNTEERS
+// =============================================
+function renderVol() {
+  const tbody  = document.getElementById('vol-tbody');
+  let rows = allData.filter(r => r._sheetName === 'Volunteers');
+  const f  = state.vol.filter;
+  const s  = state.vol.search.toLowerCase();
+  if (f !== 'all') rows = rows.filter(r => (getField(r,'Status')||'Pending') === f);
+  if (s)           rows = rows.filter(r => getField(r,'Name').toLowerCase().includes(s));
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No records found.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(function(r) {
+    const status   = getField(r, 'Status') || 'Pending';
+    const assignId = getField(r, 'Assigned ID') || '—';
+    return '<tr>'
+      + '<td style="font-size:11px;color:var(--saffron);font-weight:700">' + assignId + '</td>'
+      + '<td><strong>' + getField(r,'Name') + '</strong></td>'
+      + '<td style="color:#888;font-size:12px">' + getField(r,'Email') + '</td>'
+      + '<td>' + getField(r,'Phone') + '</td>'
+      + '<td>' + getField(r,'City') + '</td>'
+      + '<td style="font-size:12px">' + getField(r,'Interest') + '</td>'
+      + '<td>' + statusBadge(status) + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="viewDetail(\'' + r._id + '\')">View</button>'
+      + (status === 'Pending' ? '<button class="act-btn act-approve" onclick="doApprove(\'' + r._id + '\')">✓</button><button class="act-btn act-reject" onclick="doReject(\'' + r._id + '\')">✗</button>' : '')
+      + (status === 'Approved' ? '<button class="act-btn act-resend" onclick="doResend(\'' + r._id + '\')">📧</button>' : '')
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+// =============================================
+//  RENDER MEMBERS
+// =============================================
+function renderMem() {
+  const tbody = document.getElementById('mem-tbody');
+  let rows = allData.filter(r => r._sheetName === 'Members');
+  const f  = state.mem.filter;
+  const s  = state.mem.search.toLowerCase();
+  if (f !== 'all') rows = rows.filter(r => (getField(r,'Status')||'Pending') === f);
+  if (s)           rows = rows.filter(r => getField(r,'Name').toLowerCase().includes(s));
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No records found.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(function(r) {
+    const status   = getField(r, 'Status') || 'Pending';
+    const assignId = getField(r, 'Assigned ID') || '—';
+    const plan     = getField(r, 'Plan') || 'Silver';
+    return '<tr>'
+      + '<td style="font-size:11px;color:var(--saffron);font-weight:700">' + assignId + '</td>'
+      + '<td><strong>' + getField(r,'Name') + '</strong></td>'
+      + '<td style="color:#888;font-size:12px">' + getField(r,'Email') + '</td>'
+      + '<td>' + getField(r,'Phone') + '</td>'
+      + '<td><span class="badge" style="background:var(--saffron-light);color:var(--saffron-dark)">' + plan + '</span></td>'
+      + '<td>' + getField(r,'City') + '</td>'
+      + '<td>' + statusBadge(status) + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="viewDetail(\'' + r._id + '\')">View</button>'
+      + (status === 'Pending' ? '<button class="act-btn act-approve" onclick="doApprove(\'' + r._id + '\')">✓</button><button class="act-btn act-reject" onclick="doReject(\'' + r._id + '\')">✗</button>' : '')
+      + (status === 'Approved' ? '<button class="act-btn act-resend" onclick="doResend(\'' + r._id + '\')">📧</button>' : '')
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+// =============================================
+//  RENDER APPROVED
+// =============================================
+function renderApproved() {
+  const tbody = document.getElementById('approved-tbody');
+  let rows = allData.filter(r => getField(r,'Status') === 'Approved');
+  const s  = state.approved.search.toLowerCase();
+  if (s) rows = rows.filter(r => getField(r,'Name').toLowerCase().includes(s) || getField(r,'Assigned ID').toLowerCase().includes(s));
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No approved entries yet.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(function(r) {
+    const exp     = getExpiryDate(r);
+    const expStr  = exp ? exp.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+    const days    = getDaysLeft(r);
+    const expBadge= days <= 0
+      ? '<span class="badge badge-rejected">Expired</span>'
+      : days <= 30
+        ? '<span class="badge badge-pending">⚠️ ' + days + 'd left</span>'
+        : '<span style="font-size:12px;color:var(--green)">' + expStr + '</span>';
+    return '<tr>'
+      + '<td style="color:var(--saffron);font-weight:700;font-size:12px">' + getField(r,'Assigned ID') + '</td>'
+      + '<td><strong>' + getField(r,'Name') + '</strong></td>'
+      + '<td>' + (isVol(r) ? '🙋 Volunteer' : '🎟️ Member') + '</td>'
+      + '<td style="color:#888;font-size:12px">' + getField(r,'Email') + '</td>'
+      + '<td>' + getField(r,'City') + '</td>'
+      + '<td style="font-size:12px">' + getField(r,'Approved On') + '</td>'
+      + '<td>' + expBadge + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="viewDetail(\'' + r._id + '\')">View</button>'
+      + '<button class="act-btn act-resend" onclick="doResend(\'' + r._id + '\')">📧 Resend</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+// =============================================
+//  RENDER RENEWALS
+// =============================================
+function renderRenewal() {
+  const tbody    = document.getElementById('renewal-tbody');
+  const expiring = allData.filter(r => getField(r,'Status') === 'Approved' && getDaysLeft(r) <= 30)
+                          .sort((a,b) => getDaysLeft(a) - getDaysLeft(b));
+  if (!expiring.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state" style="color:var(--green)">✅ No renewals due in the next 30 days.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = expiring.map(function(r) {
+    const days   = getDaysLeft(r);
+    const exp    = getExpiryDate(r);
+    const expStr = exp ? exp.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+    const color  = days <= 0 ? 'var(--red)' : days <= 7 ? 'var(--red)' : 'var(--yellow-text)';
+    const label  = days <= 0 ? '<strong style="color:var(--red)">EXPIRED</strong>' : '<strong style="color:' + color + '">' + days + ' days</strong>';
+    return '<tr>'
+      + '<td style="color:var(--saffron);font-weight:700;font-size:12px">' + getField(r,'Assigned ID') + '</td>'
+      + '<td><strong>' + getField(r,'Name') + '</strong></td>'
+      + '<td>' + (isVol(r) ? '🙋 Volunteer' : '🎟️ Member') + '</td>'
+      + '<td style="color:#888;font-size:12px">' + getField(r,'Email') + '</td>'
+      + '<td>' + (getField(r,'Plan')||'—') + '</td>'
+      + '<td style="font-size:12px">' + expStr + '</td>'
+      + '<td>' + label + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-approve" onclick="doRenew(\'' + r._id + '\')">🔄 Renew +1yr</button>'
+      + '<button class="act-btn act-view" onclick="viewDetail(\'' + r._id + '\')">View</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+// =============================================
+//  FILTER & SEARCH
+// =============================================
+function setFilter(type, val, btn) {
+  btn.closest('.filter-tabs').querySelectorAll('.f-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state[type].filter = val;
+  if (type === 'vol') renderVol();
+  else renderMem();
+}
+function setSearch(type, val) {
+  state[type].search = val;
+  if (type === 'vol')      renderVol();
+  else if (type === 'mem') renderMem();
+  else                     renderApproved();
+}
+
+// =============================================
+//  ACTIONS — APPROVE
+// =============================================
+function doApprove(rowId) {
+  const row = allData.find(r => r._id === rowId);
+  if (!row) return;
+  const prefix     = isVol(row) ? 'PAP-VOL' : 'PAP-MEM';
+  const assignedId = prefix + '-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+  showToast('Approving...', '');
+  callSheet({
+    action:    'approve',
+    rowIndex:  row._rowIndex,
+    sheetName: row._sheetName,
+    assignedId: assignedId
+  }, function(res) {
+    if (res && res.success) {
+      // Update local data
+      row['Status']      = 'Approved';
+      row['Assigned ID'] = assignedId;
+      row['Approved On'] = new Date().toLocaleDateString('en-IN');
+      showToast('✅ ' + getField(row,'Name') + ' approved! ID: ' + assignedId + '. Email sent.', 'green');
+      closeModal();
+      renderAll();
+    } else {
+      showToast('❌ Approval failed. ' + (res && res.error ? res.error : ''), 'red');
+    }
+  });
+}
+
+// =============================================
+//  ACTIONS — REJECT
+// =============================================
+function doReject(rowId) {
+  const row = allData.find(r => r._id === rowId);
+  if (!row) return;
+  if (!confirm('Reject application from ' + getField(row,'Name') + '?')) return;
+  callSheet({
+    action:    'reject',
+    rowIndex:  row._rowIndex,
+    sheetName: row._sheetName
+  }, function(res) {
+    if (res && res.success) {
+      row['Status'] = 'Rejected';
+      showToast('Application rejected.', 'red');
+      closeModal();
+      renderAll();
+    } else {
+      showToast('❌ Rejection failed.', 'red');
+    }
+  });
+}
+
+// =============================================
+//  ACTIONS — RESEND ID CARD
+// =============================================
+function doResend(rowId) {
+  const row = allData.find(r => r._id === rowId);
+  if (!row) return;
+  const exp      = getExpiryDate(row);
+  const validUntil = exp ? exp.toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'}) : '1 year from approval';
+  const approvedOn = getField(row, 'Approved On');
+  let joinDate;
+  try { joinDate = new Date(approvedOn).toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'}); }
+  catch(e) { joinDate = approvedOn; }
+
+  callSheet({
+    action:     'approve',
+    rowIndex:   row._rowIndex,
+    sheetName:  row._sheetName,
+    assignedId: getField(row, 'Assigned ID')
+  }, function(res) {
+    showToast('📧 ID card resent to ' + getField(row,'Email'), 'green');
+  });
+}
+
+// =============================================
+//  ACTIONS — RENEW +1yr
+// =============================================
+function doRenew(rowId) {
+  const row = allData.find(r => r._id === rowId);
+  if (!row) return;
+  if (!confirm('Renew ' + getField(row,'Name') + ' for 1 more year?')) return;
+  // Reset approvedOn to today so expiry extends 1 year from now
+  const todayStr = new Date().toLocaleDateString('en-IN');
+  callSheet({
+    action:    'approve',
+    rowIndex:  row._rowIndex,
+    sheetName: row._sheetName,
+    assignedId: getField(row,'Assigned ID')
+  }, function(res) {
+    if (res && res.success) {
+      row['Approved On'] = todayStr;
+      showToast('🔄 ' + getField(row,'Name') + ' renewed for 1 year. New ID card emailed.', 'green');
+      renderAll();
+    } else {
+      showToast('❌ Renewal failed.', 'red');
+    }
+  });
+}
+
+// =============================================
+//  VIEW DETAIL MODAL
+// =============================================
+function viewDetail(rowId) {
+  const row = allData.find(r => r._id === rowId);
+  if (!row) return;
+  const name   = getField(row,'Name');
+  const status = getField(row,'Status') || 'Pending';
+  document.getElementById('modal-title').textContent = (isVol(row) ? '🙋 Volunteer' : '🎟️ Member') + ' — ' + name;
+
+  // Build detail rows from all sheet columns
+  const skip = ['_rowIndex','_sheetName','_id'];
+  const detailsHtml = Object.entries(row)
+    .filter(([k]) => !skip.includes(k) && row[k] !== '')
+    .map(([k,v]) => '<div class="detail-row"><span class="detail-label">' + k + '</span><span class="detail-value">' + v + '</span></div>')
+    .join('');
+  document.getElementById('modal-details').innerHTML = detailsHtml;
+
+  // ID Card preview (only if approved)
+  const cardDiv = document.getElementById('modal-id-card');
+  const actDiv  = document.getElementById('modal-actions');
+  const assignedId = getField(row, 'Assigned ID');
+
+  if (status === 'Approved' && assignedId) {
+    const exp      = getExpiryDate(row);
+    const expFull  = exp ? exp.toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'}) : '—';
+    const days     = getDaysLeft(row);
+    const expiryNote = days <= 0
+      ? '<div style="background:var(--red-light);color:var(--red);padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px;">⚠️ Expired. Please renew.</div>'
+      : days <= 30
+        ? '<div style="background:var(--yellow);color:var(--yellow-text);padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px;">⚠️ Expiring in ' + days + ' days.</div>'
+        : '';
+    cardDiv.innerHTML =
+      '<div class="id-preview">'
+      + '<div class="id-prev-head">Pupils & Peoples Foundation — ID Card</div>'
+      + '<div class="id-prev-body">'
+      + '<div class="id-prev-row"><span style="color:var(--muted)">ID</span><span style="color:var(--saffron);font-weight:700">' + assignedId + '</span></div>'
+      + '<div class="id-prev-row"><span style="color:var(--muted)">Name</span><span><strong>' + name + '</strong></span></div>'
+      + '<div class="id-prev-row"><span style="color:var(--muted)">Role</span><span>' + (isVol(row) ? 'Volunteer' : 'Member (' + (getField(row,'Plan')||'Silver') + ')') + '</span></div>'
+      + '<div class="id-prev-row"><span style="color:var(--muted)">Mobile</span><span>' + getField(row,'Phone') + '</span></div>'
+      + '<div class="id-prev-row"><span style="color:var(--muted)">City</span><span>' + getField(row,'City') + '</span></div>'
+      + '<div class="id-prev-row"><span style="color:var(--muted)">Valid Until</span><span style="color:' + (days<=30?'var(--red)':'var(--green)') + ';font-weight:700">' + expFull + '</span></div>'
+      + '</div>'
+      + '<div class="id-prev-foot"><span>' + assignedId + '</span><span>pupilsandpeoples.org</span></div>'
+      + '</div>'
+      + expiryNote;
+    actDiv.innerHTML =
+      '<button class="modal-approve" style="background:var(--saffron)" onclick="doResend(\'' + rowId + '\');closeModal()">📧 Resend ID Card</button>'
+      + (days <= 30 ? '<button class="modal-approve" onclick="doRenew(\'' + rowId + '\');closeModal()">🔄 Renew +1yr</button>' : '')
+      + '<button class="modal-close-btn" onclick="closeModal()">Close</button>';
+  } else if (status === 'Pending') {
+    cardDiv.innerHTML = '';
+    actDiv.innerHTML =
+      '<button class="modal-approve" onclick="doApprove(\'' + rowId + '\')">✅ Approve & Send ID Card</button>'
+      + '<button class="modal-reject" onclick="doReject(\'' + rowId + '\')">✗ Reject</button>'
+      + '<button class="modal-close-btn" onclick="closeModal()">Cancel</button>';
+  } else {
+    cardDiv.innerHTML = '';
+    actDiv.innerHTML = '<button class="modal-close-btn" onclick="closeModal()">Close</button>';
+  }
+
+  document.getElementById('detail-modal').classList.add('show');
+}
+function closeModal() { document.getElementById('detail-modal').classList.remove('show'); }
+
+// =============================================
+//  PAGE NAVIGATION
+// =============================================
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+
+  const target = document.getElementById('page-' + name);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.sidebar-item').forEach(function(s) { s.classList.remove('active'); });
+
+  const item = document.querySelector('[data-page="' + name + '"]');
+  if (item) item.classList.add('active');
+
+  // Lazy-load data for new modules when their page is opened
+  if (name === 'donations')       loadDonations();
+  if (name === 'products')        loadProducts();
+  if (name === 'sales')           loadSalesData();
+  if (name === 'staff')           loadStaffData();
+  if (name === 'expenses')        loadExpenses();
+  if (name === 'purchases')       loadPurchases();
+  if (name === 'staffhr')         loadStaffHR();
+  if (name === 'salary')          loadSalaries();
+  if (name === 'reimbursements')  loadReimbursements();
+
+  // Close sidebar on mobile after selecting a menu
+  if (window.innerWidth <= 768) {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    sidebar.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
+  }
+
+  // Scroll content area back to top on page change
+  const contentEl = document.querySelector('.content');
+  if (contentEl) contentEl.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+// =============================================
+//  TOAST
+// =============================================
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.style.display = 'block';
+  t.style.animation = 'slideUp 0.3s ease';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.display = 'none', 4000);
+}
+
+// =============================================
+//  GENERIC DOCUMENT PREVIEW / DOWNLOAD / PRINT
+//  Used by both Receipts and Invoices
+// =============================================
+let currentPreviewHtml = '';
+let currentPreviewFilename = 'document.html';
+
+function showPreview(title, html) {
+  currentPreviewHtml = html;
+  document.getElementById('preview-modal-title').textContent = title;
+  const iframe = document.getElementById('preview-iframe');
+  iframe.srcdoc = html;
+  document.getElementById('preview-modal').classList.add('show');
+}
+function closePreviewModal() {
+  document.getElementById('preview-modal').classList.remove('show');
+}
+function downloadHtml(html, filename) {
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || 'document.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function downloadFromPreview() {
+  if (!currentPreviewHtml) return;
+  const name = (document.getElementById('preview-modal-title').textContent || 'document').replace(/[^a-z0-9]+/gi, '_');
+  downloadHtml(currentPreviewHtml, name + '.html');
+}
+function printFromPreview() {
+  const iframe = document.getElementById('preview-iframe');
+  try {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  } catch(e) {
+    showToast('Could not open print dialog', 'red');
+  }
+}
+
+// =============================================
+//  DONATIONS / RECEIPT GENERATOR
+// =============================================
+let donationsCache = [];
+let lastReceiptData = null;
+
+function loadDonations() {
+  setLoadingRow('donations-tbody', 7);
+  callSheet({ action: 'getDonations' }, function(res) {
+    if (res && res.success) { donationsCache = res.data || []; renderDonationsTable(); }
+    else showErrorRows('donations-tbody', 7);
+  });
+}
+
+
+function renderDonationsTable() {
+  const tbody = document.getElementById('donations-tbody');
+  if (!donationsCache.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No donations recorded yet.</td></tr>';
+  } else {
+    tbody.innerHTML = donationsCache.slice().reverse().map(function(d) {
+      return '<tr>'
+        + '<td style="font-size:11px;color:var(--saffron);font-weight:700">' + (d['Receipt No']||'') + '</td>'
+        + '<td><strong>' + (d['Donor Name']||'') + '</strong></td>'
+        + '<td style="font-size:12px;color:#888">' + (d['Phone']||'') + '</td>'
+        + '<td style="font-weight:700">₹' + parseFloat(d['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td><span class="badge" style="background:' + (d['Receipt Type']==='80G'?'var(--green-light)':'var(--saffron-light)') + ';color:' + (d['Receipt Type']==='80G'?'var(--green-dark)':'var(--saffron-dark)') + '">' + (d['Receipt Type']||'Normal') + '</span></td>'
+        + '<td style="font-size:12px">' + (d['Timestamp']?d['Timestamp'].slice(0,10):'') + '</td>'
+        + '<td><div class="action-btns">'
+        + '<button class="act-btn act-view" onclick="resendDonationReceipt(' + (donationsCache.indexOf(d)) + ')">📧 Resend</button>'
+        + '</div></td>'
+        + '</tr>';
+    }).join('');
+  }
+  document.getElementById('d-total-donors').textContent = donationsCache.length;
+  document.getElementById('d-total-amount').textContent = '₹' + donationsCache.reduce(function(s,d){return s+(parseFloat(d['Amount'])||0);},0).toLocaleString('en-IN');
+  document.getElementById('d-total-80g').textContent = donationsCache.filter(function(d){return d['Receipt Type']==='80G';}).length;
+}
+
+function openReceiptForm() {
+  document.getElementById('receipt-modal').classList.add('show');
+  document.getElementById('receipt-result').style.display = 'none';
+  ['r-lookup','r-name','r-phone','r-email','r-pan','r-address','r-amount'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('r-purpose').value = 'General Donation';
+  document.getElementById('r-lookup-result').style.display = 'none';
+}
+function closeReceiptForm() { document.getElementById('receipt-modal').classList.remove('show'); }
+
+function doDonorLookup() {
+  const q = document.getElementById('r-lookup').value.trim();
+  if (!q) return;
+  callSheet({ action: 'lookupDonor', query: q }, function(res) {
+    const resultEl = document.getElementById('r-lookup-result');
+    if (res && res.success && res.found) {
+      document.getElementById('r-name').value = res.donor.name;
+      document.getElementById('r-phone').value = res.donor.phone;
+      document.getElementById('r-email').value = res.donor.email;
+      document.getElementById('r-address').value = res.donor.address;
+      document.getElementById('r-pan').value = res.donor.pan;
+      resultEl.style.display = 'block';
+      resultEl.textContent = '✅ Found! ' + res.totalDonations + ' past donation(s), total ₹' + res.totalAmount.toLocaleString('en-IN');
+    } else {
+      resultEl.style.display = 'block';
+      resultEl.style.color = 'var(--muted)';
+      resultEl.textContent = 'No previous donor found — enter details manually below.';
+    }
+  });
+}
+
+// Build payload object from the receipt form fields (without saving to sheet)
+function gatherReceiptFormData() {
+  return {
+    donorName: document.getElementById('r-name').value.trim(),
+    phone: document.getElementById('r-phone').value,
+    email: document.getElementById('r-email').value,
+    address: document.getElementById('r-address').value,
+    pan: document.getElementById('r-pan').value,
+    amount: document.getElementById('r-amount').value,
+    paymentMode: document.getElementById('r-mode').value,
+    purpose: document.getElementById('r-purpose').value,
+    receiptType: document.getElementById('r-type').value
+  };
+}
+
+// Preview before saving — uses a temporary receipt number so nothing is written to the sheet yet
+function previewReceiptForm() {
+  const data = gatherReceiptFormData();
+  if (!data.donorName || !data.amount) { showToast('Donor name and amount are required', 'red'); return; }
+  const tempReceiptNo = (data.receiptType === '80G' ? 'PAP-80G-PREVIEW' : 'PAP-RCT-PREVIEW');
+  const payload = Object.assign({ action: 'previewReceipt', receiptNo: tempReceiptNo }, data);
+  callSheet(payload, function(res) {
+    if (res && res.success) showPreview('Receipt Preview', res.html);
+    else showToast('❌ Could not generate preview', 'red');
+  });
+}
+
+function generateReceipt() {
+  const data = gatherReceiptFormData();
+  if (!data.donorName || !data.amount) { showToast('Donor name and amount are required', 'red'); return; }
+
+  const payload = Object.assign({ action: 'saveDonation' }, data);
+
+  callSheet(payload, function(res) {
+    if (res && res.success) {
+      lastReceiptData = Object.assign({}, data, { receiptNo: res.receiptNo });
+      document.getElementById('receipt-result-no').textContent = res.receiptNo;
+      document.getElementById('receipt-result').style.display = 'block';
+      showToast('✅ Receipt ' + res.receiptNo + ' generated!', 'green');
+      loadDonations();
+    } else {
+      showToast('❌ Failed to generate receipt', 'red');
+    }
+  });
+}
+
+function viewGeneratedReceipt() {
+  if (!lastReceiptData) return;
+  callSheet(Object.assign({ action: 'previewReceipt' }, lastReceiptData), function(res) {
+    if (res && res.success) showPreview('Receipt — ' + lastReceiptData.receiptNo, res.html);
+    else showToast('❌ Could not load receipt', 'red');
+  });
+}
+
+function downloadGeneratedReceipt() {
+  if (!lastReceiptData) return;
+  callSheet(Object.assign({ action: 'previewReceipt' }, lastReceiptData), function(res) {
+    if (res && res.success) downloadHtml(res.html, lastReceiptData.receiptNo + '.html');
+    else showToast('❌ Could not download receipt', 'red');
+  });
+}
+
+function sendReceiptViaEmail() {
+  if (!lastReceiptData || !lastReceiptData.email) { showToast('No email address on file', 'red'); return; }
+  callSheet(Object.assign({ action: 'sendReceipt' }, lastReceiptData), function(res) {
+    if (res && res.success) showToast('📧 Receipt emailed to ' + lastReceiptData.email, 'green');
+    else showToast('❌ Email failed: ' + (res && res.error || ''), 'red');
+  });
+}
+
+function sendReceiptViaWhatsApp() {
+  if (!lastReceiptData || !lastReceiptData.phone) { showToast('No phone number on file', 'red'); return; }
+  const phone = lastReceiptData.phone.replace(/\D/g, '');
+  const msg = 'Dear ' + lastReceiptData.donorName + ', thank you for your generous donation of ₹' + lastReceiptData.amount
+    + ' to ' + 'Pupils & Peoples Foundation. Your receipt number is ' + lastReceiptData.receiptNo
+    + (lastReceiptData.receiptType === '80G' ? ' (eligible for 80G tax deduction)' : '') + '. We truly appreciate your support! 🙏';
+  const url = 'https://wa.me/' + (phone.length === 10 ? '91' + phone : phone) + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+function resendDonationReceipt(idx) {
+  const d = donationsCache.slice().reverse()[idx];
+  if (!d) return;
+  const payload = {
+    action: 'sendReceipt',
+    donorName: d['Donor Name'], phone: d['Phone'], email: d['Email'], address: d['Address'],
+    pan: d['PAN'], amount: d['Amount'], paymentMode: d['Payment Mode'], purpose: d['Purpose'],
+    receiptType: d['Receipt Type'], receiptNo: d['Receipt No']
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) showToast('📧 Resent to ' + d['Email'], 'green');
+    else showToast('❌ Resend failed', 'red');
+  });
+}
+
+// =============================================
+//  PRODUCTS
+// =============================================
+let productsCache = [];
+let editingProductSku = null;
+
+function loadProducts() {
+  setLoadingRow('products-tbody', 8);
+  callSheet({ action: 'getProducts' }, function(res) {
+    if (res && res.success) { productsCache = res.data || []; renderProductsTable(); }
+    else showErrorRows('products-tbody', 8);
+  });
+}
+
+function renderProductsTable() {
+  const tbody = document.getElementById('products-tbody');
+  if (!productsCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No products yet. Click "Add Product" to get started.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = productsCache.map(function(p) {
+    const lowStock = parseFloat(p['Stock Qty']) <= 5;
+    return '<tr>'
+      + '<td style="font-size:12px;font-weight:700;color:var(--saffron)">' + p['SKU'] + '</td>'
+      + '<td><strong>' + p['Name'] + '</strong></td>'
+      + '<td style="font-size:12px">' + (p['Category']||'—') + '</td>'
+      + '<td>₹' + p['Price'] + '</td>'
+      + '<td>' + (lowStock ? '<span class="badge badge-rejected">' + p['Stock Qty'] + ' low!</span>' : p['Stock Qty']) + '</td>'
+      + '<td style="font-size:12px">' + (p['Unit']||'pcs') + '</td>'
+      + '<td style="font-size:12px">' + (p['Tax%']||0) + '%</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="editProduct(\'' + p['SKU'] + '\')">✏️ Edit</button>'
+      + '<button class="act-btn act-reject" onclick="removeProduct(\'' + p['SKU'] + '\')">🗑️</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function openProductForm() {
+  editingProductSku = null;
+  document.getElementById('product-modal-title').textContent = '📦 Add Product';
+  ['p-sku','p-name','p-category','p-price','p-cost','p-stock','p-image','p-desc'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('p-unit').value = 'pcs';
+  document.getElementById('p-tax').value = '0';
+  document.getElementById('product-modal').classList.add('show');
+}
+function closeProductForm() { document.getElementById('product-modal').classList.remove('show'); }
+
+function editProduct(sku) {
+  const p = productsCache.find(function(x){ return x['SKU'] === sku; });
+  if (!p) return;
+  editingProductSku = sku;
+  document.getElementById('product-modal-title').textContent = '✏️ Edit Product';
+  document.getElementById('p-sku').value = p['SKU'];
+  document.getElementById('p-name').value = p['Name'];
+  document.getElementById('p-category').value = p['Category']||'';
+  document.getElementById('p-price').value = p['Price'];
+  document.getElementById('p-cost').value = p['Cost Price']||'';
+  document.getElementById('p-stock').value = p['Stock Qty'];
+  document.getElementById('p-unit').value = p['Unit']||'pcs';
+  document.getElementById('p-tax').value = p['Tax%']||0;
+  document.getElementById('p-image').value = p['Image URL']||'';
+  document.getElementById('p-desc').value = p['Description']||'';
+  document.getElementById('product-modal').classList.add('show');
+}
+
+function saveProductForm() {
+  const sku = document.getElementById('p-sku').value.trim();
+  const name = document.getElementById('p-name').value.trim();
+  if (!sku || !name) { showToast('SKU and Name are required', 'red'); return; }
+  const payload = {
+    action: 'saveProduct', sku: sku, name: name,
+    category: document.getElementById('p-category').value,
+    price: document.getElementById('p-price').value,
+    costPrice: document.getElementById('p-cost').value,
+    stockQty: document.getElementById('p-stock').value,
+    unit: document.getElementById('p-unit').value,
+    tax: document.getElementById('p-tax').value,
+    description: document.getElementById('p-desc').value,
+    imageUrl: document.getElementById('p-image').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) {
+      showToast('✅ Product saved!', 'green');
+      closeProductForm();
+      loadProducts();
+    } else {
+      showToast('❌ Save failed', 'red');
+    }
+  });
+}
+
+function removeProduct(sku) {
+  if (!confirm('Delete this product permanently?\n\nSKU: ' + sku)) return;
+  showToast('Deleting...', '');
+  callSheet({ action: 'deleteProduct', sku: sku }, function(res) {
+    if (res && res.success) {
+      showToast('✅ Product deleted', 'green');
+      loadProducts();
+    } else {
+      showToast('❌ Delete failed: ' + (res && res.error ? res.error : 'Unknown error — check Apps Script is redeployed'), 'red');
+    }
+  });
+}
+
+// =============================================
+//  SALES / INVOICE
+// =============================================
+let salesCache = [];
+let invoiceItems = [];
+let lastInvoiceData = null;
+
+function loadSalesData() {
+  setLoadingRow('sales-tbody', 7);
+  callSheet({ action: 'getSales' }, function(res) {
+    if (res && res.success) { salesCache = res.data || []; renderSalesTable(); }
+    else showErrorRows('sales-tbody', 7);
+  });
+  if (!productsCache.length) loadProducts();
+}
+
+function renderSalesTable() {
+  const tbody = document.getElementById('sales-tbody');
+  if (!salesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No sales recorded yet.</td></tr>';
+  } else {
+    tbody.innerHTML = salesCache.slice().reverse().map(function(s) {
+      let itemCount = 0;
+      try { itemCount = JSON.parse(s['Items JSON']||'[]').length; } catch(e){}
+      return '<tr>'
+        + '<td style="font-size:11px;color:var(--saffron);font-weight:700">' + (s['Invoice No']||'') + '</td>'
+        + '<td><strong>' + (s['Customer Name']||'') + '</strong></td>'
+        + '<td style="font-size:12px">' + itemCount + ' item(s)</td>'
+        + '<td style="font-weight:700">₹' + parseFloat(s['Total']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (s['Payment Mode']||'') + '</td>'
+        + '<td style="font-size:12px">' + (s['Timestamp']?s['Timestamp'].slice(0,10):'') + '</td>'
+        + '<td>—</td>'
+        + '</tr>';
+    }).join('');
+  }
+  document.getElementById('sa-total-inv').textContent = salesCache.length;
+  document.getElementById('sa-total-value').textContent = '₹' + salesCache.reduce(function(s,d){return s+(parseFloat(d['Total'])||0);},0).toLocaleString('en-IN');
+}
+
+function openInvoiceForm() {
+  invoiceItems = [];
+  ['inv-name','inv-phone','inv-email','inv-address'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('invoice-result').style.display = 'none';
+  renderInvoiceItems();
+  document.getElementById('invoice-modal').classList.add('show');
+  // Always fetch the freshest product list right before showing the dropdown
+  const sel = document.getElementById('inv-product-select');
+  sel.innerHTML = '<option value="">Loading products...</option>';
+  callSheet({ action: 'getProducts' }, function(res) {
+    console.log('getProducts response:', res);
+    if (res && res.success) {
+      productsCache = res.data || [];
+      if (!productsCache.length) {
+        console.warn('getProducts returned an empty array. If you have products in the sheet, your Apps Script deployment is likely outdated — redeploy as a NEW VERSION.');
+      }
+      populateProductSelect();
+    } else {
+      sel.innerHTML = '<option value="">Failed to load products — check console</option>';
+      showToast('❌ Could not load products. Open browser console (F12) for details.', 'red');
+    }
+  });
+}
+function closeInvoiceForm() { document.getElementById('invoice-modal').classList.remove('show'); }
+
+function populateProductSelect() {
+  const sel = document.getElementById('inv-product-select');
+  if (!productsCache.length) {
+    sel.innerHTML = '<option value="">No products yet — add one in the Products tab</option>';
+    return;
+  }
+  sel.innerHTML = productsCache.map(function(p) {
+    return '<option value="' + p['SKU'] + '">' + p['Name'] + ' — ₹' + p['Price'] + ' (Stock: ' + p['Stock Qty'] + ')</option>';
+  }).join('');
+}
+
+function refreshInvoiceProducts() {
+  const sel = document.getElementById('inv-product-select');
+  sel.innerHTML = '<option value="">Refreshing...</option>';
+  callSheet({ action: 'getProducts' }, function(res) {
+    console.log('refreshInvoiceProducts response:', res);
+    if (res && res.success) {
+      productsCache = res.data || [];
+      populateProductSelect();
+      showToast(productsCache.length ? '✅ Loaded ' + productsCache.length + ' product(s)' : '⚠️ Sheet has 0 products', productsCache.length ? 'green' : 'red');
+    } else {
+      sel.innerHTML = '<option value="">Failed to load — check console</option>';
+      showToast('❌ Refresh failed. Check console for details.', 'red');
+    }
+  });
+}
+
+function addInvoiceItem() {
+  const sku = document.getElementById('inv-product-select').value;
+  const qty = parseInt(document.getElementById('inv-qty').value) || 1;
+  const product = productsCache.find(function(p){ return String(p['SKU']) === String(sku); });
+  if (!sku || !product) { showToast('Please select a product from the dropdown', 'red'); return; }
+  invoiceItems.push({ sku: sku, name: product['Name'], price: parseFloat(product['Price']), qty: qty, tax: parseFloat(product['Tax%']||0) });
+  renderInvoiceItems();
+}
+
+function removeInvoiceItem(idx) {
+  invoiceItems.splice(idx, 1);
+  renderInvoiceItems();
+}
+
+function renderInvoiceItems() {
+  const tbody = document.getElementById('inv-items-tbody');
+  tbody.innerHTML = invoiceItems.map(function(it, idx) {
+    return '<tr>'
+      + '<td style="padding:6px;">' + it.name + '</td>'
+      + '<td style="padding:6px;text-align:center;">' + it.qty + '</td>'
+      + '<td style="padding:6px;text-align:right;">₹' + it.price + '</td>'
+      + '<td style="padding:6px;text-align:right;">₹' + (it.qty * it.price) + '</td>'
+      + '<td style="padding:6px;"><button class="act-btn act-reject" onclick="removeInvoiceItem(' + idx + ')">✕</button></td>'
+      + '</tr>';
+  }).join('');
+  let subtotal = 0, tax = 0;
+  invoiceItems.forEach(function(it) {
+    const lineTotal = it.qty * it.price;
+    subtotal += lineTotal;
+    tax += lineTotal * (it.tax/100);
+  });
+  document.getElementById('inv-subtotal').textContent = subtotal.toFixed(2);
+  document.getElementById('inv-tax').textContent = tax.toFixed(2);
+  document.getElementById('inv-total').textContent = (subtotal + tax).toFixed(2);
+}
+
+// Build payload from current invoice form + items (without saving)
+function gatherInvoiceFormData() {
+  let subtotal = 0, tax = 0;
+  invoiceItems.forEach(function(it) { const lt = it.qty*it.price; subtotal += lt; tax += lt*(it.tax/100); });
+  const total = subtotal + tax;
+  return {
+    customerName: document.getElementById('inv-name').value.trim(),
+    phone: document.getElementById('inv-phone').value,
+    email: document.getElementById('inv-email').value,
+    address: document.getElementById('inv-address').value,
+    items: JSON.stringify(invoiceItems),
+    subtotal: subtotal.toFixed(2), tax: tax.toFixed(2), total: total.toFixed(2),
+    paymentMode: document.getElementById('inv-mode').value
+  };
+}
+
+function previewInvoiceForm() {
+  const data = gatherInvoiceFormData();
+  if (!data.customerName) { showToast('Customer name required', 'red'); return; }
+  if (!invoiceItems.length) { showToast('Add at least one item', 'red'); return; }
+  const payload = Object.assign({ action: 'previewInvoice', invoiceNo: 'PAP-INV-PREVIEW' }, data);
+  callSheet(payload, function(res) {
+    if (res && res.success) showPreview('Invoice Preview', res.html);
+    else showToast('❌ Could not generate preview', 'red');
+  });
+}
+
+function saveInvoice() {
+  const data = gatherInvoiceFormData();
+  if (!data.customerName) { showToast('Customer name required', 'red'); return; }
+  if (!invoiceItems.length) { showToast('Add at least one item', 'red'); return; }
+
+  const payload = Object.assign({ action: 'saveSale' }, data);
+
+  callSheet(payload, function(res) {
+    if (res && res.success) {
+      lastInvoiceData = Object.assign({}, data, { invoiceNo: res.invoiceNo });
+      document.getElementById('invoice-result-no').textContent = res.invoiceNo;
+      document.getElementById('invoice-result').style.display = 'block';
+      showToast('✅ Invoice ' + res.invoiceNo + ' generated!', 'green');
+      loadProducts();
+      loadSalesData();
+    } else {
+      showToast('❌ Failed to generate invoice', 'red');
+    }
+  });
+}
+
+function viewGeneratedInvoice() {
+  if (!lastInvoiceData) return;
+  callSheet(Object.assign({ action: 'previewInvoice' }, lastInvoiceData), function(res) {
+    if (res && res.success) showPreview('Invoice — ' + lastInvoiceData.invoiceNo, res.html);
+    else showToast('❌ Could not load invoice', 'red');
+  });
+}
+
+function downloadGeneratedInvoice() {
+  if (!lastInvoiceData) return;
+  callSheet(Object.assign({ action: 'previewInvoice' }, lastInvoiceData), function(res) {
+    if (res && res.success) downloadHtml(res.html, lastInvoiceData.invoiceNo + '.html');
+    else showToast('❌ Could not download invoice', 'red');
+  });
+}
+
+function sendInvoiceViaEmail() {
+  if (!lastInvoiceData || !lastInvoiceData.email) { showToast('No email on file', 'red'); return; }
+  callSheet(Object.assign({ action: 'sendInvoice' }, lastInvoiceData), function(res) {
+    if (res && res.success) showToast('📧 Invoice emailed to ' + lastInvoiceData.email, 'green');
+    else showToast('❌ Email failed', 'red');
+  });
+}
+
+function sendInvoiceViaWhatsApp() {
+  if (!lastInvoiceData || !lastInvoiceData.phone) { showToast('No phone on file', 'red'); return; }
+  const phone = lastInvoiceData.phone.replace(/\D/g, '');
+  const msg = 'Dear ' + lastInvoiceData.customerName + ', thank you for your purchase from Pupils & Peoples Foundation! '
+    + 'Invoice No: ' + lastInvoiceData.invoiceNo + ', Total: ₹' + lastInvoiceData.total + '. We appreciate your support! 🙏';
+  const url = 'https://wa.me/' + (phone.length === 10 ? '91' + phone : phone) + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+// =============================================
+//  STAFF MANAGEMENT
+// =============================================
+let staffCache = [];
+
+function loadStaffData() {
+  setLoadingRow('staff-tbody', 7);
+  callSheet({ action: 'getStaff' }, function(res) {
+    if (res && res.success) { staffCache = res.data || []; renderStaffTable(); }
+    else showErrorRows('staff-tbody', 7);
+  });
+}
+
+function renderStaffTable() {
+  const tbody = document.getElementById('staff-tbody');
+  if (!staffCache.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No staff added yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = staffCache.map(function(s) {
+    const roleColor = s['Role']==='Admin' ? 'var(--red)' : s['Role']==='Coordinator' ? 'var(--saffron)' : 'var(--green)';
+    return '<tr>'
+      + '<td style="font-weight:600">' + s['Username'] + '</td>'
+      + '<td>' + s['Full Name'] + '</td>'
+      + '<td><span class="badge" style="background:' + roleColor + ';color:white">' + s['Role'] + '</span></td>'
+      + '<td style="font-size:12px">' + (s['Category']||'—') + '</td>'
+      + '<td style="font-size:12px;color:#888">' + (s['Email']||'—') + '</td>'
+      + '<td>' + (s['Status']==='Inactive' ? '<span class="badge badge-rejected">Inactive</span>' : '<span class="badge badge-approved">Active</span>') + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="editStaff(\'' + s['Username'] + '\')">✏️ Edit</button>'
+      + '<button class="act-btn act-reject" onclick="removeStaff(\'' + s['Username'] + '\')">🗑️</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function toggleCategoryField() {
+  const role = document.getElementById('st-role').value;
+  document.getElementById('st-category-wrap').style.display = role === 'Coordinator' ? 'block' : 'none';
+}
+
+let editingStaffUsername = null;
+function openStaffForm() {
+  editingStaffUsername = null;
+  document.getElementById('staff-modal-title').textContent = '👥 Add Staff / Coordinator';
+  ['st-username','st-password','st-fullname','st-email','st-phone'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('st-role').value = 'Staff';
+  document.getElementById('st-status').value = 'Active';
+  toggleCategoryField();
+  document.getElementById('staff-modal').classList.add('show');
+}
+function closeStaffForm() { document.getElementById('staff-modal').classList.remove('show'); }
+
+function editStaff(username) {
+  const s = staffCache.find(function(x){ return x['Username'] === username; });
+  if (!s) return;
+  editingStaffUsername = username;
+  document.getElementById('staff-modal-title').textContent = '✏️ Edit Staff Member';
+  document.getElementById('st-username').value = s['Username'];
+  document.getElementById('st-password').value = ''; // leave blank = keep old password
+  document.getElementById('st-fullname').value = s['Full Name'];
+  document.getElementById('st-role').value = s['Role'];
+  document.getElementById('st-category').value = s['Category']||'General';
+  document.getElementById('st-email').value = s['Email']||'';
+  document.getElementById('st-phone').value = s['Phone']||'';
+  document.getElementById('st-status').value = s['Status']||'Active';
+  toggleCategoryField();
+  document.getElementById('staff-modal').classList.add('show');
+}
+
+function saveStaffForm() {
+  const username = document.getElementById('st-username').value.trim();
+  const fullName = document.getElementById('st-fullname').value.trim();
+  if (!username || !fullName) { showToast('Username and Full Name required', 'red'); return; }
+  const payload = {
+    action: 'saveStaff', username: username,
+    password: document.getElementById('st-password').value,
+    fullName: fullName,
+    role: document.getElementById('st-role').value,
+    category: document.getElementById('st-category').value,
+    email: document.getElementById('st-email').value,
+    phone: document.getElementById('st-phone').value,
+    status: document.getElementById('st-status').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) {
+      showToast('✅ Staff member saved!', 'green');
+      closeStaffForm();
+      loadStaffData();
+    } else {
+      showToast('❌ Save failed', 'red');
+    }
+  });
+}
+
+function removeStaff(username) {
+  if (!confirm('Remove this staff member?')) return;
+  callSheet({ action: 'deleteStaff', username: username }, function(res) {
+    if (res && res.success) { showToast('Staff removed', 'green'); loadStaffData(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  FINANCE SUMMARY (Dashboard rollup)
+// =============================================
+function loadFinanceSummary() {
+  callSheet({ action: 'getFinanceSummary' }, function(res) {
+    if (!res || !res.success) return;
+    const s = res.summary;
+    const fmt = function(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
+    document.getElementById('f-income').textContent          = fmt(s.totalIncome);
+    document.getElementById('f-outgo').textContent            = fmt(s.totalOutgo);
+    document.getElementById('f-balance').textContent          = fmt(s.netBalance);
+    document.getElementById('f-staffcount').textContent       = s.staffCount;
+    document.getElementById('f-donations').textContent        = fmt(s.totalDonations);
+    document.getElementById('f-sales').textContent             = fmt(s.totalSales);
+    document.getElementById('f-expenses').textContent         = fmt(s.totalExpenses);
+    document.getElementById('f-purchases').textContent        = fmt(s.totalPurchases);
+    document.getElementById('f-salary').textContent           = fmt(s.totalSalaryPaid);
+    document.getElementById('f-reimbursed').textContent       = fmt(s.totalReimbursed);
+    document.getElementById('f-pending-reimburse').textContent= fmt(s.pendingReimburse);
+    document.getElementById('f-pending-purchase').textContent = fmt(s.pendingPurchases);
+    const balEl = document.getElementById('f-balance');
+    balEl.className = 'stat-num ' + (s.netBalance >= 0 ? 'green' : 'red');
+  });
+}
+
+// =============================================
+//  EXPENSES
+// =============================================
+let expensesCache = [];
+
+function loadExpenses() {
+  setLoadingRow('expenses-tbody', 8);
+  callSheet({ action: 'getExpenses' }, function(res) {
+    if (res && res.success) { expensesCache = res.data || []; renderExpensesTable(); }
+    else showErrorRows('expenses-tbody', 8);
+  });
+}
+
+function renderExpensesTable() {
+  const tbody = document.getElementById('expenses-tbody');
+  if (!expensesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No expenses recorded yet.</td></tr>';
+  } else {
+    tbody.innerHTML = expensesCache.slice().reverse().map(function(e) {
+      const idx = expensesCache.indexOf(e);
+      return '<tr>'
+        + '<td style="font-size:12px">' + (e['Date']||'') + '</td>'
+        + '<td><span class="badge" style="background:var(--saffron-light);color:var(--saffron-dark)">' + (e['Category']||'') + '</span></td>'
+        + '<td style="font-size:13px">' + (e['Description']||'') + '</td>'
+        + '<td style="font-size:12px">' + (e['Vendor']||'—') + '</td>'
+        + '<td style="font-weight:700;color:var(--red)">₹' + parseFloat(e['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (e['Payment Mode']||'') + '</td>'
+        + '<td style="font-size:12px">' + (e['Approved By']||'—') + '</td>'
+        + '<td><button class="act-btn act-reject" onclick="removeExpense(' + e._rowIndex + ')">🗑️</button>'
+        + (e['Bill URL'] ? ' <a class="act-btn act-view" href="' + e['Bill URL'] + '" target="_blank" style="text-decoration:none;">📎 Bill</a>' : '')
+        + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+  const total = expensesCache.reduce(function(s,e){return s+(parseFloat(e['Amount'])||0);},0);
+  const thisMonth = new Date().toISOString().slice(0,7);
+  const monthTotal = expensesCache.filter(function(e){ return (e['Date']||'').toString().slice(0,7) === thisMonth || (e['Timestamp']||'').toString().slice(0,7) === thisMonth; })
+    .reduce(function(s,e){return s+(parseFloat(e['Amount'])||0);},0);
+  document.getElementById('exp-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('exp-month').textContent = '₹' + monthTotal.toLocaleString('en-IN');
+}
+
+function openExpenseForm() {
+  ['exp-description','exp-amount','exp-vendor','exp-approved','exp-bill'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('exp-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('expense-modal').classList.add('show');
+}
+function closeExpenseForm() { document.getElementById('expense-modal').classList.remove('show'); }
+
+function saveExpenseForm() {
+  const desc = document.getElementById('exp-description').value.trim();
+  const amount = document.getElementById('exp-amount').value;
+  if (!desc || !amount) { showToast('Description and amount are required', 'red'); return; }
+  const payload = {
+    action: 'saveExpense',
+    date: document.getElementById('exp-date').value,
+    category: document.getElementById('exp-category').value,
+    description: desc,
+    amount: amount,
+    vendor: document.getElementById('exp-vendor').value,
+    paymentMode: document.getElementById('exp-mode').value,
+    billUrl: document.getElementById('exp-bill').value,
+    approvedBy: document.getElementById('exp-approved').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Expense saved!', 'green'); closeExpenseForm(); loadExpenses(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function removeExpense(rowIndex) {
+  if (!confirm('Delete this expense record?')) return;
+  callSheet({ action: 'deleteExpense', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) { showToast('Expense deleted', 'green'); loadExpenses(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  PURCHASES
+// =============================================
+let purchasesCache = [];
+
+function loadPurchases() {
+  setLoadingRow('purchases-tbody', 9);
+  callSheet({ action: 'getPurchases' }, function(res) {
+    if (res && res.success) { purchasesCache = res.data || []; renderPurchasesTable(); }
+    else showErrorRows('purchases-tbody', 9);
+  });
+}
+
+function renderPurchasesTable() {
+  const tbody = document.getElementById('purchases-tbody');
+  if (!purchasesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No purchases recorded yet.</td></tr>';
+  } else {
+    tbody.innerHTML = purchasesCache.slice().reverse().map(function(p) {
+      const isPending = p['Payment Status'] === 'Pending';
+      return '<tr>'
+        + '<td style="font-size:12px">' + (p['Date']||'') + '</td>'
+        + '<td><strong>' + (p['Item']||'') + '</strong></td>'
+        + '<td style="font-size:12px">' + (p['Supplier']||'') + '</td>'
+        + '<td>' + (p['Quantity']||'') + '</td>'
+        + '<td style="font-weight:700;color:var(--red)">₹' + parseFloat(p['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (p['Invoice No']||'—') + '</td>'
+        + '<td style="font-size:12px">' + (p['Due Date']||'—') + '</td>'
+        + '<td>' + (isPending ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Paid</span>') + '</td>'
+        + '<td><div class="action-btns">'
+        + (isPending ? '<button class="act-btn act-approve" onclick="markPurchasePaid(' + p._rowIndex + ')">✓ Mark Paid</button>' : '')
+        + '<button class="act-btn act-reject" onclick="removePurchase(' + p._rowIndex + ')">🗑️</button>'
+        + '</div></td>'
+        + '</tr>';
+    }).join('');
+  }
+  const total = purchasesCache.reduce(function(s,p){return s+(parseFloat(p['Amount'])||0);},0);
+  const pending = purchasesCache.filter(function(p){return p['Payment Status']==='Pending';}).reduce(function(s,p){return s+(parseFloat(p['Amount'])||0);},0);
+  document.getElementById('pur-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('pur-pending').textContent = '₹' + pending.toLocaleString('en-IN');
+}
+
+function openPurchaseForm() {
+  ['pur-item','pur-supplier','pur-qty','pur-amount','pur-invoice','pur-duedate','pur-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('pur-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('pur-status').value = 'Pending';
+  document.getElementById('purchase-modal').classList.add('show');
+}
+function closePurchaseForm() { document.getElementById('purchase-modal').classList.remove('show'); }
+
+function savePurchaseForm() {
+  const item = document.getElementById('pur-item').value.trim();
+  const supplier = document.getElementById('pur-supplier').value.trim();
+  const amount = document.getElementById('pur-amount').value;
+  if (!item || !supplier || !amount) { showToast('Item, supplier and amount are required', 'red'); return; }
+  const payload = {
+    action: 'savePurchase',
+    date: document.getElementById('pur-date').value,
+    item: item, supplier: supplier,
+    quantity: document.getElementById('pur-qty').value,
+    amount: amount,
+    invoiceNo: document.getElementById('pur-invoice').value,
+    paymentStatus: document.getElementById('pur-status').value,
+    dueDate: document.getElementById('pur-duedate').value,
+    notes: document.getElementById('pur-notes').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Purchase saved!', 'green'); closePurchaseForm(); loadPurchases(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function markPurchasePaid(rowIndex) {
+  callSheet({ action: 'updatePurchaseStatus', rowIndex: rowIndex, status: 'Paid' }, function(res) {
+    if (res && res.success) { showToast('Marked as Paid', 'green'); loadPurchases(); }
+    else showToast('❌ Update failed', 'red');
+  });
+}
+
+function removePurchase(rowIndex) {
+  if (!confirm('Delete this purchase record?')) return;
+  callSheet({ action: 'deletePurchase', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) { showToast('Purchase deleted', 'green'); loadPurchases(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  STAFF HR DETAILS
+// =============================================
+let staffHRCache = [];
+let editingHREmpId = null;
+
+function loadStaffHR() {
+  setLoadingRow('staffhr-tbody', 8);
+  callSheet({ action: 'getStaffHR' }, function(res) {
+    if (res && res.success) { staffHRCache = res.data || []; renderStaffHRTable(); }
+    else showErrorRows('staffhr-tbody', 8);
+  });
+}
+
+function renderStaffHRTable() {
+  const tbody = document.getElementById('staffhr-tbody');
+  if (!staffHRCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No staff HR records yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = staffHRCache.map(function(h) {
+    return '<tr>'
+      + '<td style="font-weight:700;color:var(--saffron);font-size:12px">' + h['Employee ID'] + '</td>'
+      + '<td><strong>' + h['Full Name'] + '</strong></td>'
+      + '<td style="font-size:12px">' + (h['Department']||'—') + '</td>'
+      + '<td style="font-size:12px">' + (h['Employment Type']||'—') + '</td>'
+      + '<td style="font-size:12px">' + (h['Join Date']||'—') + '</td>'
+      + '<td>₹' + parseFloat(h['Monthly Salary']||0).toLocaleString('en-IN') + '</td>'
+      + '<td>' + (h['Status']==='Inactive' ? '<span class="badge badge-rejected">Inactive</span>' : '<span class="badge badge-approved">Active</span>') + '</td>'
+      + '<td><div class="action-btns">'
+      + '<button class="act-btn act-view" onclick="editStaffHR(\'' + h['Employee ID'] + '\')">✏️ Edit</button>'
+      + '<button class="act-btn act-reject" onclick="removeStaffHR(\'' + h['Employee ID'] + '\')">🗑️</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function openStaffHRForm() {
+  editingHREmpId = null;
+  document.getElementById('staffhr-modal-title').textContent = '🪪 Add Staff Member (HR)';
+  ['hr-empid','hr-name','hr-dept','hr-salary','hr-phone','hr-email','hr-address','hr-pan','hr-aadhar','hr-bankname','hr-account','hr-ifsc'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('hr-type').value = 'Full-time';
+  document.getElementById('hr-status').value = 'Active';
+  document.getElementById('staffhr-modal').classList.add('show');
+}
+function closeStaffHRForm() { document.getElementById('staffhr-modal').classList.remove('show'); }
+
+function editStaffHR(empId) {
+  // Note: list view has masked Account/Aadhar — fetch fresh unmasked values is not exposed by design,
+  // so editing preserves existing values unless the admin retypes them.
+  const h = staffHRCache.find(function(x){ return x['Employee ID'] === empId; });
+  if (!h) return;
+  editingHREmpId = empId;
+  document.getElementById('staffhr-modal-title').textContent = '✏️ Edit Staff Member';
+  document.getElementById('hr-empid').value = h['Employee ID'];
+  document.getElementById('hr-name').value = h['Full Name'];
+  document.getElementById('hr-dept').value = h['Department']||'';
+  document.getElementById('hr-type').value = h['Employment Type']||'Full-time';
+  document.getElementById('hr-joindate').value = h['Join Date']||'';
+  document.getElementById('hr-salary').value = h['Monthly Salary']||'';
+  document.getElementById('hr-phone').value = h['Phone']||'';
+  document.getElementById('hr-email').value = h['Email']||'';
+  document.getElementById('hr-address').value = h['Address']||'';
+  document.getElementById('hr-pan').value = h['PAN']||'';
+  document.getElementById('hr-aadhar').value = ''; // masked — retype if changing
+  document.getElementById('hr-bankname').value = h['Bank Name']||'';
+  document.getElementById('hr-account').value = ''; // masked — retype if changing
+  document.getElementById('hr-ifsc').value = h['IFSC Code']||'';
+  document.getElementById('hr-status').value = h['Status']||'Active';
+  document.getElementById('staffhr-modal').classList.add('show');
+}
+
+function saveStaffHRForm() {
+  const empId = document.getElementById('hr-empid').value.trim();
+  const name = document.getElementById('hr-name').value.trim();
+  if (!empId || !name) { showToast('Employee ID and Name are required', 'red'); return; }
+  const payload = {
+    action: 'saveStaffHR', employeeId: empId, fullName: name,
+    department: document.getElementById('hr-dept').value,
+    employmentType: document.getElementById('hr-type').value,
+    joinDate: document.getElementById('hr-joindate').value,
+    monthlySalary: document.getElementById('hr-salary').value,
+    phone: document.getElementById('hr-phone').value,
+    email: document.getElementById('hr-email').value,
+    address: document.getElementById('hr-address').value,
+    pan: document.getElementById('hr-pan').value,
+    aadhar: document.getElementById('hr-aadhar').value,
+    bankName: document.getElementById('hr-bankname').value,
+    accountNumber: document.getElementById('hr-account').value,
+    ifsc: document.getElementById('hr-ifsc').value,
+    status: document.getElementById('hr-status').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Staff record saved!', 'green'); closeStaffHRForm(); loadStaffHR(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function removeStaffHR(empId) {
+  if (!confirm('Delete this staff HR record?')) return;
+  callSheet({ action: 'deleteStaffHR', employeeId: empId }, function(res) {
+    if (res && res.success) { showToast('Staff record deleted', 'green'); loadStaffHR(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  SALARY
+// =============================================
+let salariesCache = [];
+
+function loadSalaries() {
+  setLoadingRow('salary-tbody', 8);
+  callSheet({ action: 'getSalaries' }, function(res) {
+    if (res && res.success) { salariesCache = res.data || []; renderSalariesTable(); }
+    else showErrorRows('salary-tbody', 8);
+  });
+  if (!staffHRCache.length) loadStaffHRForDropdown();
+}
+
+function loadStaffHRForDropdown() {
+  callSheet({ action: 'getStaffHR' }, function(res) {
+    if (res && res.success) staffHRCache = res.data || [];
+  });
+}
+
+function renderSalariesTable() {
+  const tbody = document.getElementById('salary-tbody');
+  if (!salariesCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No salary records yet.</td></tr>';
+  } else {
+    tbody.innerHTML = salariesCache.slice().reverse().map(function(s) {
+      return '<tr>'
+        + '<td style="font-size:12px">' + (s['Month']||'') + '</td>'
+        + '<td><strong>' + (s['Employee Name']||'') + '</strong></td>'
+        + '<td>₹' + parseFloat(s['Basic Salary']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="color:var(--red)">₹' + parseFloat(s['Deductions']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-weight:700;color:var(--green)">₹' + parseFloat(s['Net Paid']||0).toLocaleString('en-IN') + '</td>'
+        + '<td style="font-size:12px">' + (s['Payment Date']||'') + '</td>'
+        + '<td style="font-size:12px">' + (s['Payment Mode']||'') + '</td>'
+        + '<td><button class="act-btn act-reject" onclick="removeSalary(' + s._rowIndex + ')">🗑️</button></td>'
+        + '</tr>';
+    }).join('');
+  }
+  const total = salariesCache.reduce(function(s,r){return s+(parseFloat(r['Net Paid'])||0);},0);
+  document.getElementById('sal-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('sal-count').textContent = salariesCache.length;
+}
+
+function openSalaryForm() {
+  document.getElementById('sal-month').value = new Date().toISOString().slice(0,7);
+  document.getElementById('sal-paydate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('sal-basic').value = '';
+  document.getElementById('sal-deductions').value = '0';
+  document.getElementById('sal-notes').value = '';
+  document.getElementById('sal-net-preview').textContent = '0';
+  const sel = document.getElementById('sal-employee');
+  sel.innerHTML = staffHRCache.length
+    ? staffHRCache.map(function(h){ return '<option value="' + h['Employee ID'] + '">' + h['Full Name'] + ' (' + h['Employee ID'] + ')</option>'; }).join('')
+    : '<option value="">No staff in HR records — add one first</option>';
+  onSalaryEmployeeChange();
+  document.getElementById('salary-modal').classList.add('show');
+  ['sal-basic','sal-deductions'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', updateSalaryPreview);
+  });
+}
+function closeSalaryForm() { document.getElementById('salary-modal').classList.remove('show'); }
+
+function onSalaryEmployeeChange() {
+  const empId = document.getElementById('sal-employee').value;
+  const h = staffHRCache.find(function(x){ return x['Employee ID'] === empId; });
+  if (h && h['Monthly Salary']) {
+    document.getElementById('sal-basic').value = h['Monthly Salary'];
+    updateSalaryPreview();
+  }
+}
+function updateSalaryPreview() {
+  const basic = parseFloat(document.getElementById('sal-basic').value) || 0;
+  const deduct = parseFloat(document.getElementById('sal-deductions').value) || 0;
+  document.getElementById('sal-net-preview').textContent = (basic - deduct).toLocaleString('en-IN');
+}
+
+function saveSalaryForm() {
+  const empId = document.getElementById('sal-employee').value;
+  const h = staffHRCache.find(function(x){ return x['Employee ID'] === empId; });
+  const basic = document.getElementById('sal-basic').value;
+  if (!empId || !basic) { showToast('Select employee and enter basic salary', 'red'); return; }
+  const payload = {
+    action: 'saveSalary',
+    month: document.getElementById('sal-month').value,
+    employeeId: empId,
+    employeeName: h ? h['Full Name'] : empId,
+    basicSalary: basic,
+    deductions: document.getElementById('sal-deductions').value,
+    paymentDate: document.getElementById('sal-paydate').value,
+    paymentMode: document.getElementById('sal-mode').value,
+    notes: document.getElementById('sal-notes').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Salary recorded! Net: ₹' + res.netPaid, 'green'); closeSalaryForm(); loadSalaries(); }
+    else showToast('❌ Save failed', 'red');
+  });
+}
+
+function removeSalary(rowIndex) {
+  if (!confirm('Delete this salary record?')) return;
+  callSheet({ action: 'deleteSalary', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) { showToast('Salary record deleted', 'green'); loadSalaries(); }
+    else showToast('❌ Delete failed', 'red');
+  });
+}
+
+// =============================================
+//  REIMBURSEMENTS
+// =============================================
+let reimburseCache = [];
+
+function loadReimbursements() {
+  setLoadingRow('reimburse-tbody', 6);
+  callSheet({ action: 'getReimbursements' }, function(res) {
+    if (res && res.success) {
+      reimburseCache = res.data || [];
+      renderReimburseTable();
+      const pendingCount = reimburseCache.filter(function(r){ return r['Status'] === 'Pending'; }).length;
+      const badge = document.getElementById('badge-reimburse');
+      if (badge) badge.textContent = pendingCount;
+    } else {
+      showErrorRows('reimburse-tbody', 6);
+    }
+  });
+  // Admin sees approve/reject controls; Staff/Coordinator only see their own + can submit
+  const notice = document.getElementById('reimburse-notice');
+  if (notice) {
+    notice.textContent = CURRENT_ROLE === 'Admin'
+      ? 'ℹ️ Review reimbursement requests submitted by staff and mark them Paid once processed.'
+      : 'ℹ️ Submit your own expense reimbursement requests here. Admin will review and mark them as Paid.';
+  }
+}
+
+function renderReimburseTable() {
+  const tbody = document.getElementById('reimburse-tbody');
+  // Admin sees all; non-admin sees only their own submissions
+  const visible = CURRENT_ROLE === 'Admin'
+    ? reimburseCache
+    : reimburseCache.filter(function(r){ return r['Staff Name'] === CURRENT_NAME; });
+
+  if (!visible.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No reimbursement requests yet.</td></tr>';
+  } else {
+    tbody.innerHTML = visible.slice().reverse().map(function(r) {
+      const isPending = r['Status'] === 'Pending';
+      return '<tr>'
+        + '<td style="font-size:12px">' + (r['Date']||'') + '</td>'
+        + '<td><strong>' + (r['Staff Name']||'') + '</strong></td>'
+        + '<td style="font-size:13px">' + (r['Reason']||'') + '</td>'
+        + '<td style="font-weight:700">₹' + parseFloat(r['Amount']||0).toLocaleString('en-IN') + '</td>'
+        + '<td>' + (isPending ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Paid</span>') + '</td>'
+        + '<td>' + (CURRENT_ROLE === 'Admin' && isPending ? '<button class="act-btn act-approve" onclick="markReimbursePaid(' + r._rowIndex + ')">✓ Mark Paid</button>' : '—') + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+  const pending = reimburseCache.filter(function(r){return r['Status']==='Pending';}).length;
+  const paidTotal = reimburseCache.filter(function(r){return r['Status']==='Paid';}).reduce(function(s,r){return s+(parseFloat(r['Amount'])||0);},0);
+  document.getElementById('rb-pending').textContent = pending;
+  document.getElementById('rb-paid').textContent = '₹' + paidTotal.toLocaleString('en-IN');
+}
+
+function openReimburseForm() {
+  document.getElementById('rb-name').value = CURRENT_NAME !== 'Administrator' ? CURRENT_NAME : '';
+  document.getElementById('rb-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('rb-amount').value = '';
+  document.getElementById('rb-reason').value = '';
+  document.getElementById('rb-notes').value = '';
+  document.getElementById('reimburse-modal').classList.add('show');
+}
+function closeReimburseForm() { document.getElementById('reimburse-modal').classList.remove('show'); }
+
+function saveReimburseForm() {
+  const name = document.getElementById('rb-name').value.trim();
+  const amount = document.getElementById('rb-amount').value;
+  const reason = document.getElementById('rb-reason').value.trim();
+  if (!name || !amount || !reason) { showToast('Name, amount and reason are required', 'red'); return; }
+  const payload = {
+    action: 'saveReimbursement',
+    staffName: name,
+    username: CURRENT_NAME,
+    date: document.getElementById('rb-date').value,
+    reason: reason,
+    amount: amount,
+    notes: document.getElementById('rb-notes').value
+  };
+  callSheet(payload, function(res) {
+    if (res && res.success) { showToast('✅ Reimbursement request submitted!', 'green'); closeReimburseForm(); loadReimbursements(); }
+    else showToast('❌ Submission failed', 'red');
+  });
+}
+
+function markReimbursePaid(rowIndex) {
+  callSheet({ action: 'updateReimbursement', rowIndex: rowIndex, status: 'Paid' }, function(res) {
+    if (res && res.success) { showToast('Marked as Paid', 'green'); loadReimbursements(); }
+    else showToast('❌ Update failed', 'red');
+  });
+}
+
+// =============================================
+//  INIT
+// =============================================
+window.addEventListener('load', function() {
+  SHEET_URL = localStorage.getItem('sheetUrl') || '';
+  const inp = document.getElementById('sheet-url-input');
+  if (inp && SHEET_URL) inp.value = SHEET_URL;
+});
+</script>
+</body>
+</html>

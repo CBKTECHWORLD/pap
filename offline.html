@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're Offline — Pupils & Peoples Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:#FAF8F5;
+    color:#16201F;
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;padding:24px;
+  }
+  .card{
+    background:white;
+    border:1px solid rgba(14,79,79,0.14);
+    border-radius:20px;
+    padding:48px 40px;
+    max-width:420px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 4px 40px rgba(14,79,79,0.10);
+  }
+  .logo{
+    width:72px;height:72px;border-radius:50%;
+    background:linear-gradient(135deg,#0E4F4F,#0A3D3D);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    overflow:hidden;
+  }
+  .logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  .logo span{color:white;font-family:'Fraunces',serif;font-weight:700;font-size:18px;}
+  .offline-icon{font-size:56px;margin-bottom:16px;display:block;}
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:26px;font-weight:900;
+    color:#16201F;margin-bottom:10px;
+  }
+  p{font-size:15px;color:#5C6A68;line-height:1.7;margin-bottom:28px;}
+  .btn-try{
+    display:inline-block;
+    background:#0E4F4F;color:white;
+    padding:13px 32px;border-radius:100px;
+    font-size:15px;font-weight:600;
+    text-decoration:none;border:none;cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:background 0.2s;margin:0 6px 10px;
+  }
+  .btn-try:hover{background:#0A3D3D;}
+  .btn-cached{
+    display:inline-block;
+    background:transparent;color:#0E4F4F;
+    padding:13px 32px;border-radius:100px;
+    font-size:15px;font-weight:600;
+    text-decoration:none;border:2px solid #0E4F4F;cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:all 0.2s;margin:0 6px 10px;
+  }
+  .btn-cached:hover{background:#EAF4F3;}
+  .divider{border:none;border-top:1px solid rgba(14,79,79,0.12);margin:28px 0;}
+  .quick-links{display:flex;flex-direction:column;gap:10px;}
+  .quick-link{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 16px;border-radius:12px;
+    background:#FAF8F5;border:1px solid rgba(14,79,79,0.1);
+    text-decoration:none;color:#16201F;
+    font-size:14px;font-weight:500;
+    transition:background 0.2s;
+  }
+  .quick-link:hover{background:#EAF4F3;}
+  .quick-link .ql-icon{font-size:20px;flex-shrink:0;}
+  .quick-link .ql-label{font-weight:600;}
+  .quick-link .ql-sub{font-size:12px;color:#5C6A68;}
+  .status{
+    margin-top:20px;font-size:12px;color:#5C6A68;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .status-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:#DC2626;flex-shrink:0;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <img src="logo.png" alt="P&P logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+    <span style="display:none">P&P</span>
+  </div>
+
+  <span class="offline-icon">📡</span>
+  <h1>You're Offline</h1>
+  <p>It looks like you've lost your internet connection. Some pages may still be available from your last visit.</p>
+
+  <button class="btn-try" onclick="tryReconnect()">Try Again</button>
+  <a class="btn-cached" href="/" onclick="goBack()">Go to Home</a>
+
+  <hr class="divider">
+
+  <p style="font-size:13px;font-weight:600;color:#5C6A68;margin-bottom:12px;text-align:left;">Available offline (if visited before):</p>
+  <div class="quick-links">
+    <a class="quick-link" href="/">
+      <span class="ql-icon">🏠</span>
+      <div><div class="ql-label">Home</div><div class="ql-sub">Main website</div></div>
+    </a>
+    <a class="quick-link" href="/#join">
+      <span class="ql-icon">🙋</span>
+      <div><div class="ql-label">Join Us</div><div class="ql-sub">Volunteer & membership forms</div></div>
+    </a>
+    <a class="quick-link" href="/#donate">
+      <span class="ql-icon">🙏</span>
+      <div><div class="ql-label">Donate</div><div class="ql-sub">UPI donation details</div></div>
+    </a>
+    <a class="quick-link" href="/admin.html">
+      <span class="ql-icon">⚙️</span>
+      <div><div class="ql-label">Admin Panel</div><div class="ql-sub">Dashboard (read-only offline)</div></div>
+    </a>
+  </div>
+
+  <div class="status">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">No internet connection</span>
+  </div>
+</div>
+
+<script>
+function tryReconnect() {
+  window.location.reload();
+}
+function goBack() {
+  if (history.length > 1) history.back();
+}
+
+// Watch for connectivity changes
+window.addEventListener('online', () => {
+  document.getElementById('status-dot').style.background = '#22C55E';
+  document.getElementById('status-text').textContent = 'Connection restored! Redirecting…';
+  setTimeout(() => window.location.reload(), 1200);
+});
+
+window.addEventListener('offline', () => {
+  document.getElementById('status-dot').style.background = '#DC2626';
+  document.getElementById('status-text').textContent = 'No internet connection';
+});
+
+// Show current status on load
+if (navigator.onLine) {
+  document.getElementById('status-dot').style.background = '#22C55E';
+  document.getElementById('status-text').textContent = 'Connection looks OK — try reloading';
+}
+</script>
+</body>
+</html>
