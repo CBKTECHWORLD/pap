@@ -99,185 +99,6 @@ tr:hover td{background:#fafaf9;}
 .act-resend:hover{background:#7C3AED;color:white;}
 .empty-state{padding:48px;text-align:center;color:var(--muted);font-size:14px;}
 
-
-.nav-logo img {
-    width: 80px;      /* Adjust as needed */
-    height: auto;
-}
-
-.menu-toggle{
-    display:none;
-    background:none;
-    border:none;
-    font-size:28px;
-    cursor:pointer;
-    color:var(--green);
-}
-
-.sidebar-close{
-    display:none;
-    text-align:right;
-    padding:10px 20px;
-    font-size:24px;
-    cursor:pointer;
-    color:var(--green);
-}
-
-.sidebar-overlay{
-  display:none;
-}
-
-
-@media(max-width:768px){
-
-    /* ── MENU TOGGLE ── */
-    .menu-toggle{
-        display:block;
-    }
-
-    /* ── SIDEBAR ── */
-   .sidebar{
-    display:block;
-    position:fixed;
-    left:-260px;
-    top:0;
-    width:250px;
-    height:100vh;
-    z-index:9999;
-    background:white;
-    transition:left 0.3s ease;
-    box-shadow:0 0 20px rgba(0,0,0,0.15);
-    overflow-y:auto;
-    pointer-events:none;        /* ← can't intercept clicks when hidden */
-    visibility:hidden;          /* ← also removes it from accessibility tree */
-}
-
-   .sidebar.show{
-    left:0;
-    pointer-events:auto;        /* ← re-enable clicks when open */
-    visibility:visible;
-}
-    .sidebar-close{
-        display:block;
-    }
-
-    /* ── HEADER: compact on mobile ── */
-    header{
-        height:auto;
-        padding:8px 12px;
-        gap:8px;
-        flex-wrap:nowrap;
-    }
-    .header-brand{
-        gap:6px;
-        flex:1;
-        min-width:0;          /* allow text to truncate */
-    }
-    .header-title{
-        font-size:13px;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-    }
-    .header-sub{
-        display:none;         /* hide subtitle on mobile */
-    }
-
-    /* ── LOGO: constrain the nav-logo image ── */
-    .nav-logo img{
-        width:32px !important;
-        height:32px !important;
-        border-radius:50%;
-        object-fit:cover;
-    }
-
-    /* ── HEADER RIGHT: hide less-important items ── */
-    .header-right{
-        gap:6px;
-        flex-shrink:0;
-    }
-    #last-sync{
-        display:none;         /* hide "Synced X:XX pm" on mobile */
-    }
-    #header-role-name{
-        font-size:11px;
-        padding:4px 8px;
-        max-width:90px;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-    }
-    .refresh-btn{
-        padding:6px 10px;
-        font-size:12px;
-    }
-    .logout-btn{
-        padding:6px 10px;
-        font-size:12px;
-    }
-
-    /* ── CONTENT ── */
-    .content{
-        padding:12px;
-    }
-
-    /* ── MODALS: full screen on mobile ── */
-    .modal-overlay{
-        padding:0;
-        align-items:flex-end;  /* sheet slides up from bottom */
-    }
-    .modal{
-        border-radius:20px 20px 0 0;
-        max-height:92vh;
-        width:100%;
-        max-width:100% !important;
-        padding:20px 16px;
-    }
-
-    /* ── ALL FORM GRIDS: single column on mobile ── */
-    .modal [style*="grid-template-columns"],
-    .modal div[style*="grid-template-columns"]{
-        display:flex !important;
-        flex-direction:column !important;
-        gap:10px !important;
-    }
-    /* Settings-input full width already, but ensure no overflow */
-    .settings-input{
-        width:100%;
-        box-sizing:border-box;
-    }
-
-    /* ── STATS CARDS: 2 per row on mobile ── */
-    .stats-row{
-        grid-template-columns:1fr 1fr;
-        gap:10px;
-    }
-    .stat-num{
-        font-size:22px;
-    }
-
-    /* ── FILTER TABS: wrap nicely ── */
-    .controls{
-        flex-direction:column;
-        align-items:stretch;
-    }
-    .filter-tabs{
-        flex-wrap:wrap;
-    }
-    .search-box{
-        width:100%;
-    }
-
-    /* ── PAGE HEADER ── */
-    .page-header{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-    .page-title{
-        font-size:18px;
-    }
-}
-
 /* LOADING */
 .loading-row td{text-align:center;padding:40px;color:var(--muted);}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--saffron);border-radius:50%;animation:spin 0.7s linear infinite;margin-right:8px;vertical-align:middle;}
@@ -329,31 +150,28 @@ tr:hover td{background:#fafaf9;}
 .notice{background:var(--yellow);border:1px solid #F59E0B;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:var(--yellow-text);line-height:1.6;}
 
 @media(max-width:768px){
-  .content{
-    padding:16px;
-  }
+  .sidebar{display:none;}
+  .content{padding:16px;}
 }
-
-.sidebar-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.4);
-    z-index:9998;
-}
-
-.sidebar-overlay.show{
-    display:block;
-}
-
 </style>
+  <!-- PWA manifest & meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0E4F4F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="P&P Admin">
+  <meta name="application-name" content="P&P Admin">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo"><img src="img/paplogo1.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
+    <div class="login-logo"><img src="logo.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
     <h2>Welcome Back</h2>
     <p>Pupils & Peoples Foundation<br>Admin Dashboard</p>
 
@@ -377,15 +195,11 @@ tr:hover td{background:#fafaf9;}
 <!-- APP -->
 <div id="app">
   <header>
-    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="header-brand">
-      <div class="nav-logo">
-        <img src="./img/paplogo1.png" alt="Pupils and Peoples Foundation logo">
-    </div>
-      <!-- <div class="header-logo">P&P</div> -->
+      <div class="header-logo">P&P</div>
       <div>
         <div class="header-title">Admin Dashboard</div>
-        <div class="header-sub">Pupils and Peoples Foundation</div>
+        <div class="header-sub">Pupils & Peoples Foundation</div>
       </div>
     </div>
     <div class="header-right">
@@ -398,7 +212,6 @@ tr:hover td{background:#fafaf9;}
 
   <div class="main">
     <nav class="sidebar">
-      <div class="sidebar-close" onclick="toggleSidebar()">✕</div>
       <div class="sidebar-item active" data-page="dashboard" onclick="goPage('dashboard')"><span class="sidebar-icon">🏠</span> Dashboard</div>
       <div class="sidebar-item" data-page="volunteers" onclick="goPage('volunteers')"><span class="sidebar-icon">🙋</span> Volunteers <span class="sidebar-badge" id="badge-vol">0</span></div>
       <div class="sidebar-item" data-page="members" onclick="goPage('members')"><span class="sidebar-icon">🎟️</span> Members <span class="sidebar-badge" id="badge-mem">0</span></div>
@@ -415,7 +228,7 @@ tr:hover td{background:#fafaf9;}
       <div class="sidebar-item" data-page="staff" onclick="goPage('staff')"><span class="sidebar-icon">👥</span> Staff Logins</div>
       <div class="sidebar-item" data-page="settings" onclick="goPage('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
     </nav>
-<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <main class="content">
 
       <!-- DASHBOARD -->
@@ -1041,8 +854,6 @@ const state = {
 //  AUTH
 // =============================================
 // Reveal username/password fields once a role is chosen
-
-
 function onLoginRoleChange() {
   const role = document.getElementById('login-role').value;
   const credBlock = document.getElementById('login-credentials');
@@ -1220,9 +1031,7 @@ function callSheet(params, callback) {
 
 function loadData() {
   if (!SHEET_URL) {
-    ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
-      showErrorRows(id, 8, 'No Apps Script URL set. Go to Settings and paste your URL.');
-    });
+    showLoadingRows();
     showToast('⚠️ Paste your Apps Script URL in Settings first', 'red');
     return;
   }
@@ -1233,9 +1042,6 @@ function loadData() {
       document.getElementById('last-sync').textContent = 'Synced ' + new Date().toLocaleTimeString('en-IN');
       renderAll();
     } else {
-      ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
-        showErrorRows(id, 8, res && res.error ? res.error : 'Failed to load. Tap Refresh Data to retry.');
-      });
       showToast('❌ Failed to load data. ' + (res && res.error ? res.error : ''), 'red');
     }
   });
@@ -1244,30 +1050,10 @@ function loadData() {
 function showLoadingRows() {
   ['dash-tbody','vol-tbody','mem-tbody','approved-tbody','renewal-tbody'].forEach(function(id) {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = '<tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading...</td></tr>';
+    if (el) el.innerHTML = '<tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading from Google Sheet...</td></tr>';
   });
 }
 
-function showErrorRows(tbodyId, colspan, message) {
-  const el = document.getElementById(tbodyId);
-  if (el) el.innerHTML = '<tr><td colspan="' + colspan + '" class="empty-state" style="color:var(--red)">⚠️ ' + (message || 'Could not load data. Check your Apps Script URL in Settings.') + '</td></tr>';
-}
-
-function setLoadingRow(tbodyId, colspan) {
-  const el = document.getElementById(tbodyId);
-  if (el) el.innerHTML = '<tr class="loading-row"><td colspan="' + colspan + '"><span class="spinner"></span> Loading...</td></tr>';
-}
-
-
-function toggleSidebar() {
-  const sidebar  = document.querySelector('.sidebar');
-  const overlay  = document.querySelector('.sidebar-overlay');
-  const isOpen   = sidebar.classList.toggle('show');
-  if (overlay) {
-    if (isOpen) overlay.classList.add('show');
-    else        overlay.classList.remove('show');
-  }
-}
 // =============================================
 //  HELPERS
 // =============================================
@@ -1679,13 +1465,10 @@ function closeModal() { document.getElementById('detail-modal').classList.remove
 //  PAGE NAVIGATION
 // =============================================
 function goPage(name) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + name);
   if (target) target.classList.add('active');
-
-  document.querySelectorAll('.sidebar-item').forEach(function(s) { s.classList.remove('active'); });
-
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
   const item = document.querySelector('[data-page="' + name + '"]');
   if (item) item.classList.add('active');
 
@@ -1699,19 +1482,6 @@ function goPage(name) {
   if (name === 'staffhr')         loadStaffHR();
   if (name === 'salary')          loadSalaries();
   if (name === 'reimbursements')  loadReimbursements();
-
-  // Close sidebar on mobile after selecting a menu
-  if (window.innerWidth <= 768) {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
-    sidebar.classList.remove('show');
-    if (overlay) overlay.classList.remove('show');
-  }
-
-  // Scroll content area back to top on page change
-  const contentEl = document.querySelector('.content');
-  if (contentEl) contentEl.scrollTop = 0;
-  window.scrollTo(0, 0);
 }
 
 // =============================================
@@ -1777,13 +1547,13 @@ let donationsCache = [];
 let lastReceiptData = null;
 
 function loadDonations() {
-  setLoadingRow('donations-tbody', 7);
   callSheet({ action: 'getDonations' }, function(res) {
-    if (res && res.success) { donationsCache = res.data || []; renderDonationsTable(); }
-    else showErrorRows('donations-tbody', 7);
+    if (res && res.success) {
+      donationsCache = res.data || [];
+      renderDonationsTable();
+    }
   });
 }
-
 
 function renderDonationsTable() {
   const tbody = document.getElementById('donations-tbody');
@@ -1941,10 +1711,11 @@ let productsCache = [];
 let editingProductSku = null;
 
 function loadProducts() {
-  setLoadingRow('products-tbody', 8);
   callSheet({ action: 'getProducts' }, function(res) {
-    if (res && res.success) { productsCache = res.data || []; renderProductsTable(); }
-    else showErrorRows('products-tbody', 8);
+    if (res && res.success) {
+      productsCache = res.data || [];
+      renderProductsTable();
+    }
   });
 }
 
@@ -2047,10 +1818,11 @@ let invoiceItems = [];
 let lastInvoiceData = null;
 
 function loadSalesData() {
-  setLoadingRow('sales-tbody', 7);
   callSheet({ action: 'getSales' }, function(res) {
-    if (res && res.success) { salesCache = res.data || []; renderSalesTable(); }
-    else showErrorRows('sales-tbody', 7);
+    if (res && res.success) {
+      salesCache = res.data || [];
+      renderSalesTable();
+    }
   });
   if (!productsCache.length) loadProducts();
 }
@@ -2253,10 +2025,11 @@ function sendInvoiceViaWhatsApp() {
 let staffCache = [];
 
 function loadStaffData() {
-  setLoadingRow('staff-tbody', 7);
   callSheet({ action: 'getStaff' }, function(res) {
-    if (res && res.success) { staffCache = res.data || []; renderStaffTable(); }
-    else showErrorRows('staff-tbody', 7);
+    if (res && res.success) {
+      staffCache = res.data || [];
+      renderStaffTable();
+    }
   });
 }
 
@@ -2381,10 +2154,8 @@ function loadFinanceSummary() {
 let expensesCache = [];
 
 function loadExpenses() {
-  setLoadingRow('expenses-tbody', 8);
   callSheet({ action: 'getExpenses' }, function(res) {
     if (res && res.success) { expensesCache = res.data || []; renderExpensesTable(); }
-    else showErrorRows('expenses-tbody', 8);
   });
 }
 
@@ -2459,10 +2230,8 @@ function removeExpense(rowIndex) {
 let purchasesCache = [];
 
 function loadPurchases() {
-  setLoadingRow('purchases-tbody', 9);
   callSheet({ action: 'getPurchases' }, function(res) {
     if (res && res.success) { purchasesCache = res.data || []; renderPurchasesTable(); }
-    else showErrorRows('purchases-tbody', 9);
   });
 }
 
@@ -2547,10 +2316,8 @@ let staffHRCache = [];
 let editingHREmpId = null;
 
 function loadStaffHR() {
-  setLoadingRow('staffhr-tbody', 8);
   callSheet({ action: 'getStaffHR' }, function(res) {
     if (res && res.success) { staffHRCache = res.data || []; renderStaffHRTable(); }
-    else showErrorRows('staffhr-tbody', 8);
   });
 }
 
@@ -2652,10 +2419,8 @@ function removeStaffHR(empId) {
 let salariesCache = [];
 
 function loadSalaries() {
-  setLoadingRow('salary-tbody', 8);
   callSheet({ action: 'getSalaries' }, function(res) {
     if (res && res.success) { salariesCache = res.data || []; renderSalariesTable(); }
-    else showErrorRows('salary-tbody', 8);
   });
   if (!staffHRCache.length) loadStaffHRForDropdown();
 }
@@ -2758,7 +2523,6 @@ function removeSalary(rowIndex) {
 let reimburseCache = [];
 
 function loadReimbursements() {
-  setLoadingRow('reimburse-tbody', 6);
   callSheet({ action: 'getReimbursements' }, function(res) {
     if (res && res.success) {
       reimburseCache = res.data || [];
@@ -2766,8 +2530,6 @@ function loadReimbursements() {
       const pendingCount = reimburseCache.filter(function(r){ return r['Status'] === 'Pending'; }).length;
       const badge = document.getElementById('badge-reimburse');
       if (badge) badge.textContent = pendingCount;
-    } else {
-      showErrorRows('reimburse-tbody', 6);
     }
   });
   // Admin sees approve/reject controls; Staff/Coordinator only see their own + can submit
@@ -2853,5 +2615,156 @@ window.addEventListener('load', function() {
   if (inp && SHEET_URL) inp.value = SHEET_URL;
 });
 </script>
+
+<!-- PWA Install Prompt & Service Worker -->
+<div id="pwa-install-banner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9998;background:#0E4F4F;color:white;padding:14px 22px;border-radius:14px;box-shadow:0 4px 24px rgba(14,79,79,0.35);display:none;align-items:center;gap:14px;max-width:92vw;animation:slideUp 0.4s ease;">
+  <img src="icons/icon-72.png" style="width:36px;height:36px;border-radius:8px;flex-shrink:0;">
+  <div style="flex:1;min-width:0;">
+    <div style="font-size:14px;font-weight:600;">Add to Home Screen</div>
+    <div style="font-size:12px;opacity:0.8;">Install P&amp;P Foundation for quick access</div>
+  </div>
+  <button id="pwa-install-btn" style="background:#B8862E;color:white;border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">Install</button>
+  <button id="pwa-dismiss-btn" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:100px;padding:8px 12px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+</div>
+
+<div id="pwa-update-banner" style="display:none;position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:9997;background:#B8862E;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);align-items:center;gap:12px;max-width:92vw;">
+  <span style="font-size:13px;font-weight:600;">⟳ New version available!</span>
+  <button id="pwa-update-btn" style="background:white;color:#B8862E;border:none;border-radius:100px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;font-family:inherit;">Refresh</button>
+  <button id="pwa-update-dismiss" style="background:rgba(255,255,255,0.2);color:white;border:none;border-radius:100px;padding:7px 10px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // --- Service Worker Registration ---
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js')
+        .then(function(reg) {
+          console.log('[PWA] SW registered, scope:', reg.scope);
+
+          // Check for updates every 60 seconds while app is open
+          setInterval(function() { reg.update(); }, 60000);
+
+          // Show update banner when new SW is waiting
+          reg.addEventListener('updatefound', function() {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner(newWorker);
+              }
+            });
+          });
+        })
+        .catch(function(err) {
+          console.warn('[PWA] SW registration failed:', err);
+        });
+
+      // Handle controller change (after skipWaiting) — reload page
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (!window._pwaReloading) {
+          window._pwaReloading = true;
+          window.location.reload();
+        }
+      });
+    });
+  }
+
+  // --- Install Prompt (Add to Home Screen) ---
+  let deferredPrompt = null;
+  const installBanner = document.getElementById('pwa-install-banner');
+  const installBtn    = document.getElementById('pwa-install-btn');
+  const dismissBtn    = document.getElementById('pwa-dismiss-btn');
+
+  // Check if user previously dismissed
+  const dismissed = localStorage.getItem('pwa-install-dismissed');
+
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // Don't show if already dismissed in last 7 days
+    if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) return;
+
+    // Show banner after 3 seconds
+    setTimeout(function() {
+      if (installBanner) {
+        installBanner.style.display = 'flex';
+      }
+    }, 3000);
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', function() {
+      if (!deferredPrompt) return;
+      installBanner.style.display = 'none';
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(choice) {
+        if (choice.outcome === 'accepted') {
+          console.log('[PWA] App installed');
+        }
+        deferredPrompt = null;
+      });
+    });
+  }
+
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', function() {
+      installBanner.style.display = 'none';
+      localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+    });
+  }
+
+  // Hide install banner once app is installed
+  window.addEventListener('appinstalled', function() {
+    if (installBanner) installBanner.style.display = 'none';
+    console.log('[PWA] App was installed successfully');
+  });
+
+  // --- Update Banner ---
+  function showUpdateBanner(newWorker) {
+    const updateBanner  = document.getElementById('pwa-update-banner');
+    const updateBtn     = document.getElementById('pwa-update-btn');
+    const updateDismiss = document.getElementById('pwa-update-dismiss');
+    if (!updateBanner) return;
+    updateBanner.style.display = 'flex';
+
+    if (updateBtn) {
+      updateBtn.addEventListener('click', function() {
+        newWorker.postMessage({ type: 'SKIP_WAITING' });
+      });
+    }
+    if (updateDismiss) {
+      updateDismiss.addEventListener('click', function() {
+        updateBanner.style.display = 'none';
+      });
+    }
+  }
+
+  // --- Network status indicator ---
+  function updateOnlineStatus() {
+    if (!navigator.onLine) {
+      if (!document.getElementById('pwa-offline-toast')) {
+        const toast = document.createElement('div');
+        toast.id = 'pwa-offline-toast';
+        toast.textContent = '📡 You are offline — some features may not work';
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#16201F;color:white;padding:12px 22px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;';
+        document.body.appendChild(toast);
+      }
+    } else {
+      const toast = document.getElementById('pwa-offline-toast');
+      if (toast) toast.remove();
+    }
+  }
+
+  window.addEventListener('online',  updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus();
+
+})();
+</script>
+
 </body>
 </html>
