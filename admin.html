@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard — Pupils & Peoples Foundation</title>
+<title>Admin Dashboard — Pupils & Peoples Trust</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -173,7 +173,7 @@ tr:hover td{background:#fafaf9;}
   <div class="login-box">
     <div class="login-logo"><img src="logo.png" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='P&amp;P';"></div>
     <h2>Welcome Back</h2>
-    <p>Pupils & Peoples Foundation<br>Admin Dashboard</p>
+    <p>Pupils & Peoples Trust<br>Admin Dashboard</p>
 
     <label style="display:block;text-align:left;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">I am logging in as</label>
     <select id="login-role" onchange="onLoginRoleChange()" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;background:var(--bg);color:var(--text);">
@@ -199,7 +199,7 @@ tr:hover td{background:#fafaf9;}
       <div class="header-logo">P&P</div>
       <div>
         <div class="header-title">Admin Dashboard</div>
-        <div class="header-sub">Pupils & Peoples Foundation</div>
+        <div class="header-sub">Pupils & Peoples Trust</div>
       </div>
     </div>
     <div class="header-right">
@@ -1430,7 +1430,7 @@ function viewDetail(rowId) {
         : '';
     cardDiv.innerHTML =
       '<div class="id-preview">'
-      + '<div class="id-prev-head">Pupils & Peoples Foundation — ID Card</div>'
+      + '<div class="id-prev-head">Pupils & Peoples Trust — ID Card</div>'
       + '<div class="id-prev-body">'
       + '<div class="id-prev-row"><span style="color:var(--muted)">ID</span><span style="color:var(--saffron);font-weight:700">' + assignedId + '</span></div>'
       + '<div class="id-prev-row"><span style="color:var(--muted)">Name</span><span><strong>' + name + '</strong></span></div>'
@@ -1683,7 +1683,7 @@ function sendReceiptViaWhatsApp() {
   if (!lastReceiptData || !lastReceiptData.phone) { showToast('No phone number on file', 'red'); return; }
   const phone = lastReceiptData.phone.replace(/\D/g, '');
   const msg = 'Dear ' + lastReceiptData.donorName + ', thank you for your generous donation of ₹' + lastReceiptData.amount
-    + ' to ' + 'Pupils & Peoples Foundation. Your receipt number is ' + lastReceiptData.receiptNo
+    + ' to ' + 'Pupils and Peoples Trust. Your receipt number is ' + lastReceiptData.receiptNo
     + (lastReceiptData.receiptType === '80G' ? ' (eligible for 80G tax deduction)' : '') + '. We truly appreciate your support! 🙏';
   const url = 'https://wa.me/' + (phone.length === 10 ? '91' + phone : phone) + '?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
@@ -2013,7 +2013,7 @@ function sendInvoiceViaEmail() {
 function sendInvoiceViaWhatsApp() {
   if (!lastInvoiceData || !lastInvoiceData.phone) { showToast('No phone on file', 'red'); return; }
   const phone = lastInvoiceData.phone.replace(/\D/g, '');
-  const msg = 'Dear ' + lastInvoiceData.customerName + ', thank you for your purchase from Pupils & Peoples Foundation! '
+  const msg = 'Dear ' + lastInvoiceData.customerName + ', thank you for your purchase from Pupils & Peoples Trust! '
     + 'Invoice No: ' + lastInvoiceData.invoiceNo + ', Total: ₹' + lastInvoiceData.total + '. We appreciate your support! 🙏';
   const url = 'https://wa.me/' + (phone.length === 10 ? '91' + phone : phone) + '?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
@@ -2621,7 +2621,7 @@ window.addEventListener('load', function() {
   <img src="icons/icon-72.png" style="width:36px;height:36px;border-radius:8px;flex-shrink:0;">
   <div style="flex:1;min-width:0;">
     <div style="font-size:14px;font-weight:600;">Add to Home Screen</div>
-    <div style="font-size:12px;opacity:0.8;">Install P&amp;P Foundation for quick access</div>
+    <div style="font-size:12px;opacity:0.8;">Install P&amp;P Trust for quick access</div>
   </div>
   <button id="pwa-install-btn" style="background:#B8862E;color:white;border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">Install</button>
   <button id="pwa-dismiss-btn" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:100px;padding:8px 12px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
