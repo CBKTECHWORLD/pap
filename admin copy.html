@@ -226,7 +226,6 @@ tr:hover td{background:#fafaf9;}
       <div class="sidebar-item" data-page="salary" onclick="goPage('salary')"><span class="sidebar-icon">💰</span> Salary</div>
       <div class="sidebar-item" data-page="reimbursements" onclick="goPage('reimbursements')"><span class="sidebar-icon">🧾</span> Reimbursements <span class="sidebar-badge red" id="badge-reimburse">0</span></div>
       <div class="sidebar-item" data-page="staff" onclick="goPage('staff')"><span class="sidebar-icon">👥</span> Staff Logins</div>
-      <div class="sidebar-item" data-page="push" onclick="goPage('push')"><span class="sidebar-icon">📣</span> Push Notifications</div>
       <div class="sidebar-item" data-page="settings" onclick="goPage('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
     </nav>
 
@@ -495,53 +494,6 @@ tr:hover td{background:#fafaf9;}
         </div>
       </div>
 
-      <!-- PUSH NOTIFICATIONS -->
-      <div class="page" id="page-push">
-        <div class="page-header"><h2 class="page-title">Push Notifications</h2></div>
-        <div class="notice">📣 Sends a real push notification to everyone who has allowed notifications on the app (via OneSignal — free). Works even when their phone is locked or the app is closed.</div>
-
-        <div class="stats-row" id="push-stats">
-          <div class="stat-card"><div class="stat-label">Subscribers</div><div class="stat-num blue" id="push-subs">—</div></div>
-          <div class="stat-card"><div class="stat-label">Sent</div><div class="stat-num green" id="push-sent-count">0</div></div>
-          <div class="stat-card"><div class="stat-label">Scheduled</div><div class="stat-num orange" id="push-sched-count">0</div></div>
-        </div>
-
-        <div class="settings-card">
-          <h3>✏️ Compose Notification</h3>
-          <p>Write a title and message, or use the default. Send instantly or schedule it for later — scheduling is handled by OneSignal, no need to keep this tab open.</p>
-
-          <label style="font-size:12px;font-weight:600;color:var(--muted);">Title</label>
-          <input class="settings-input" id="push-title" placeholder="Pupils & Peoples Foundation" style="margin-top:4px;">
-
-          <label style="font-size:12px;font-weight:600;color:var(--muted);margin-top:10px;display:block;">Message</label>
-          <textarea class="settings-input" id="push-message" rows="3" style="margin-top:4px;resize:vertical;font-family:'Inter',sans-serif;" placeholder="Type your message..."></textarea>
-          <button class="save-btn" style="background:var(--green-light);color:var(--green-dark);margin-top:8px;" onclick="useDefaultPushMsg()">↺ Use Default Message</button>
-
-          <div style="margin-top:16px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
-            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;">
-              <input type="radio" name="push-when" value="now" checked onchange="togglePushSchedule()"> Send Now
-            </label>
-            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;">
-              <input type="radio" name="push-when" value="later" onchange="togglePushSchedule()"> Schedule for Later
-            </label>
-            <input type="datetime-local" class="settings-input" id="push-schedule-time" style="width:auto;display:none;margin:0;">
-          </div>
-
-          <button class="save-btn" style="margin-top:16px;" onclick="sendPush()">🚀 Send Notification</button>
-        </div>
-
-        <div class="settings-card">
-          <h3>🕓 Notification History</h3>
-          <p>All notifications sent or scheduled from this panel.</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Sent / Scheduled</th><th>Title</th><th>Message</th><th>Status</th><th>Sent By</th><th>Actions</th></tr></thead>
-              <tbody id="push-tbody"><tr><td colspan="6" class="empty-state">No notifications sent yet.</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
       <!-- SETTINGS -->
       <div class="page" id="page-settings">
         <div class="page-header"><h2 class="page-title">Settings</h2></div>
@@ -556,10 +508,6 @@ tr:hover td{background:#fafaf9;}
           <h3>📧 Email Sender</h3>
           <p>ID cards are sent from <strong>pupilsandpeoples@gmail.com</strong> via Google Apps Script when you approve an application.</p>
           <input class="settings-input" value="pupilsandpeoples@gmail.com" readonly>
-        </div>
-        <div class="settings-card">
-          <h3>📣 Push Notifications (OneSignal)</h3>
-          <p>Push notifications are sent via OneSignal (free). The App ID and REST API Key are configured directly in <code>google-apps-script.gs</code> (<code>ONESIGNAL_APP_ID</code> / <code>ONESIGNAL_REST_API_KEY</code>) — never stored in this admin panel, since the REST API Key must stay private. See the comments at the top of that file for setup steps.</p>
         </div>
         <div class="settings-card">
           <h3>🔑 Change Admin Password</h3>
@@ -991,7 +939,6 @@ function applyRolePermissions(role) {
     salary: role === 'Admin',
     reimbursements: true, // all roles can view/submit their own
     staff: role === 'Admin',
-    push: role === 'Admin',
     settings: role === 'Admin'
   };
   Object.keys(allItems).forEach(function(key) {
@@ -1535,7 +1482,6 @@ function goPage(name) {
   if (name === 'staffhr')         loadStaffHR();
   if (name === 'salary')          loadSalaries();
   if (name === 'reimbursements')  loadReimbursements();
-  if (name === 'push')            loadPushHistory();
 }
 
 // =============================================
@@ -1598,9 +1544,6 @@ function printFromPreview() {
 //  DONATIONS / RECEIPT GENERATOR
 // =============================================
 let donationsCache = [];
-let pushHistoryCache = [];
-const DEFAULT_PUSH_TITLE   = 'Pupils & Peoples Foundation';
-const DEFAULT_PUSH_MESSAGE = 'New update from Pupils & Peoples Foundation — tap to see what\'s new!';
 let lastReceiptData = null;
 
 function loadDonations() {
@@ -1766,104 +1709,6 @@ function resendDonationReceipt(idx) {
 // =============================================
 let productsCache = [];
 let editingProductSku = null;
-
-// =============================================
-//  PUSH NOTIFICATIONS
-// =============================================
-function useDefaultPushMsg() {
-  document.getElementById('push-title').value   = DEFAULT_PUSH_TITLE;
-  document.getElementById('push-message').value = DEFAULT_PUSH_MESSAGE;
-}
-
-function togglePushSchedule() {
-  const later = document.querySelector('input[name="push-when"]:checked').value === 'later';
-  const timeInput = document.getElementById('push-schedule-time');
-  timeInput.style.display = later ? 'inline-block' : 'none';
-  if (later && !timeInput.value) {
-    const d = new Date(Date.now() + 30 * 60000); // default 30 min from now
-    d.setSeconds(0,0);
-    timeInput.value = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,16);
-  }
-}
-
-function loadPushHistory() {
-  callSheet({ action: 'getPushHistory' }, function(res) {
-    pushHistoryCache = (res && res.data) ? res.data : [];
-    document.getElementById('push-subs').textContent = (res && res.subscribers != null) ? res.subscribers : '—';
-    renderPushHistory();
-  });
-}
-
-function renderPushHistory() {
-  const tbody = document.getElementById('push-tbody');
-  const rows = pushHistoryCache.slice().reverse();
-  document.getElementById('push-sent-count').textContent  = pushHistoryCache.filter(r => r['Status'] === 'Sent').length;
-  document.getElementById('push-sched-count').textContent = pushHistoryCache.filter(r => r['Status'] === 'Scheduled').length;
-
-  if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No notifications sent yet.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = rows.map(function(r) {
-    const when = r['Scheduled For'] ? r['Scheduled For'] : r['Timestamp'];
-    const statusClass = r['Status'] === 'Scheduled' ? 'badge-pending' : (r['Status'] === 'Failed' ? 'badge-rejected' : 'badge-approved');
-    return '<tr>' +
-      '<td>' + (when || '') + '</td>' +
-      '<td>' + (r['Title'] || '') + '</td>' +
-      '<td style="max-width:260px;">' + (r['Message'] || '') + '</td>' +
-      '<td><span class="badge ' + statusClass + '">' + (r['Status'] || '') + '</span></td>' +
-      '<td>' + (r['Sent By'] || '') + '</td>' +
-      '<td class="action-btns">' +
-        (r['Status'] === 'Scheduled' ? '<button class="act-btn act-reject" onclick="cancelScheduledPush(' + (r['Row'] || 0) + ', \'' + (r['Notification ID'] || '') + '\')">Cancel</button>' : '') +
-      '</td>' +
-    '</tr>';
-  }).join('');
-}
-
-function sendPush() {
-  const title   = document.getElementById('push-title').value.trim() || DEFAULT_PUSH_TITLE;
-  const message = document.getElementById('push-message').value.trim();
-  if (!message) { showToast('⚠️ Write a message first', 'red'); return; }
-
-  const when = document.querySelector('input[name="push-when"]:checked').value;
-  let scheduleISO = '';
-  if (when === 'later') {
-    const localVal = document.getElementById('push-schedule-time').value;
-    if (!localVal) { showToast('⚠️ Pick a schedule date/time', 'red'); return; }
-    scheduleISO = new Date(localVal).toISOString();
-  }
-
-  showToast('Sending…', '');
-  callSheet({
-    action: 'sendPush',
-    title: title,
-    message: message,
-    scheduleFor: scheduleISO,
-    sentBy: CURRENT_NAME || 'Admin'
-  }, function(res) {
-    if (res && res.success) {
-      showToast(scheduleISO ? '✅ Notification scheduled' : '✅ Notification sent', 'green');
-      document.getElementById('push-title').value = '';
-      document.getElementById('push-message').value = '';
-      document.getElementById('push-schedule-time').value = '';
-      loadPushHistory();
-    } else {
-      showToast('❌ ' + ((res && res.error) || 'Could not send notification'), 'red');
-    }
-  });
-}
-
-function cancelScheduledPush(rowIndex, notificationId) {
-  if (!confirm('Cancel this scheduled notification?')) return;
-  callSheet({ action: 'cancelPush', rowIndex: rowIndex, notificationId: notificationId }, function(res) {
-    if (res && res.success) {
-      showToast('✅ Notification cancelled', 'green');
-      loadPushHistory();
-    } else {
-      showToast('❌ ' + ((res && res.error) || 'Could not cancel'), 'red');
-    }
-  });
-}
 
 function loadProducts() {
   callSheet({ action: 'getProducts' }, function(res) {

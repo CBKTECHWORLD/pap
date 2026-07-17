@@ -16,22 +16,6 @@ const SHEET_PURCHASES = 'Purchases';
 const SHEET_STAFF_HR  = 'StaffHR';
 const SHEET_SALARY    = 'Salary';
 const SHEET_REIMBURSE = 'Reimbursements';
-const SHEET_PUSH       = 'PushNotifications';
-
-// ============================================================
-//  PUSH NOTIFICATIONS — OneSignal (free)
-//  Setup (one-time, ~5 min):
-//   1. Create a free account at https://onesignal.com
-//   2. New App → Web Push → follow the "Typical Site" setup, using
-//      https://YOUR-DOMAIN/ as the site URL. This gives you an App ID.
-//   3. In Settings → Keys & IDs, copy the "REST API Key".
-//   4. Paste both values below. NEVER put the REST API Key in
-//      admin.html or index.html — it must stay server-side here.
-//   5. Also paste ONESIGNAL_APP_ID into the OneSignal init script
-//      in index.html (that one is public and safe to expose).
-// ============================================================
-const ONESIGNAL_APP_ID       = 'PASTE_YOUR_ONESIGNAL_APP_ID_HERE';
-const ONESIGNAL_REST_API_KEY = 'PASTE_YOUR_ONESIGNAL_REST_API_KEY_HERE';
 const ORG_NAME        = 'Pupils & Peoples Foundation';
 const ORG_WEBSITE     = 'pupilsandpeoples.org';
 const ORG_EMAIL       = 'pupilsandpeoples@gmail.com';
@@ -122,10 +106,6 @@ function doGet(e) {
       case 'updateReimbursement': result = updateReimbursementStatus(p.rowIndex, p.status); break;
 
       case 'getFinanceSummary':   result = getFinanceSummary(); break;
-
-      case 'sendPush':         result = sendPushNotification(p); break;
-      case 'getPushHistory':   result = getPushHistory(); break;
-      case 'cancelPush':       result = cancelScheduledPush(p.rowIndex, p.notificationId); break;
 
       default:
         if (p.name) {
@@ -999,115 +979,4 @@ function getFinanceSummary() {
       staffCount: staffCount
     }
   };
-}
-
-// ============================================================
-//  PUSH NOTIFICATIONS — send / history / cancel via OneSignal
-// ============================================================
-const PUSH_HEADERS = ['Timestamp','Title','Message','Status','Scheduled For','Sent By','Notification ID','Recipients'];
-
-function sendPushNotification(p) {
-  if (!ONESIGNAL_APP_ID || ONESIGNAL_APP_ID.indexOf('PASTE_') === 0) {
-    return { success: false, error: 'OneSignal is not configured yet. Add ONESIGNAL_APP_ID and ONESIGNAL_REST_API_KEY at the top of this script.' };
-  }
-  const title       = (p.title || '').toString().trim() || 'Pupils & Peoples Foundation';
-  const message     = (p.message || '').toString().trim();
-  const scheduleFor = (p.scheduleFor || '').toString().trim(); // ISO string, optional
-  if (!message) return { success: false, error: 'Message cannot be empty' };
-
-  const payload = {
-    app_id: ONESIGNAL_APP_ID,
-    included_segments: ['Subscribed Users'],
-    headings: { en: title },
-    contents: { en: message },
-    url: 'https://' + ORG_WEBSITE + '/'
-  };
-  if (scheduleFor) payload.send_after = scheduleFor;
-
-  const options = {
-    method: 'post',
-    contentType: 'application/json; charset=utf-8',
-    headers: { 'Authorization': 'Key ' + ONESIGNAL_REST_API_KEY },
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  };
-
-  let notifId = '';
-  let recipients = 0;
-  let ok = true;
-  let errMsg = '';
-  try {
-    const resp = UrlFetchApp.fetch('https://onesignal.com/api/v1/notifications', options);
-    const body = JSON.parse(resp.getContentText());
-    if (body.errors) {
-      ok = false;
-      errMsg = Array.isArray(body.errors) ? body.errors.join(', ') : JSON.stringify(body.errors);
-    } else {
-      notifId    = body.id || '';
-      recipients = body.recipients || 0;
-    }
-  } catch (err) {
-    ok = false;
-    errMsg = err.message;
-  }
-
-  const sheet = getOrCreateSheet(SHEET_PUSH, PUSH_HEADERS);
-  sheet.appendRow([
-    new Date().toISOString(),
-    title,
-    message,
-    ok ? (scheduleFor ? 'Scheduled' : 'Sent') : 'Failed',
-    scheduleFor ? new Date(scheduleFor).toLocaleString('en-IN') : '',
-    p.sentBy || 'Admin',
-    notifId,
-    recipients
-  ]);
-
-  if (!ok) return { success: false, error: errMsg || 'OneSignal request failed' };
-  return { success: true, notificationId: notifId, recipients: recipients };
-}
-
-function getPushHistory() {
-  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName(SHEET_PUSH);
-  const data  = sheet ? sheetToObjects(sheet).map(function(r, i) {
-    r['Row'] = i + 2; // actual sheet row number (header is row 1)
-    return r;
-  }) : [];
-
-  let subscribers = null;
-  if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID.indexOf('PASTE_') !== 0) {
-    try {
-      const resp = UrlFetchApp.fetch(
-        'https://onesignal.com/api/v1/apps/' + ONESIGNAL_APP_ID,
-        { headers: { 'Authorization': 'Key ' + ONESIGNAL_REST_API_KEY }, muteHttpExceptions: true }
-      );
-      const body = JSON.parse(resp.getContentText());
-      subscribers = body.players !== undefined ? body.players : null;
-    } catch (err) {
-      subscribers = null;
-    }
-  }
-
-  return { success: true, data: data, subscribers: subscribers };
-}
-
-function cancelScheduledPush(rowIndex, notificationId) {
-  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName(SHEET_PUSH);
-  if (!sheet) return { success: false, error: 'No push notification history yet' };
-
-  if (notificationId && ONESIGNAL_APP_ID) {
-    try {
-      UrlFetchApp.fetch(
-        'https://onesignal.com/api/v1/notifications/' + notificationId + '?app_id=' + ONESIGNAL_APP_ID,
-        { method: 'delete', headers: { 'Authorization': 'Key ' + ONESIGNAL_REST_API_KEY }, muteHttpExceptions: true }
-      );
-    } catch (err) {
-      // continue — still mark as cancelled locally even if OneSignal call fails
-    }
-  }
-  const row = parseInt(rowIndex);
-  if (row > 1) sheet.getRange(row, 4).setValue('Cancelled'); // column 4 = Status
-  return { success: true };
 }

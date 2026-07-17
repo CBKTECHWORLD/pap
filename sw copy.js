@@ -1,10 +1,4 @@
 // ============================================================
-//  OneSignal Push Notifications — merged into this existing SW
-//  so push events work without a separate service worker file.
-// ============================================================
-importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
-
-// ============================================================
 //  Pupils & Peoples Foundation — Service Worker
 //  Strategy:
 //    • App Shell (HTML, CSS, JS, fonts) → Cache First
@@ -43,9 +37,7 @@ const FONT_ORIGINS = [
 const NETWORK_ONLY_ORIGINS = [
   'https://script.google.com',   // Apps Script API
   'https://wa.me',               // WhatsApp
-  'mailto:',
-  'https://onesignal.com',       // OneSignal API
-  'https://cdn.onesignal.com'    // OneSignal SDK
+  'mailto:'
 ];
 
 // Maximum items in the dynamic cache before pruning old entries

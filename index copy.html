@@ -832,59 +832,11 @@ window.addEventListener('scroll', function() {
   <button id="pwa-dismiss-btn" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:100px;padding:8px 12px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
 </div>
 
-<div id="push-opt-in-banner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9998;background:#0E4F4F;color:white;padding:14px 20px;border-radius:14px;box-shadow:0 4px 24px rgba(14,79,79,0.35);align-items:center;gap:14px;max-width:92vw;animation:slideUp 0.4s ease;">
-  <span style="font-size:22px;flex-shrink:0;">🔔</span>
-  <div style="flex:1;min-width:0;">
-    <div style="font-size:14px;font-weight:600;">Stay Updated</div>
-    <div style="font-size:12px;opacity:0.8;">Get notified about events, drives & updates</div>
-  </div>
-  <button id="push-optin-btn" style="background:#B8862E;color:white;border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">Enable</button>
-  <button id="push-optin-dismiss" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:100px;padding:8px 12px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
-</div>
-
 <div id="pwa-update-banner" style="display:none;position:fixed;top:76px;left:50%;transform:translateX(-50%);z-index:9997;background:#B8862E;color:white;padding:11px 18px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);align-items:center;gap:12px;max-width:92vw;">
   <span style="font-size:13px;font-weight:600;">⟳ New version available!</span>
   <button id="pwa-update-btn" style="background:white;color:#B8862E;border:none;border-radius:100px;padding:6px 16px;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;font-family:inherit;">Refresh</button>
   <button id="pwa-update-dismiss" style="background:rgba(255,255,255,0.2);color:white;border:none;border-radius:100px;padding:6px 10px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
 </div>
-
-<!-- OneSignal Push Notifications (free) -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  // NOTE: this App ID is public/safe to expose (unlike the REST API Key, which lives only in google-apps-script.gs)
-  window.ONESIGNAL_APP_ID = '24100932-ee3e-4e3e-8cca-4109935c4fbe';
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    if (!window.ONESIGNAL_APP_ID || window.ONESIGNAL_APP_ID.indexOf('PASTE_') === 0) return;
-    await OneSignal.init({
-      appId: window.ONESIGNAL_APP_ID,
-      allowLocalhostAsSecureOrigin: true,
-      serviceWorkerParam: { scope: './' },
-      serviceWorkerPath: 'sw.js'
-    });
-
-    // Show our own opt-in banner instead of the native prompt appearing unprompted
-    const optedIn = await OneSignal.User.PushSubscription.optedIn;
-    const dismissed = localStorage.getItem('push-optin-dismissed');
-    if (!optedIn && !(dismissed && Date.now() - parseInt(dismissed) < 7*24*60*60*1000)) {
-      setTimeout(function() {
-        const banner = document.getElementById('push-opt-in-banner');
-        if (banner) banner.style.display = 'flex';
-      }, 4000);
-    }
-
-    const optinBtn = document.getElementById('push-optin-btn');
-    if (optinBtn) optinBtn.addEventListener('click', async function() {
-      document.getElementById('push-opt-in-banner').style.display = 'none';
-      await OneSignal.User.PushSubscription.optIn();
-    });
-    const optinDismiss = document.getElementById('push-optin-dismiss');
-    if (optinDismiss) optinDismiss.addEventListener('click', function() {
-      document.getElementById('push-opt-in-banner').style.display = 'none';
-      localStorage.setItem('push-optin-dismissed', Date.now().toString());
-    });
-  });
-</script>
 
 <script>
 (function() {
