@@ -856,11 +856,16 @@ window.addEventListener('scroll', function() {
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
     if (!window.ONESIGNAL_APP_ID || window.ONESIGNAL_APP_ID.indexOf('PASTE_') === 0) return;
+    // Derive the absolute folder this site is deployed under (e.g. "/pap/")
+    // so this keeps working regardless of the repo/folder name.
+    const basePath = location.pathname.endsWith('/')
+      ? location.pathname
+      : location.pathname.replace(/[^/]*$/, '');
     await OneSignal.init({
       appId: window.ONESIGNAL_APP_ID,
       allowLocalhostAsSecureOrigin: true,
-      serviceWorkerParam: { scope: './' },
-      serviceWorkerPath: 'sw.js'
+      serviceWorkerParam: { scope: basePath },
+      serviceWorkerPath: basePath + 'sw.js'
     });
 
     // Show our own opt-in banner instead of the native prompt appearing unprompted
