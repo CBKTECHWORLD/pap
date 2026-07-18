@@ -533,6 +533,7 @@ tr:hover td{background:#fafaf9;}
         <div class="settings-card">
           <h3>🕓 Notification History</h3>
           <p>All notifications sent or scheduled from this panel.</p>
+          <button class="save-btn" style="background:var(--red-light);color:var(--red);margin-bottom:10px;" onclick="clearAllPushHistory()">🗑️ Clear All History</button>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Sent / Scheduled</th><th>Title</th><th>Message</th><th>Status</th><th>Sent By</th><th>Actions</th></tr></thead>
@@ -1815,6 +1816,7 @@ function renderPushHistory() {
       '<td>' + (r['Sent By'] || '') + '</td>' +
       '<td class="action-btns">' +
         (r['Status'] === 'Scheduled' ? '<button class="act-btn act-reject" onclick="cancelScheduledPush(' + (r['Row'] || 0) + ', \'' + (r['Notification ID'] || '') + '\')">Cancel</button>' : '') +
+        '<button class="act-btn act-reject" onclick="deletePushHistoryRow(' + (r['Row'] || 0) + ')">Delete</button>' +
       '</td>' +
     '</tr>';
   }).join('');
@@ -1861,6 +1863,30 @@ function cancelScheduledPush(rowIndex, notificationId) {
       loadPushHistory();
     } else {
       showToast('❌ ' + ((res && res.error) || 'Could not cancel'), 'red');
+    }
+  });
+}
+
+function deletePushHistoryRow(rowIndex) {
+  if (!confirm('Delete this notification from history? This cannot be undone.')) return;
+  callSheet({ action: 'deletePush', rowIndex: rowIndex }, function(res) {
+    if (res && res.success) {
+      showToast('✅ Deleted', 'green');
+      loadPushHistory();
+    } else {
+      showToast('❌ ' + ((res && res.error) || 'Could not delete'), 'red');
+    }
+  });
+}
+
+function clearAllPushHistory() {
+  if (!confirm('Clear ALL push notification history? This cannot be undone.')) return;
+  callSheet({ action: 'clearPushHistory' }, function(res) {
+    if (res && res.success) {
+      showToast('✅ History cleared', 'green');
+      loadPushHistory();
+    } else {
+      showToast('❌ ' + ((res && res.error) || 'Could not clear history'), 'red');
     }
   });
 }
