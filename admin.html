@@ -498,17 +498,16 @@ tr:hover td{background:#fafaf9;}
       <!-- PUSH NOTIFICATIONS -->
       <div class="page" id="page-push">
         <div class="page-header"><h2 class="page-title">Push Notifications</h2></div>
-        <div class="notice">📣 Sends a real push notification to everyone who has allowed notifications on the app (via OneSignal — free). Works even when their phone is locked or the app is closed.</div>
+        <div class="notice">📣 No third-party service, no setup needed. When someone opens the app (site or installed PWA) and has allowed notifications, they'll see any new message here — including ones sent while they were away. This only fires when they actually open the app, not while it's fully closed in the background.</div>
 
         <div class="stats-row" id="push-stats">
-          <div class="stat-card"><div class="stat-label">Subscribers</div><div class="stat-num blue" id="push-subs">—</div></div>
           <div class="stat-card"><div class="stat-label">Sent</div><div class="stat-num green" id="push-sent-count">0</div></div>
           <div class="stat-card"><div class="stat-label">Scheduled</div><div class="stat-num orange" id="push-sched-count">0</div></div>
         </div>
 
         <div class="settings-card">
           <h3>✏️ Compose Notification</h3>
-          <p>Write a title and message, or use the default. Send instantly or schedule it for later — scheduling is handled by OneSignal, no need to keep this tab open.</p>
+          <p>Write a title and message, or use the default. "Send Now" makes it visible immediately; "Schedule" holds it back until the chosen time — either way, it's delivered the next time someone opens the app after that point.</p>
 
           <label style="font-size:12px;font-weight:600;color:var(--muted);">Title</label>
           <input class="settings-input" id="push-title" placeholder="Pupils & Peoples Foundation" style="margin-top:4px;">
@@ -559,8 +558,8 @@ tr:hover td{background:#fafaf9;}
           <input class="settings-input" value="pupilsandpeoples@gmail.com" readonly>
         </div>
         <div class="settings-card">
-          <h3>📣 Push Notifications (OneSignal)</h3>
-          <p>Push notifications are sent via OneSignal (free). The App ID and REST API Key are configured directly in <code>google-apps-script.gs</code> (<code>ONESIGNAL_APP_ID</code> / <code>ONESIGNAL_REST_API_KEY</code>) — never stored in this admin panel, since the REST API Key must stay private. See the comments at the top of that file for setup steps.</p>
+          <h3>📣 Push Notifications</h3>
+          <p>Built in — no third-party service, no API keys, no setup. Messages sent from the Push Notifications page are shown to anyone who has the app open (or opens it later) and has allowed notifications in their browser.</p>
         </div>
         <div class="settings-card">
           <h3>🔑 Change Admin Password</h3>
@@ -1790,7 +1789,6 @@ function togglePushSchedule() {
 function loadPushHistory() {
   callSheet({ action: 'getPushHistory' }, function(res) {
     pushHistoryCache = (res && res.data) ? res.data : [];
-    document.getElementById('push-subs').textContent = (res && res.subscribers != null) ? res.subscribers : '—';
     renderPushHistory();
   });
 }

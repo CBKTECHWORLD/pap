@@ -836,7 +836,7 @@ window.addEventListener('scroll', function() {
   <span style="font-size:22px;flex-shrink:0;">🔔</span>
   <div style="flex:1;min-width:0;">
     <div style="font-size:14px;font-weight:600;">Stay Updated</div>
-    <div style="font-size:12px;opacity:0.8;">Get notified about events, drives & updates</div>
+    <div style="font-size:12px;opacity:0.8;">See a notification here when we post updates</div>
   </div>
   <button id="push-optin-btn" style="background:#B8862E;color:white;border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">Enable</button>
   <button id="push-optin-dismiss" style="background:rgba(255,255,255,0.15);color:white;border:none;border-radius:100px;padding:8px 12px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
@@ -848,47 +848,97 @@ window.addEventListener('scroll', function() {
   <button id="pwa-update-dismiss" style="background:rgba(255,255,255,0.2);color:white;border:none;border-radius:100px;padding:6px 10px;font-size:13px;cursor:pointer;font-family:inherit;">Later</button>
 </div>
 
-<!-- OneSignal Push Notifications (free) -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<!-- Push Notifications — self-contained, no third-party service.
+     Checks the PushNotifications sheet (via the same Apps Script API
+     used elsewhere) each time this page is opened, and shows a
+     browser notification if there's something new. This only fires
+     when someone actually opens the app — not while it's fully
+     closed in the background. -->
 <script>
-  // NOTE: this App ID is public/safe to expose (unlike the REST API Key, which lives only in google-apps-script.gs)
-  window.ONESIGNAL_APP_ID = '24100932-ee3e-4e3e-8cca-4109935c4fbe';
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    if (!window.ONESIGNAL_APP_ID || window.ONESIGNAL_APP_ID.indexOf('PASTE_') === 0) return;
-    // Derive the absolute folder this site is deployed under (e.g. "/pap/")
-    // so this keeps working regardless of the repo/folder name.
-    const basePath = location.pathname.endsWith('/')
-      ? location.pathname
-      : location.pathname.replace(/[^/]*$/, '');
-    await OneSignal.init({
-      appId: window.ONESIGNAL_APP_ID,
-      allowLocalhostAsSecureOrigin: true,
-      serviceWorkerParam: { scope: basePath },
-      serviceWorkerPath: basePath + 'sw.js'
-    });
+(function() {
+  'use strict';
+  const LAST_SEEN_KEY = 'pap-last-notification-id';
+  const DISMISS_KEY    = 'pap-push-optin-dismissed';
 
-    // Show our own opt-in banner instead of the native prompt appearing unprompted
-    const optedIn = await OneSignal.User.PushSubscription.optedIn;
-    const dismissed = localStorage.getItem('push-optin-dismissed');
-    if (!optedIn && !(dismissed && Date.now() - parseInt(dismissed) < 7*24*60*60*1000)) {
+  function jsonp(params) {
+    return new Promise(function(resolve) {
+      const cbName = '__papPushCb' + Date.now();
+      window[cbName] = function(data) {
+        delete window[cbName];
+        script.remove();
+        resolve(data);
+      };
+      const p = new URLSearchParams(params);
+      p.set('callback', cbName);
+      const script = document.createElement('script');
+      script.src = SHEET_URL + '?' + p.toString();
+      script.onerror = function() { delete window[cbName]; script.remove(); resolve(null); };
+      document.head.appendChild(script);
       setTimeout(function() {
-        const banner = document.getElementById('push-opt-in-banner');
-        if (banner) banner.style.display = 'flex';
-      }, 4000);
+        if (window[cbName]) { delete window[cbName]; script.remove(); resolve(null); }
+      }, 8000);
+    });
+  }
+
+  function showNotification(title, body) {
+    const opts = { body: body, icon: 'icons/icon-192.png', badge: 'icons/icon-96.png' };
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then(function(reg) {
+        if (reg) reg.showNotification(title, opts);
+        else new Notification(title, opts);
+      });
+    } else {
+      new Notification(title, opts);
     }
+  }
+
+  async function checkForNewNotification() {
+    if (Notification.permission !== 'granted') return;
+    const res = await jsonp({ action: 'getLatestNotification' });
+    if (!res || !res.success || !res.notification) return;
+    const n = res.notification;
+    const lastSeen = localStorage.getItem(LAST_SEEN_KEY);
+    if (n.id && n.id !== lastSeen) {
+      showNotification(n.title || 'Pupils & Peoples Foundation', n.message || '');
+      localStorage.setItem(LAST_SEEN_KEY, n.id);
+    }
+  }
+
+  function maybeShowOptInBanner() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') { checkForNewNotification(); return; }
+    if (Notification.permission === 'denied') return;
+    const dismissed = localStorage.getItem(DISMISS_KEY);
+    if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) return;
+    setTimeout(function() {
+      const banner = document.getElementById('push-opt-in-banner');
+      if (banner) banner.style.display = 'flex';
+    }, 4000);
+  }
+
+  window.addEventListener('load', function() {
+    maybeShowOptInBanner();
 
     const optinBtn = document.getElementById('push-optin-btn');
-    if (optinBtn) optinBtn.addEventListener('click', async function() {
+    if (optinBtn) optinBtn.addEventListener('click', function() {
       document.getElementById('push-opt-in-banner').style.display = 'none';
-      await OneSignal.User.PushSubscription.optIn();
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') checkForNewNotification();
+      });
     });
     const optinDismiss = document.getElementById('push-optin-dismiss');
     if (optinDismiss) optinDismiss.addEventListener('click', function() {
       document.getElementById('push-opt-in-banner').style.display = 'none';
-      localStorage.setItem('push-optin-dismissed', Date.now().toString());
+      localStorage.setItem(DISMISS_KEY, Date.now().toString());
+    });
+
+    // Also re-check whenever the tab becomes visible again (e.g. user
+    // switches back to it), so updates show up without a full reload.
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') checkForNewNotification();
     });
   });
+})();
 </script>
 
 <script>
